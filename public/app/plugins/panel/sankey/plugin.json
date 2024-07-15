@@ -1,0 +1,16 @@
+{
+  "type": "panel",
+  "name": "Sankey Panel",
+  "id": "architeq-sankey-panel",
+  "info": {
+    "description": "Sankey Panel Plugin for Grafana",
+    "author": {
+      "name": "Architeq"
+    },
+    "keywords": ["architeq", "sankey"],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    }
+  }
+}

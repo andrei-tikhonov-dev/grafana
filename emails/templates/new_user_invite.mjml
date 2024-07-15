@@ -4,37 +4,37 @@
   <!-- css styling -->
   <mj-include path="./partials/layout/theme.css" type="css" css-inline="inline" />
   <mj-head>
-    <!-- ⬇ Don't forget to specify an email subject below! ⬇ -->
+    <!-- ⬇ Don't forget to specify an email subject! Use the HTML comment below ⬇ -->
     <mj-title>
-      {{ Subject .Subject .TemplateData "{{ .InvitedBy }} has invited you to join Grafana" }}
+      {{ Subject .Subject .TemplateData "{{ .InvitedBy }} has added you to the {{ .OrgName }}" }}
     </mj-title>
     <mj-include path="./partials/layout/head.mjml" />
   </mj-head>
-  <mj-body>
+  <mj-body css-class="body">
     <mj-section>
       <mj-include path="./partials/layout/header.mjml" />
     </mj-section>
     <mj-section css-class="background">
       <mj-column>
-        <mj-text>
-          <h2>You're invited to join {{ .OrgName }}</h2>
+        <mj-text align="center">
+          <h2 >Welcome to the {{ .OrgName }}!</h2>
+          <h2>Let’s get started.</h2>
         </mj-text>
         <mj-text>
-          You've been invited to join the <strong>{{ .OrgName }}</strong> organization by <strong>{{ .InvitedBy }}</strong>. To accept your invitation and join the team, please click the link below:
+          You’ve been invited to join the {{ .OrgName }} by {{ .InvitedBy }}. To accept your invitation and join the team, please click the button below:
         </mj-text>
-        <mj-button href="{{ .LinkUrl }}">
+        <mj-button href="{{ .LinkUrl }}" background-color="#DC562B"  border-radius="8px" >
           Accept Invitation
         </mj-button>
+
+        <mj-image padding="32px 24px" width="455px" src="https://res.cloudinary.com/dkycfmmfx/image/upload/v1720161685/presentaion_t3yotv.png" align="center" />
+
         <mj-text>
-          You can also copy and paste this link into your browser directly:
-        </mj-text>
-        <mj-text>
-          <a rel="noopener" href="{{ .LinkUrl }}">{{ .LinkUrl }}</a>
+          You can also copy and paste the link into your browser directly: <br />
+          <a rel="noopener" href="{{ .AppUrl }}">{{ .LinkUrl }}</a>
         </mj-text>
       </mj-column>
     </mj-section>
-    <mj-section>
-      <mj-include path="./partials/layout/footer.mjml" />
-    </mj-section>
+    <mj-include path="./partials/layout/footer.mjml" />
   </mj-body>
 </mjml>

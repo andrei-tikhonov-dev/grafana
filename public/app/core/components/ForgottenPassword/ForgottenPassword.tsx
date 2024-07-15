@@ -70,7 +70,7 @@ export const ForgottenPassword = () => {
         </LinkButton>
       </Stack>
 
-      <p className={styles}>Did you forget your username or email? Contact your Grafana administrator.</p>
+      <p className={styles}>Did you forget your username or email? Contact your Sprintometer administrator.</p>
     </form>
   );
 };

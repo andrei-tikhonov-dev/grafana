@@ -48,6 +48,7 @@ import * as timeseriesPanel from 'app/plugins/panel/timeseries/module';
 import * as tracesPanel from 'app/plugins/panel/traces/module';
 import * as trendPanel from 'app/plugins/panel/trend/module';
 import * as welcomeBanner from 'app/plugins/panel/welcome/module';
+import * as sankeyPanel from 'app/plugins/panel/sankey/module';
 
 // Async loaded panels
 const geomapPanel = async () => await import(/* webpackChunkName: "geomapPanel" */ 'app/plugins/panel/geomap/module');
@@ -95,6 +96,7 @@ const builtInPlugins: Record<string, System.Module | (() => Promise<System.Modul
   'core:plugin/canvas': canvasPanel,
   'core:plugin/dashlist': dashListPanel,
   'core:plugin/alertlist': alertListPanel,
+  'core:plugin/sankey': sankeyPanel,
   'core:plugin/annolist': annoListPanel,
   'core:plugin/heatmap': heatmapPanel,
   'core:plugin/table': tablePanel,

@@ -6,11 +6,11 @@
   <mj-head>
     <!-- ⬇ Don't forget to specify an email subject below! ⬇ -->
     <mj-title>
-      {{ Subject .Subject .TemplateData "Welcome to Grafana, please complete your sign up!" }}
+      {{ Subject .Subject .TemplateData "Welcome to Sprintometer, please complete your sign up!" }}
     </mj-title>
     <mj-include path="./partials/layout/head.mjml" />
   </mj-head>
-  <mj-body>
+  <mj-body css-class="body">
     <mj-section>
       <mj-include path="./partials/layout/header.mjml" />
     </mj-section>
@@ -46,8 +46,6 @@
         </mj-column>
       </mj-section>
     </mj-wrapper>
-    <mj-section>
-      <mj-include path="./partials/layout/footer.mjml" />
-    </mj-section>
+    <mj-include path="./partials/layout/footer.mjml" />
   </mj-body>
 </mjml>

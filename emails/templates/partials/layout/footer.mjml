@@ -1,5 +1,24 @@
-<mj-column background-color="transparent">
-  <mj-text align="center">
-    &copy; {{ now | date "2006" }} Grafana Labs. Sent by <a href="{{ .AppUrl }}">Grafana v{{ .BuildVersion }}</a>.
-  </mj-text>
-</mj-column>
+<mj-section>
+  <mj-column>
+    <mj-image padding="0" width="45px" src="https://res.cloudinary.com/dkycfmmfx/image/upload/v1720510435/logo_fywl4c.png" align="center" />
+    <mj-text align="center">
+      Kasernenstrasse 11, 8004 Zürich
+    <br />
+      <a href="mailto:ilja.mutschnik@sbb.ch">ilja.mutschnik@sbb.ch</a>
+    </mj-text>
+  </mj-column>
+</mj-section>
+<mj-section>
+  <mj-group css-class="border-top">
+    <mj-column>
+      <mj-text align="left">
+        <a href="https://sprintometer.ch/">sprintometer.ch</a>
+      </mj-text>
+    </mj-column>
+    <mj-column>
+      <mj-social align="right">
+        <mj-social-element href="https://www.linkedin.com/showcase/sprintometertool" src="https://res.cloudinary.com/dkycfmmfx/image/upload/v1720510435/linkedin_thpuvo.png" />
+      </mj-social>
+    </mj-column>
+  </mj-group>
+</mj-section>

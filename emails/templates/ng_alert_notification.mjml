@@ -12,7 +12,7 @@
     <!-- Summary of the email contents, this will go in the email preview -->
     <mj-include path="./partials/alerting/summary.mjml" />
   </mj-head>
-  <mj-body>
+  <mj-body css-class="body">
     <mj-section>
       <mj-include path="./partials/layout/header.mjml" />
     </mj-section>
@@ -119,8 +119,6 @@
       {{ end }}
     </mj-raw>
 
-    <mj-section padding-top="10px">
-      <mj-include path="./partials/layout/footer.mjml" />
-    </mj-section>
+    <mj-include path="./partials/layout/footer.mjml" />
   </mj-body>
 </mjml>

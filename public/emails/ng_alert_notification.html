@@ -1,10 +1,8 @@
 <!doctype html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html lang="und" dir="auto" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
-  <title>
-    {{ Subject .Subject .TemplateData "{{ .Title }}" }}
-  </title>
+  <title>{{ Subject .Subject .TemplateData "{{ .Title }}" }}</title>
   {{ __dangerouslyInjectHTML `<!--[if !mso]><!-->` }}
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   {{ __dangerouslyInjectHTML `<!--<![endif]-->` }}
@@ -82,6 +80,11 @@
         width: 25% !important;
         max-width: 25%;
       }
+
+      .mj-column-per-50 {
+        width: 50% !important;
+        max-width: 50%;
+      }
     }
 
   </style>
@@ -101,9 +104,14 @@
       max-width: 25%;
     }
 
+    .moz-text-html .mj-column-per-50 {
+      width: 50% !important;
+      max-width: 50%;
+    }
+
   </style>
   <style type="text/css">
-    @media only screen and (max-width:480px) {
+    @media only screen and (max-width:479px) {
       table.mj-full-width-mobile {
         width: 100% !important;
       }
@@ -114,15 +122,12 @@
     }
 
   </style>
-  <style type="text/css">
-  </style>
   {{ $numberOfFiringInstance := (len .Alerts.Firing) }}
   {{ $numberOfResolvedAlerts := (len .Alerts.Resolved) }}
 </head>
 
 <body style="word-spacing:normal;">
-  <div style="display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
-    <mj-raw>
+  <div style="display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;"><mj-raw>
       {{ if $numberOfFiringInstance }}
     </mj-raw>
     <strong>{{ $numberOfFiringInstance }} firing</strong> alert {{ $numberOfFiringInstance| plural "instance" "instances" }}
@@ -142,7 +147,7 @@
       {{ end }}
     </mj-raw>
   </div>
-  <div class="canvas" style="background-color: #fff;">
+  <div class="body" style="background-color: #F5F2EF;" lang="und" dir="auto">
     {{ __dangerouslyInjectHTML `<!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->` }}
     <div style="margin:0px auto;max-width:600px;">
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
@@ -154,12 +159,12 @@
                 <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background-color:transparent;vertical-align:top;" width="100%">
                   <tbody>
                     <tr>
-                      <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                      <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                         <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
                           <tbody>
                             <tr>
-                              <td style="width:200px;">
-                                <img height="auto" src="https://grafana.com/static/assets/img/logo_new_transparent_light_400x100.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="200">
+                              <td style="width:166px;">
+                                <img alt src="https://res.cloudinary.com/dkycfmmfx/image/upload/v1720510435/logotype_vxchym.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="166" height="auto">
                               </td>
                             </tr>
                           </tbody>
@@ -221,7 +226,7 @@
     {{ __dangerouslyInjectHTML `<!--[if mso | IE]></td></tr></table><![endif]-->` }}
     {{ if .Message }}
     {{ __dangerouslyInjectHTML `<!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="background-outlook" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->` }}
-    <div class="background" style="background-color: #FFF; border: 1px solid #e4e5e6; margin: 0px auto; max-width: 600px;">
+    <div class="background" style="background-color: #FFF; border: 1px solid #e4e5e6; border-radius: 8px; margin: 0px auto; max-width: 600px;">
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
         <tbody>
           <tr>
@@ -238,8 +243,7 @@
                             <tbody>
                               <tr>
                                 <td align="left" class="txt" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                  <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: left; color: #000000;">
-                                    <mj-raw>
+                                  <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: left; color: #000000;"><mj-raw>
                                       {{ range $line := (splitList "\n" .Message) }}
                                     </mj-raw>
                                     {{ $line }}<br>
@@ -295,7 +299,7 @@
     {{ __dangerouslyInjectHTML `<!--[if mso | IE]></td></tr></table><![endif]-->` }}
     {{ range .Alerts.Firing }}
     {{ __dangerouslyInjectHTML `<!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="background-outlook" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->` }}
-    <div class="background" style="background-color: #FFF; border: 1px solid #e4e5e6; margin: 0px auto; max-width: 600px;">
+    <div class="background" style="background-color: #FFF; border: 1px solid #e4e5e6; border-radius: 8px; margin: 0px auto; max-width: 600px;">
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
         <tbody>
           <tr>
@@ -311,7 +315,7 @@
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:middle;" width="100%">
                             <tbody>
                               <tr>
-                                <td align="center" vertical-align="middle" style="font-size:0px;padding:0;word-break:break-word;">
+                                <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                     <tbody>
                                       <tr>
@@ -345,7 +349,7 @@
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:middle;" width="100%">
                             <tbody>
                               <tr>
-                                <td align="center" vertical-align="middle" style="font-size:0px;padding:0;word-break:break-word;">
+                                <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                     <tbody>
                                       <tr>
@@ -386,8 +390,8 @@
                                     <tbody>
                                       <tr>
                                         <td style="width:600px;">
-                                          <a href="{{ .ImageURL }}" target="_blank" style="color: #6E9FFF;">
-                                            <img height="auto" src="{{ .ImageURL }}" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="600">
+                                          <a href="{{ .ImageURL }}" target="_blank" style="color: #C34D26;">
+                                            <img alt src="{{ .ImageURL }}" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="600" height="auto">
                                           </a>
                                         </td>
                                       </tr>
@@ -422,7 +426,7 @@
                                     <tbody>
                                       <tr>
                                         <td style="width:600px;">
-                                          <img height="auto" src="cid:{{ .EmbeddedImage }}" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="600">
+                                          <img alt src="cid:{{ .EmbeddedImage }}" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="600" height="auto">
                                         </td>
                                       </tr>
                                     </tbody>
@@ -469,8 +473,7 @@
                               </tr>
                               <tr>
                                 <td align="left" class="txt" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                  <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: left; color: #000000;">
-                                    <mj-raw>{{ range $line := (splitList "\n" .Annotations.description) }}</mj-raw>
+                                  <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: left; color: #000000;"><mj-raw>{{ range $line := (splitList "\n" .Annotations.description) }}</mj-raw>
                                     {{ $line }}<br>
                                     <mj-raw>{{ end }}</mj-raw>
                                   </div>
@@ -528,8 +531,7 @@
                                     <tbody>
                                       <tr>
                                         <td align="left" class="txt" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                          <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: left; color: #000000;">
-                                            <mj-raw>{{ range $refID, $value := .Values }}</mj-raw>
+                                          <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: left; color: #000000;"><mj-raw>{{ range $refID, $value := .Values }}</mj-raw>
                                             {{ $refID }}={{ $value }}&nbsp; <mj-raw>{{ end }}</mj-raw>
                                           </div>
                                         </td>
@@ -624,7 +626,7 @@
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tbody>
                               <tr>
-                                <td align="center" vertical-align="middle" style="font-size:0px;padding:0;word-break:break-word;">
+                                <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                     <tbody>
                                       <tr>
@@ -646,7 +648,7 @@
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tbody>
                               <tr>
-                                <td align="center" vertical-align="middle" style="font-size:0px;padding:0;word-break:break-word;">
+                                <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                     <tbody>
                                       <tr>
@@ -668,7 +670,7 @@
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tbody>
                               <tr>
-                                <td align="center" vertical-align="middle" style="font-size:0px;padding:0;word-break:break-word;">
+                                <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                     <tbody>
                                       <tr>
@@ -690,7 +692,7 @@
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tbody>
                               <tr>
-                                <td align="center" vertical-align="middle" style="font-size:0px;padding:0;word-break:break-word;">
+                                <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                     <tbody>
                                       <tr>
@@ -786,7 +788,7 @@
     {{ __dangerouslyInjectHTML `<!--[if mso | IE]></td></tr></table><![endif]-->` }}
     {{ range .Alerts.Resolved }}
     {{ __dangerouslyInjectHTML `<!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="background-outlook" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->` }}
-    <div class="background" style="background-color: #FFF; border: 1px solid #e4e5e6; margin: 0px auto; max-width: 600px;">
+    <div class="background" style="background-color: #FFF; border: 1px solid #e4e5e6; border-radius: 8px; margin: 0px auto; max-width: 600px;">
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
         <tbody>
           <tr>
@@ -802,7 +804,7 @@
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:middle;" width="100%">
                             <tbody>
                               <tr>
-                                <td align="center" vertical-align="middle" style="font-size:0px;padding:0;word-break:break-word;">
+                                <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                     <tbody>
                                       <tr>
@@ -836,7 +838,7 @@
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:middle;" width="100%">
                             <tbody>
                               <tr>
-                                <td align="center" vertical-align="middle" style="font-size:0px;padding:0;word-break:break-word;">
+                                <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                     <tbody>
                                       <tr>
@@ -877,8 +879,8 @@
                                     <tbody>
                                       <tr>
                                         <td style="width:600px;">
-                                          <a href="{{ .ImageURL }}" target="_blank" style="color: #6E9FFF;">
-                                            <img height="auto" src="{{ .ImageURL }}" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="600">
+                                          <a href="{{ .ImageURL }}" target="_blank" style="color: #C34D26;">
+                                            <img alt src="{{ .ImageURL }}" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="600" height="auto">
                                           </a>
                                         </td>
                                       </tr>
@@ -913,7 +915,7 @@
                                     <tbody>
                                       <tr>
                                         <td style="width:600px;">
-                                          <img height="auto" src="cid:{{ .EmbeddedImage }}" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="600">
+                                          <img alt src="cid:{{ .EmbeddedImage }}" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="600" height="auto">
                                         </td>
                                       </tr>
                                     </tbody>
@@ -960,8 +962,7 @@
                               </tr>
                               <tr>
                                 <td align="left" class="txt" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                  <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: left; color: #000000;">
-                                    <mj-raw>{{ range $line := (splitList "\n" .Annotations.description) }}</mj-raw>
+                                  <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: left; color: #000000;"><mj-raw>{{ range $line := (splitList "\n" .Annotations.description) }}</mj-raw>
                                     {{ $line }}<br>
                                     <mj-raw>{{ end }}</mj-raw>
                                   </div>
@@ -1019,8 +1020,7 @@
                                     <tbody>
                                       <tr>
                                         <td align="left" class="txt" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                          <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: left; color: #000000;">
-                                            <mj-raw>{{ range $refID, $value := .Values }}</mj-raw>
+                                          <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: left; color: #000000;"><mj-raw>{{ range $refID, $value := .Values }}</mj-raw>
                                             {{ $refID }}={{ $value }}&nbsp; <mj-raw>{{ end }}</mj-raw>
                                           </div>
                                         </td>
@@ -1115,7 +1115,7 @@
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tbody>
                               <tr>
-                                <td align="center" vertical-align="middle" style="font-size:0px;padding:0;word-break:break-word;">
+                                <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                     <tbody>
                                       <tr>
@@ -1137,7 +1137,7 @@
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tbody>
                               <tr>
-                                <td align="center" vertical-align="middle" style="font-size:0px;padding:0;word-break:break-word;">
+                                <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                     <tbody>
                                       <tr>
@@ -1159,7 +1159,7 @@
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tbody>
                               <tr>
-                                <td align="center" vertical-align="middle" style="font-size:0px;padding:0;word-break:break-word;">
+                                <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                     <tbody>
                                       <tr>
@@ -1181,7 +1181,7 @@
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tbody>
                               <tr>
-                                <td align="center" vertical-align="middle" style="font-size:0px;padding:0;word-break:break-word;">
+                                <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                     <tbody>
                                       <tr>
@@ -1253,18 +1253,93 @@
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
         <tbody>
           <tr>
-            <td style="direction:ltr;font-size:0px;padding:20px 0;padding-top:10px;text-align:center;">
+            <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
               {{ __dangerouslyInjectHTML `<!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->` }}
               <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
-                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background-color:transparent;vertical-align:top;" width="100%">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                   <tbody>
                     <tr>
+                      <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
+                          <tbody>
+                            <tr>
+                              <td style="width:45px;">
+                                <img alt src="https://res.cloudinary.com/dkycfmmfx/image/upload/v1720510435/logo_fywl4c.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="45" height="auto">
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
                       <td align="center" class="txt" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                        <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: center; color: #000000;">&copy; {{ now | date "2006" }} Grafana Labs. Sent by <a href="{{ .AppUrl }}" style="color: #6E9FFF;">Grafana v{{ .BuildVersion }}</a>.</div>
+                        <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: center; color: #000000;">Kasernenstrasse 11, 8004 Zürich <br>
+                          <a href="mailto:ilja.mutschnik@sbb.ch" style="color: #C34D26;">ilja.mutschnik@sbb.ch</a>
+                        </div>
                       </td>
                     </tr>
                   </tbody>
                 </table>
+              </div>
+              {{ __dangerouslyInjectHTML `<!--[if mso | IE]></td></tr></table><![endif]-->` }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    {{ __dangerouslyInjectHTML `<!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->` }}
+    <div style="margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
+              {{ __dangerouslyInjectHTML `<!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="border-top-outlook" style="width:600px;" ><![endif]-->` }}
+              <div class="mj-column-per-100 mj-outlook-group-fix border-top" style="border-top: 1px solid #e4e5e6; font-size: 0; line-height: 0; text-align: left; display: inline-block; width: 100%; direction: ltr;">
+                {{ __dangerouslyInjectHTML `<!--[if mso | IE]><table border="0" cellpadding="0" cellspacing="0" role="presentation" ><tr><td style="vertical-align:top;width:300px;" ><![endif]-->` }}
+                <div class="mj-column-per-50 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;">
+                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                    <tbody>
+                      <tr>
+                        <td align="left" class="txt" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                          <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: left; color: #000000;"><a href="https://sprintometer.ch/" style="color: #C34D26;">sprintometer.ch</a></div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                {{ __dangerouslyInjectHTML `<!--[if mso | IE]></td><td style="vertical-align:top;width:300px;" ><![endif]-->` }}
+                <div class="mj-column-per-50 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;">
+                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                    <tbody>
+                      <tr>
+                        <td align="right" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                          {{ __dangerouslyInjectHTML `<!--[if mso | IE]><table align="right" border="0" cellpadding="0" cellspacing="0" role="presentation" ><tr><td><![endif]-->` }}
+                          <table align="right" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
+                            <tbody>
+                              <tr>
+                                <td style="padding:4px;vertical-align:middle;">
+                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-radius:3px;width:20px;">
+                                    <tbody>
+                                      <tr>
+                                        <td style="font-size:0;height:20px;vertical-align:middle;width:20px;">
+                                          <a href="https://www.linkedin.com/showcase/sprintometertool" target="_blank" style="color: #C34D26;">
+                                            <img alt height="20" src="https://res.cloudinary.com/dkycfmmfx/image/upload/v1720510435/linkedin_thpuvo.png" style="border-radius:3px;display:block;" width="20">
+                                          </a>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          {{ __dangerouslyInjectHTML `<!--[if mso | IE]></td></tr></table><![endif]-->` }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                {{ __dangerouslyInjectHTML `<!--[if mso | IE]></td></tr></table><![endif]-->` }}
               </div>
               {{ __dangerouslyInjectHTML `<!--[if mso | IE]></td></tr></table><![endif]-->` }}
             </td>
