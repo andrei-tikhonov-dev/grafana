@@ -1,5 +1,6 @@
-import React from 'react';
 import { SankeyNode } from 'd3-sankey';
+import React from 'react';
+
 import { useSankeyContext } from './SankeyContext';
 
 interface NumberProps {

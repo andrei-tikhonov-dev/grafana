@@ -1,6 +1,7 @@
-import React, { useRef } from 'react';
 import { css } from '@emotion/css';
 import { SankeyNode } from 'd3-sankey';
+import React, { useRef } from 'react';
+
 import { useTooltip } from './TooltipContext';
 
 interface NodeProps {

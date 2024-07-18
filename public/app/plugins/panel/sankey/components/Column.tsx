@@ -1,6 +1,7 @@
-import React from 'react';
 import { css } from '@emotion/css';
+import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+
 import { ToolbarButton } from '@grafana/ui';
 
 const ITEM_TYPE = 'COLUMN';

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Field } from '@grafana/data';
 
 export function useColumns(fields: Field[] = [], valueField: string) {

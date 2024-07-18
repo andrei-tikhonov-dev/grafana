@@ -1,12 +1,15 @@
-import React from 'react';
-import { Path } from './Path';
-import { Node } from './Node';
 import * as d3Sankey from 'd3-sankey';
 import { SankeyLink, SankeyNode } from 'd3-sankey';
-import { Headers } from './Headers';
-import { ValueLabel } from './ValueLabel';
+import React from 'react';
+
+
 import { MARGIN } from '../constants';
+
+import { Headers } from './Headers';
+import { Node } from './Node';
+import { Path } from './Path';
 import { TooltipProvider } from './TooltipContext';
+import { ValueLabel } from './ValueLabel';
 
 interface SankeyProps {
   data: any;

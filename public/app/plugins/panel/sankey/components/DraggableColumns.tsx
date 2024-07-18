@@ -1,9 +1,13 @@
 import React from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+
 import { ToolbarButtonRow } from '@grafana/ui';
-import { Column } from './Column';
+
 import { ColumnData } from '../types';
+
+import { Column } from './Column';
+
 
 export function DraggableColumns({
   columns,

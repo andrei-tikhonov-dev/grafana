@@ -1,7 +1,10 @@
-import React, { useRef } from 'react';
 import { SankeyLink } from 'd3-sankey';
-import { useTooltip } from './TooltipContext';
+import React, { useRef } from 'react';
+
 import { createD3Link } from '../utils/utils';
+
+import { useTooltip } from './TooltipContext';
+
 
 interface PathProps {
   data: SankeyLink<any, any>;

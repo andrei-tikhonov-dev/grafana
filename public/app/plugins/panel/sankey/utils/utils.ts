@@ -1,4 +1,5 @@
 import * as d3Sankey from 'd3-sankey';
+
 import { MARGIN } from '../constants';
 
 export function getContainerSize({
@@ -27,7 +28,7 @@ export function getContainerSize({
 
 export function abbreviate(str: string): string {
   return str
-    .split(' ')
+    ?.split(' ')
     .map((w) => w[0].toUpperCase())
     .join('');
 }

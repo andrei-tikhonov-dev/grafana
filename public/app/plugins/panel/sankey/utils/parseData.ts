@@ -1,25 +1,7 @@
 import { DataFrame, DataFrameView, Field, getFieldDisplayName, PanelData } from '@grafana/data';
+
 import { COLOR_ARRAY } from '../constants';
 import { Col0, ColumnData, PluginDataPath, PluginDataNode, Row, SankeyOptions } from '../types';
-
-function sortDataFrameFields(dataFrame: DataFrame, columnNames: string[]): DataFrame {
-  const columnNameToIndex = new Map<string, number>();
-  columnNames.forEach((name, index) => {
-    columnNameToIndex.set(name, index);
-  });
-
-  const sortedFields = dataFrame.fields.map((field) => {
-    const columnId = columnNameToIndex.get(field.name) ?? dataFrame.fields.length;
-    return { ...field, columnId };
-  });
-
-  sortedFields.sort((a, b) => (a.columnId ?? 0) - (b.columnId ?? 0));
-
-  return {
-    ...dataFrame,
-    fields: sortedFields,
-  };
-}
 
 export type ParseDataOptions = Pick<SankeyOptions, 'valueField' | 'dataDelimiter' | 'baseUrl'>;
 export function parseData(
@@ -32,7 +14,7 @@ export function parseData(
   const seriesFields = series.fields;
   const numFields = seriesFields.length - 1;
   const hiddenColumns = columnsControl.filter((column) => !column.show).map((column) => column.name);
-  const columnNames = getDisplayNames(seriesFields);
+  const columnNames = getColumnNames(seriesFields);
   const headerData = filterDisplayNames(columnNames, hiddenColumns);
   const valueFieldData = findValueField(data, valueField);
   const frame = new DataFrameView(series);
@@ -57,6 +39,25 @@ export function parseData(
   };
 }
 
+function sortDataFrameFields(dataFrame: DataFrame, columnNames: string[]): DataFrame {
+  const columnNameToIndex = new Map<string, number>();
+  columnNames.forEach((name, index) => {
+    columnNameToIndex.set(name, index);
+  });
+
+  const sortedFields = dataFrame.fields.map((field) => {
+    const columnId = columnNameToIndex.get(field.name) ?? dataFrame.fields.length;
+    return { ...field, columnId };
+  });
+
+  sortedFields.sort((a, b) => (a.columnId ?? 0) - (b.columnId ?? 0));
+
+  return {
+    ...dataFrame,
+    fields: sortedFields,
+  };
+}
+
 function getDataPathsWithTooltips(pluginDataLinks: PluginDataPath[], rows: Row[]): PluginDataPath[] {
   return pluginDataLinks.map((link) => {
     const row = rows.find((row) => row.name === link.id);
@@ -67,7 +68,7 @@ function getDataPathsWithTooltips(pluginDataLinks: PluginDataPath[], rows: Row[]
   });
 }
 
-function getDisplayNames(fields: Field[]): string[] {
+function getColumnNames(fields: Field[]): string[] {
   return fields.map((field) => getFieldDisplayName(field));
 }
 
@@ -102,21 +103,21 @@ function processFrame({
   valueFieldData?: Field;
   baseUrl?: string;
 }) {
-  const pluginDataLinks: PluginDataPath[] = [];
+  const pluginDataPaths: PluginDataPath[] = [];
   const pluginDataNodes: PluginDataNode[] = [];
   const col0: Col0[] = [];
   const rows: Row[] = [];
 
-  let rowId = 0;
-  let currentColor;
+  frame.forEach((row, rowId) => {
+    const currentLink: number[] = [];
+    let firstVisibleColumnId = 0;
 
-  frame.forEach((row) => {
-    let currentLink: number[] = [];
     for (let columnId = 0; columnId < numFields; columnId++) {
       const columnName = getFieldDisplayName(seriesFields[columnId]);
       const value = row[columnId];
 
       if (hiddenColumns.includes(columnName)) {
+        firstVisibleColumnId = columnId + 1;
         continue;
       }
 
@@ -135,9 +136,8 @@ function processFrame({
           link,
         };
         index = addNode(pluginDataNodes, node);
-        if (columnId === 0) {
-          currentColor = assignColor(col0);
-          col0.push({ name: name, index, color: currentColor });
+        if (columnId === firstVisibleColumnId) {
+          col0.push({ name: name, index, color: assignColor(col0) });
         }
       } else {
         pluginDataNodes[index].rowIds.push(rowId);
@@ -152,17 +152,15 @@ function processFrame({
         currentLink,
         valueFieldData,
         row[numFields],
-        pluginDataLinks,
+        pluginDataPaths,
         rowId,
         rowColor
       );
       rows.push({ name: String(rowId), display: rowDisplay });
     }
-
-    rowId++;
   });
 
-  return { pluginDataPaths: pluginDataLinks, pluginDataNodes, rows };
+  return { pluginDataPaths, pluginDataNodes, rows };
 }
 
 function parseNodeValue(
@@ -203,7 +201,7 @@ function buildRowDisplay(
   rowId: number,
   rowColor: any
 ): string {
-  let rowDisplay = `${pluginDataNodes[currentLink[0]].name}`;
+  let rowDisplay = `${pluginDataNodes[currentLink[0]]?.name}`;
 
   for (let i = 0; i < currentLink.length - 1; i++) {
     let displayValue = '';

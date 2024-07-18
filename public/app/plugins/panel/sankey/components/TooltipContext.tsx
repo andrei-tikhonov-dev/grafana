@@ -1,7 +1,10 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+
 import { Tooltip as GrafanaTooltip } from '@grafana/ui';
-import { Portal } from './Portal';
+
 import { useMousePosition } from '../hooks/useMousePosition';
+
+import { Portal } from './Portal';
 import { useSankeyContext } from './SankeyContext';
 
 const defaultStyle: React.CSSProperties = {
