@@ -151,14 +151,14 @@
                     <tr>
                       <td align="center" class="txt" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                         <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: center; color: #000000;">
-                          <h2>Welcome to the {{ .OrgName }}!</h2>
-                          <h2>Let’s get started.</h2>
+                          <h2>Welcome to {{ .OrgName }}</h2>
+                          <h2>Let’s get started!</h2>
                         </div>
                       </td>
                     </tr>
                     <tr>
                       <td align="left" class="txt" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                        <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: left; color: #000000;">You’ve been invited to join the {{ .OrgName }} by {{ .InvitedBy }}. To accept your invitation and join the team, please click the button below:</div>
+                        <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: left; color: #000000;">Dear {{ .Name }}, you’ve been invited to join {{ .OrgName }} by {{ .InvitedBy }}. To accept your invitation and join the team, please click the button below:</div>
                       </td>
                     </tr>
                     <tr>
@@ -167,7 +167,7 @@
                           <tbody>
                             <tr>
                               <td align="center" bgcolor="#DC562B" role="presentation" style="border:none;border-radius:8px;cursor:auto;mso-padding-alt:10px 25px;background:#DC562B;" valign="middle">
-                                <a href="{{ .LinkUrl }}" rel="noopener" style="display: inline-block; background: #DC562B; color: #ffffff; font-family: Inter, Helvetica, Arial; font-size: 13px; font-weight: normal; line-height: 120%; margin: 0; text-decoration: none; text-transform: none; padding: 10px 25px; mso-padding-alt: 0px; border-radius: 8px;" target="_blank"> Accept Invitation </a>
+                                <a href="{{ .LinkUrl }}" rel="noopener" style="display: inline-block; background: #DC562B; color: #ffffff; font-family: Inter, Helvetica, Arial; font-size: 13px; font-weight: normal; line-height: 120%; margin: 0; text-decoration: none; text-transform: none; padding: 10px 25px; mso-padding-alt: 0px; border-radius: 8px;" target="_blank"> Join </a>
                               </td>
                             </tr>
                           </tbody>
@@ -180,7 +180,7 @@
                           <tbody>
                             <tr>
                               <td style="width:455px;">
-                                <img alt src="https://res.cloudinary.com/dkycfmmfx/image/upload/v1720161685/presentaion_t3yotv.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="455" height="auto">
+                                <img alt src="https://res.cloudinary.com/dkycfmmfx/image/upload/v1721888019/presentaion_v4jdcf.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="455" height="auto">
                               </td>
                             </tr>
                           </tbody>
@@ -190,7 +190,7 @@
                     <tr>
                       <td align="left" class="txt" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                         <div style="font-family: Inter, Helvetica, Arial; font-size: 13px; line-height: 150%; text-align: left; color: #000000;">You can also copy and paste the link into your browser directly: <br>
-                          <a rel="noopener" href="{{ .AppUrl }}" style="color: #C34D26;">{{ .LinkUrl }}</a>
+                          <a rel="noopener" href="{{ .LinkUrl }}" style="color: #C34D26;">{{ .LinkUrl }}</a>
                         </div>
                       </td>
                     </tr>

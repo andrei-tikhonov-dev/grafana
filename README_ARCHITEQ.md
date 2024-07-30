@@ -1,5 +1,10 @@
 # Docker
 
+### Run docker compose
+```shell
+ docker compose up --build
+```
+
 ### Build docker image
 ```shell
 docker build --platform linux/amd64,linux/arm64 -t imarchiteq/sprintometer-ui:0.0.0 .
@@ -18,7 +23,7 @@ docker push imarchiteq/sprintometer-ui:0.0.0
 
 # Database
 
-### Postrges configuration example
+### Postgres configuration example
 ```dockerfile
 GF_DATABASE_TYPE=postgres
 GF_DATABASE_HOST=postgres:5432
@@ -34,6 +39,8 @@ ENV GF_DATABASE_TYPE=postgres
 
 # Database host:
 ENV GF_DATABASE_HOST=127.0.0.1:3306
+
+
 
 # Database name:
 ENV GF_DATABASE_NAME=grafana

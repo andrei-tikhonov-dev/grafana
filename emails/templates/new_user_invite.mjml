@@ -17,21 +17,21 @@
     <mj-section css-class="background">
       <mj-column>
         <mj-text align="center">
-          <h2 >Welcome to the {{ .OrgName }}!</h2>
-          <h2>Let’s get started.</h2>
+          <h2 >Welcome to {{ .OrgName }}</h2>
+          <h2>Let’s get started!</h2>
         </mj-text>
         <mj-text>
-          You’ve been invited to join the {{ .OrgName }} by {{ .InvitedBy }}. To accept your invitation and join the team, please click the button below:
+          Dear {{ .Name }}, you’ve been invited to join {{ .OrgName }} by {{ .InvitedBy }}. To accept your invitation and join the team, please click the button below:
         </mj-text>
         <mj-button href="{{ .LinkUrl }}" background-color="#DC562B"  border-radius="8px" >
-          Accept Invitation
+          Join
         </mj-button>
 
-        <mj-image padding="32px 24px" width="455px" src="https://res.cloudinary.com/dkycfmmfx/image/upload/v1720161685/presentaion_t3yotv.png" align="center" />
+        <mj-image padding="32px 24px" width="455px"  src="https://res.cloudinary.com/dkycfmmfx/image/upload/v1721888019/presentaion_v4jdcf.png" align="center" />
 
         <mj-text>
           You can also copy and paste the link into your browser directly: <br />
-          <a rel="noopener" href="{{ .AppUrl }}">{{ .LinkUrl }}</a>
+          <a rel="noopener" href="{{ .LinkUrl }}">{{ .LinkUrl }}</a>
         </mj-text>
       </mj-column>
     </mj-section>

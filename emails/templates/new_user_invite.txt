@@ -1,5 +1,4 @@
 [[HiddenSubject .Subject "[[.InvitedBy]] has invited you to the [[.OrgName]]"]]
 
-You’ve been invited to join the [[.OrgName]] by [[.InvitedBy]]. To accept your invitation and join the team, please click the link below:
- 
-[[.OrgName]]
+Dear [[.Name]], you’ve been invited to join [[.OrgName]] by [[.InvitedBy]]. To accept your invitation and join the team, please click the link:
+[[.LinkUrl]]
