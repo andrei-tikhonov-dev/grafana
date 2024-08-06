@@ -21,18 +21,13 @@
           <h2>Let’s get started!</h2>
         </mj-text>
         <mj-text>
-          Dear {{ .Name }}, you’ve been invited to join {{ .OrgName }} by {{ .InvitedBy }}. To accept your invitation and join the team, please click the button below:
-        </mj-text>
-        <mj-button href="{{ .LinkUrl }}" background-color="#DC562B"  border-radius="8px" >
-          Join
-        </mj-button>
-
-        <mj-image padding="32px 24px" width="455px"  src="https://res.cloudinary.com/dkycfmmfx/image/upload/v1721888019/presentaion_v4jdcf.png" align="center" />
-
-        <mj-text>
-          You can also copy and paste the link into your browser directly: <br />
+          Dear {{ .Name }}, you’ve been invited to join {{ .OrgName }} by {{ .InvitedBy }}. To accept your invitation and join the team, please click the link below:
+          <br>
           <a rel="noopener" href="{{ .LinkUrl }}">{{ .LinkUrl }}</a>
         </mj-text>
+
+        <mj-image padding="32px 24px" width="455px" rel="noopener" href="{{ .LinkUrl }}"  src="https://www.architeq.ch/images/presentaion910x615.png" align="center" />
+
       </mj-column>
     </mj-section>
     <mj-include path="./partials/layout/footer.mjml" />

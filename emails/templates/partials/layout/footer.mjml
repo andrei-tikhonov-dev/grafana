@@ -1,6 +1,6 @@
 <mj-section>
   <mj-column>
-    <mj-image padding="0" width="45px" src="https://res.cloudinary.com/dkycfmmfx/image/upload/v1720510435/logo_fywl4c.png" align="center" />
+    <mj-image padding="0" width="45px" src="https://www.architeq.ch/images/logo178x160.png" align="center" />
     <mj-text align="center">
       Kasernenstrasse 11, 8004 Zürich
     <br />
@@ -17,7 +17,7 @@
     </mj-column>
     <mj-column>
       <mj-social align="right">
-        <mj-social-element href="https://www.linkedin.com/showcase/sprintometertool" src="https://res.cloudinary.com/dkycfmmfx/image/upload/v1720510435/linkedin_thpuvo.png" />
+        <mj-social-element href="https://www.linkedin.com/showcase/sprintometertool" src="https://www.architeq.ch/images/linkedin73x72.png" />
       </mj-social>
     </mj-column>
   </mj-group>
