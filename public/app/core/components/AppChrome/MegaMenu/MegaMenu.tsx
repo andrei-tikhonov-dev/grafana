@@ -3,7 +3,7 @@ import { DOMAttributes } from '@react-types/shared';
 import React, { forwardRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { GrafanaTheme2 } from '@grafana/data';
+import { GrafanaTheme2, NavModelItem } from '@grafana/data';
 import { selectors } from '@grafana/e2e-selectors';
 import { CustomScrollbar, Icon, IconButton, useStyles2, Stack } from '@grafana/ui';
 import { useGrafana } from 'app/core/context/GrafanaContext';
@@ -14,6 +14,18 @@ import { MegaMenuItem } from './MegaMenuItem';
 import { enrichWithInteractionTracking, getActiveItem } from './utils';
 
 export const MENU_WIDTH = '300px';
+
+function hasItemWithId(items: NavModelItem[], targetId: string): boolean {
+  return items.some((item) => {
+    if (item.id === targetId) {
+      return true;
+    }
+    if (item.children && item.children.length > 0) {
+      return hasItemWithId(item.children, targetId);
+    }
+    return false;
+  });
+}
 
 export interface Props extends DOMAttributes {
   onClose: () => void;
@@ -27,8 +39,23 @@ export const MegaMenu = React.memo(
     const { chrome } = useGrafana();
     const state = chrome.useState();
 
+    // Sprintometer menu hack
+    const isAdminRole = hasItemWithId(navTree, 'admin/users');
+    let customNavTree = navTree;
+
+    if (!isAdminRole) {
+      customNavTree = navTree
+        .filter((item) => item.id !== 'alerting' && item.id !== 'cfg')
+        .map((item) => {
+          if (item.id === 'dashboards/browse') {
+            return { ...item, children: [] };
+          }
+          return item;
+        });
+    }
+
     // Remove profile + help from tree
-    const navItems = navTree
+    const navItems = customNavTree
       .filter((item) => item.id !== 'profile' && item.id !== 'help')
       .map((item) => enrichWithInteractionTracking(item, state.megaMenuDocked));
 
