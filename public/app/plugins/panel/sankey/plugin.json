@@ -1,6 +1,6 @@
 {
   "type": "panel",
-  "name": "Sankey Panel",
+  "name": "Architeq Sankey",
   "id": "architeq-sankey-panel",
   "info": {
     "description": "Sankey Panel Plugin for Grafana",

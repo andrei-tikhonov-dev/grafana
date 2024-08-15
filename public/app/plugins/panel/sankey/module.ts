@@ -1,6 +1,7 @@
 import { PanelPlugin, FieldConfigProperty, FieldOverrideContext, getFieldDisplayName } from '@grafana/data';
-import { SankeyOptions } from './types';
+
 import { Panel } from './Panel';
+import { SankeyOptions } from './types';
 
 const getOptions = async (context: FieldOverrideContext) => {
   const options = [];

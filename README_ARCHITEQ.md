@@ -5,21 +5,16 @@
  docker compose up --build
 ```
 
-### Build docker image
+### Build and publish docker file
 ```shell
-docker build --platform linux/amd64,linux/arm64 -t imarchiteq/sprintometer-ui:0.0.0 .
-# or
-docker buildx build --platform linux/amd64,linux/arm64 -t imarchiteq/sprintometer-ui:amd64 .
+docker buildx build --platform linux/amd64 -t imarchiteq/sprintometer-ui-test:11.1.2 --load .
+docker buildx build --platform linux/arm64 -t imarchiteq/sprintometer-ui-test:11.1.2 --load .
+
+docker login
+
+docker push imarchiteq/sprintometer-ui-test:11.1.2
 ```
 
-### Run docker file 
-```shell
-docker run -p 3000:3000 --name architeq-grafana-container imarchiteq/sprintometer-ui:0.0.0
-```
-### Publish docker image
-```shell
-docker push imarchiteq/sprintometer-ui:0.0.0
-```
 
 # Database
 
