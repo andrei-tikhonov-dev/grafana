@@ -4,29 +4,31 @@ import React, { ChangeEvent } from 'react';
 import { CustomCellRendererProps, IconButton, Input, useStyles2 } from '@grafana/ui';
 
 import { LoadingMode } from '../../constants';
-
-import { useDataCellContext } from './DataCellContext';
+import { useDataTableContext } from '../DataTable/DataTableContext';
 
 const getStyles = () => {
   return {
     cell: css`
-      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 0;
     `,
     inputCell: css`
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     `,
   };
 };
 
-export const DataCell = (props: CustomCellRendererProps) => {
+export const EditableCell = (props: CustomCellRendererProps) => {
   const styles = useStyles2(getStyles);
   const initialValue = Number(props.value);
   const seriesIndex = Number(props.field.state?.seriesIndex);
   const [value, setValue] = React.useState<number | string>(initialValue);
   const rowIndex = props.rowIndex;
-  const { addItem, removeItem, hasItem, updateData, loading } = useDataCellContext();
+  const { addItem, removeItem, hasItem, updateData, loading } = useDataTableContext();
 
   const handleEdit = () => {
     addItem(seriesIndex, rowIndex);
@@ -37,6 +39,9 @@ export const DataCell = (props: CustomCellRendererProps) => {
   };
 
   const handleSave = async () => {
+    if (!updateData) {
+      return;
+    }
     const isUpdated = await updateData(Number(value), props);
     if (isUpdated) {
       handleClose();
@@ -56,8 +61,8 @@ export const DataCell = (props: CustomCellRendererProps) => {
       <IconButton name="times" size="xs" tooltip="Close" onClick={handleClose} />
     </div>
   ) : (
-    <div onClick={handleEdit} className={styles.cell}>
-      {value}
+    <div className={styles.cell}>
+      {value} <IconButton aria-label="Edit" size="xs" name="edit" onClick={handleEdit} />
     </div>
   );
 };

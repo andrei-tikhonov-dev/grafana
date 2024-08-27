@@ -1,24 +1,26 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 import { LoadingMode } from '../../constants';
-import { UpdateDataHandler } from '../../types';
+import { UpdateHandler } from '../../types';
 
 interface DataCellContextType {
   data: Record<number, number[]>;
-  updateData: UpdateDataHandler;
   addItem: (seriesIndex: number, item: number) => void;
   removeItem: (seriesIndex: number, item: number) => void;
   hasItem: (seriesIndex: number, item: number) => boolean;
+  updateData?: UpdateHandler;
   loading?: LoadingMode;
+  baseUrl?: string;
 }
 
-const DataCellContext = createContext<DataCellContextType | undefined>(undefined);
+const DataTableContext = createContext<DataCellContextType | undefined>(undefined);
 
 export const DataCellProvider: React.FC<{
   children: ReactNode;
-  onDataUpdate: UpdateDataHandler;
+  onUpdate?: UpdateHandler;
   loading?: LoadingMode;
-}> = ({ children, onDataUpdate, loading }) => {
+  baseUrl?: string;
+}> = ({ children, onUpdate, loading, baseUrl }) => {
   const [data, setData] = useState<Record<number, number[]>>({});
 
   const addItem = (seriesIndex: number, item: number) => {
@@ -47,14 +49,14 @@ export const DataCellProvider: React.FC<{
   };
 
   return (
-    <DataCellContext.Provider value={{ data, addItem, removeItem, hasItem, updateData: onDataUpdate, loading }}>
+    <DataTableContext.Provider value={{ data, addItem, removeItem, hasItem, updateData: onUpdate, baseUrl, loading }}>
       {children}
-    </DataCellContext.Provider>
+    </DataTableContext.Provider>
   );
 };
 
-export const useDataCellContext = (): DataCellContextType => {
-  const context = useContext(DataCellContext);
+export const useDataTableContext = (): DataCellContextType => {
+  const context = useContext(DataTableContext);
   if (!context) {
     throw new Error('useDataCellContext must be used within a DataCellProvider');
   }

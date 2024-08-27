@@ -1,5 +1,11 @@
 import { SelectableValue } from '@grafana/data';
 
+export const enum TableType {
+  HistoricalData = 'HistoricalData',
+  CurrentSprint = 'CurrentSprint',
+  SprintPlaning = 'SprintPlaning',
+}
+
 export const enum RequestMethod {
   DELETE = 'DELETE',
   PATCH = 'PATCH',
@@ -7,7 +13,7 @@ export const enum RequestMethod {
   PUT = 'PUT',
 }
 
-export enum LoadingMode {
+export const enum LoadingMode {
   NONE = '',
   INITIAL = 'initial',
   UPDATE = 'update',
