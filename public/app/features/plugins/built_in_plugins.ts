@@ -25,6 +25,8 @@ const alertmanagerPlugin = async () =>
 import { config } from '@grafana/runtime';
 import * as alertListPanel from 'app/plugins/panel/alertlist/module';
 import * as annoListPanel from 'app/plugins/panel/annolist/module';
+import * as architeqTable from 'app/plugins/panel/architeq-table/module';
+import * as architeqTimeline from 'app/plugins/panel/architeq-timeline/module';
 import * as barChartPanel from 'app/plugins/panel/barchart/module';
 import * as barGaugePanel from 'app/plugins/panel/bargauge/module';
 import * as candlestickPanel from 'app/plugins/panel/candlestick/module';
@@ -39,6 +41,7 @@ import * as livePanel from 'app/plugins/panel/live/module';
 import * as logsPanel from 'app/plugins/panel/logs/module';
 import * as newsPanel from 'app/plugins/panel/news/module';
 import * as pieChartPanel from 'app/plugins/panel/piechart/module';
+import * as sankeyPanel from 'app/plugins/panel/sankey/module';
 import * as statPanel from 'app/plugins/panel/stat/module';
 import * as stateTimelinePanel from 'app/plugins/panel/state-timeline/module';
 import * as statusHistoryPanel from 'app/plugins/panel/status-history/module';
@@ -48,8 +51,6 @@ import * as timeseriesPanel from 'app/plugins/panel/timeseries/module';
 import * as tracesPanel from 'app/plugins/panel/traces/module';
 import * as trendPanel from 'app/plugins/panel/trend/module';
 import * as welcomeBanner from 'app/plugins/panel/welcome/module';
-import * as sankeyPanel from 'app/plugins/panel/sankey/module';
-import * as architeqTable from 'app/plugins/panel/architeq-table/module';
 
 // Async loaded panels
 const geomapPanel = async () => await import(/* webpackChunkName: "geomapPanel" */ 'app/plugins/panel/geomap/module');
@@ -99,6 +100,7 @@ const builtInPlugins: Record<string, System.Module | (() => Promise<System.Modul
   'core:plugin/alertlist': alertListPanel,
   'core:plugin/sankey': sankeyPanel,
   'core:plugin/architeq-table': architeqTable,
+  'core:plugin/architeq-timeline': architeqTimeline,
   'core:plugin/annolist': annoListPanel,
   'core:plugin/heatmap': heatmapPanel,
   'core:plugin/table': tablePanel,

@@ -1,6 +1,9 @@
+import { css } from '@emotion/css';
 import React from 'react';
 
+import { GrafanaTheme2 } from '@grafana/data';
 import { PanelDataErrorView } from '@grafana/runtime';
+import { useStyles2 } from '@grafana/ui';
 
 import { TableType } from '../constants';
 import { CurrentSprint } from '../features/CurrentSprint';
@@ -16,6 +19,16 @@ const TablePanels = {
 
 export const TablePanel: React.FC<TablePanelProps> = (props) => {
   const { data, fieldConfig, id } = props;
+  const getStyles = (theme: GrafanaTheme2) => {
+    return {
+      container: css`
+        overflow: hidden;
+        max-width: ${props.width}px;
+        max-height: ${props.height}px;
+      `,
+    };
+  };
+  const styles = useStyles2(getStyles);
 
   if (data.series.length === 0) {
     return <PanelDataErrorView fieldConfig={fieldConfig} panelId={id} data={data} />;
@@ -23,5 +36,9 @@ export const TablePanel: React.FC<TablePanelProps> = (props) => {
 
   const TablePanel = TablePanels[props.options.tableType];
 
-  return <TablePanel {...props} />;
+  return (
+    <div className={styles.container}>
+      <TablePanel {...props} />
+    </div>
+  );
 };

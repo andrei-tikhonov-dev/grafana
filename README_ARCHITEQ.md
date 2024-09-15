@@ -7,12 +7,12 @@
 
 ### Build and publish docker file
 ```shell
-docker buildx build --platform linux/amd64 -t imarchiteq/sprintometer-ui-test:11.1.7 --load .
+docker buildx build --platform linux/amd64 -t imarchiteq/sprintometer-ui-test:11.1.9 --load .
 # or --platform linux/arm64
 
 docker login
 
-docker push imarchiteq/sprintometer-ui-test:11.1.7
+docker push imarchiteq/sprintometer-ui-test:11.1.9
 ```
 
 

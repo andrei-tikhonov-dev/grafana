@@ -124,6 +124,7 @@ export const SprintPlaningInfo: React.FC<Props> = ({
           secondValue={personDaysReported}
           secondValueEditable
           icon="users-alt"
+          valuesAreNotEqualAttention="Attention: Total Person-Days from Outlook and Reported values are inconsistent."
           onValueUpdate={({ firstValue, secondValue }) => {
             onUpdate?.(secondValue);
           }}
