@@ -1,11 +1,20 @@
 import { DataFrame } from '@grafana/data';
 
+import { getCheckboxFieldConfig } from '../../components/CheckboxCell';
 import { getEditableCellFieldConfig } from '../../components/EditableCell';
 import { updateFieldConfig } from '../../utils';
 
+import { HistoricDataColumns } from './constants';
 import { UpdatePayload } from './types';
 
 export const mapPayload = (value: number, id: string, propertyName: string): UpdatePayload => {
+  if (propertyName === HistoricDataColumns.RelevantForVelocity) {
+    return {
+      sprintId: id,
+      propertyName,
+      isRelevantForVelocity: value === 1,
+    };
+  }
   return {
     sprintId: id,
     propertyName,
@@ -18,5 +27,12 @@ export function configData(dataFrame: DataFrame, editableFields?: string[], hidd
     ...dataFrame,
     fields: dataFrame.fields.filter((field) => !hiddenFields?.includes(field.name)),
   };
-  return updateFieldConfig(visibleDataFrame, editableFields || [], getEditableCellFieldConfig());
+
+  const editableDataFrame = updateFieldConfig(visibleDataFrame, editableFields || [], getEditableCellFieldConfig());
+
+  return updateFieldConfig(
+    editableDataFrame,
+    [HistoricDataColumns.RelevantForVelocity],
+    getCheckboxFieldConfig({ align: 'right' })
+  );
 }

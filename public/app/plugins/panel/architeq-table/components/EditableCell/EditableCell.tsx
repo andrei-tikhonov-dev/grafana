@@ -1,34 +1,55 @@
 import { css } from '@emotion/css';
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 
-import { CustomCellRendererProps, IconButton, Input, useStyles2 } from '@grafana/ui';
+import { GrafanaTheme2 } from '@grafana/data';
+import { CustomCellRendererProps, IconButton, useStyles2 } from '@grafana/ui';
 
 import { LoadingMode } from '../../constants';
 import { useDataTableContext } from '../DataTable/DataTableContext';
 
-const getStyles = () => {
+const getStyles = (_: GrafanaTheme2) => {
   return {
     cell: css`
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 20px 0;
     `,
     inputCell: css`
       display: flex;
       align-items: center;
       gap: 6px;
     `,
+    input: css`
+      height: 25px;
+      text-align: right;
+      background-color: transparent;
+      border-bottom: 1px solid;
+      outline: none;
+    `,
+    inputButtons: css`
+      width: 25px;
+    `,
   };
 };
 
 export const EditableCell = (props: CustomCellRendererProps) => {
   const styles = useStyles2(getStyles);
+  const cellRef = useRef<HTMLDivElement>(null);
+  const [parentWidth, setParentWidth] = useState<number | undefined>(undefined);
   const initialValue = Number(props.value);
   const seriesIndex = Number(props.field.state?.seriesIndex);
   const [value, setValue] = React.useState<number | string>(initialValue);
   const rowIndex = props.rowIndex;
   const { addItem, removeItem, hasItem, updateData, loading } = useDataTableContext();
+
+  useEffect(() => {
+    if (cellRef.current) {
+      const parentParentElement = cellRef.current.parentElement?.parentElement;
+      if (parentParentElement) {
+        setParentWidth(parentParentElement.offsetWidth);
+      }
+    }
+  }, [cellRef.current]);
 
   const handleEdit = () => {
     addItem(seriesIndex, rowIndex);
@@ -50,7 +71,9 @@ export const EditableCell = (props: CustomCellRendererProps) => {
 
   return hasItem(seriesIndex, rowIndex) ? (
     <div className={styles.inputCell}>
-      <Input
+      <input
+        className={styles.input}
+        style={{ width: `calc(${parentWidth}px - 55px)` }}
         width={8}
         value={value}
         onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setValue(value)}
@@ -61,7 +84,7 @@ export const EditableCell = (props: CustomCellRendererProps) => {
       <IconButton name="times" size="xs" tooltip="Close" onClick={handleClose} />
     </div>
   ) : (
-    <div className={styles.cell}>
+    <div className={styles.cell} ref={cellRef}>
       {value} <IconButton aria-label="Edit" size="xs" name="edit" onClick={handleEdit} />
     </div>
   );

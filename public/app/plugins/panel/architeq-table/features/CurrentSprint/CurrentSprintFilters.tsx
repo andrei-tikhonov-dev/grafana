@@ -2,7 +2,9 @@ import { css } from '@emotion/css';
 import React, { useState, ChangeEvent } from 'react';
 
 import { SelectableValue } from '@grafana/data';
-import { Input, Select, useStyles2 } from '@grafana/ui';
+import { Input, MultiSelect, Select, useStyles2 } from '@grafana/ui';
+
+import { SprintPlaningColumns } from '../SprintPlaning/constants';
 
 import { CurrentSprintColumns } from './constants';
 import { Filters } from './types';
@@ -31,7 +33,7 @@ type Props = {
 
 export const CurrentSprintFilters: React.FC<Props> = ({ assignees, statuses, onChange }) => {
   const [filter, setFilter] = useState<Filters>({
-    teamMember: '',
+    teamMembers: [],
     status: '',
     search: '',
   });
@@ -43,8 +45,9 @@ export const CurrentSprintFilters: React.FC<Props> = ({ assignees, statuses, onC
     onChange(newFilter);
   };
 
-  const handleAssigneeChange = (selected: SelectableValue<string> | null) => {
-    const newFilter = { ...filter, teamMember: selected?.value || '' };
+  const handleAssigneesChange = (selected: Array<SelectableValue<string>>) => {
+    const selectedValues = selected.map((item) => item.value || '');
+    const newFilter = { ...filter, teamMembers: selectedValues };
     setFilter(newFilter);
     onChange(newFilter);
   };
@@ -61,11 +64,11 @@ export const CurrentSprintFilters: React.FC<Props> = ({ assignees, statuses, onC
         <Input value={filter.search} onChange={handleInputChange} placeholder="Search" />
       </div>
       <div className={styles.input}>
-        <Select
+        <MultiSelect
           options={assignees.map((teamMember) => ({ label: teamMember, value: teamMember }))}
-          value={filter.teamMember ? { label: filter.teamMember, value: filter.teamMember } : null}
-          onChange={handleAssigneeChange}
-          placeholder={CurrentSprintColumns.TeamMember}
+          value={filter.teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}
+          onChange={handleAssigneesChange}
+          placeholder={SprintPlaningColumns.TeamMember}
           isClearable
         />
       </div>

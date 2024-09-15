@@ -2,10 +2,10 @@ import { css } from '@emotion/css';
 import React, { useState } from 'react';
 
 import { SelectableValue } from '@grafana/data';
-import { Select, useStyles2 } from '@grafana/ui';
+import { MultiSelect, useStyles2 } from '@grafana/ui';
 
 import { SprintPlaningColumns } from './constants';
-import { Filters } from './types';
+import { SprintPlaningFiltersType } from './types';
 
 export const FILTER_HEIGHT = 45;
 
@@ -25,15 +25,16 @@ const getStyles = () => {
 
 type Props = {
   assignees: string[];
-  onChange: (filter: Filters) => void;
+  onChange: (filter: SprintPlaningFiltersType) => void;
 };
 
 export const SprintPlaningFilters: React.FC<Props> = ({ assignees, onChange }) => {
-  const [filter, setFilter] = useState<Filters>({ teamMember: '' });
+  const [filter, setFilter] = useState<SprintPlaningFiltersType>({ teamMembers: [] });
   const styles = useStyles2(getStyles);
 
-  const handleAssigneeChange = (selected: SelectableValue<string> | null) => {
-    const newFilter = { ...filter, teamMember: selected?.value || '' };
+  const handleAssigneesChange = (selected: Array<SelectableValue<string>>) => {
+    const selectedValues = selected.map((item) => item.value || '');
+    const newFilter = { ...filter, teamMembers: selectedValues };
     setFilter(newFilter);
     onChange(newFilter);
   };
@@ -41,10 +42,10 @@ export const SprintPlaningFilters: React.FC<Props> = ({ assignees, onChange }) =
   return (
     <div className={styles.container}>
       <div className={styles.input}>
-        <Select
+        <MultiSelect
           options={assignees.map((teamMember) => ({ label: teamMember, value: teamMember }))}
-          value={filter.teamMember ? { label: filter.teamMember, value: filter.teamMember } : null}
-          onChange={handleAssigneeChange}
+          value={filter.teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}
+          onChange={handleAssigneesChange}
           placeholder={SprintPlaningColumns.TeamMember}
           isClearable
         />

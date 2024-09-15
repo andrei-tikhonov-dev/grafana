@@ -1,5 +1,6 @@
 export interface UpdatePayload {
   sprintId: string;
   propertyName: string;
-  value: number;
+  value?: number;
+  isRelevantForVelocity?: boolean;
 }

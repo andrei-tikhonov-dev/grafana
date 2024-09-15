@@ -6,15 +6,15 @@ import { Icon, useStyles2 } from '@grafana/ui';
 
 import { LoadingMode } from '../../constants';
 
-import { InfoCard } from './InfoCard';
-import { Info } from './types';
+import { SprintPlaningInfoCard } from './SprintPlaningInfoCard';
+import { SprintPlaningInfoType } from './types';
 
-export const INFO_HEIGHT = 220;
+export const INFO_HEIGHT = 280;
 
 const getStyles = (theme: GrafanaTheme2) => {
   return {
     container: css`
-      height: 200px;
+      height: ${INFO_HEIGHT}px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -57,23 +57,12 @@ const getStyles = (theme: GrafanaTheme2) => {
   };
 };
 
-interface Props extends Info {
+interface Props extends SprintPlaningInfoType {
   onUpdate?: (value?: number) => void;
   loading?: LoadingMode;
 }
 
-export const SprintPlaningInfo: React.FC<Props> = ({
-  sprintName,
-  storyPointsAssigned,
-  storyPointsAvailable,
-  sprintStatus,
-  sprintStatusMessage,
-  onUpdate,
-  startDate,
-  endDate,
-  personDaysScheduled,
-  personDaysReported,
-}) => {
+export const SprintPlaningInfo: React.FC<Props> = (props) => {
   const styles = useStyles2(getStyles);
 
   const StatusIcons: Record<string, ReactElement> = {
@@ -94,48 +83,31 @@ export const SprintPlaningInfo: React.FC<Props> = ({
       <div className={styles.info}>
         <div className={styles.infoItem}>
           <strong className={styles.label}>Sprint: </strong>
-          {sprintName}
+          {props.sprintName}
         </div>
         <div className={styles.infoItem}>
           <strong className={styles.label}>
             <Icon name="calendar-alt" size="sm" /> Start:{' '}
           </strong>
-          {dateTime(startDate).format('DD MMM, YYYY')}
+          {dateTime(props.startDate).format('DD MMM, YYYY')}
         </div>
         <div className={styles.infoItem}>
           <strong className={styles.label}>
             <Icon name="calendar-alt" size="sm" /> End:{' '}
           </strong>
-          {dateTime(endDate).format('DD MMM, YYYY')}
+          {dateTime(props.endDate).format('DD MMM, YYYY')}
         </div>
       </div>
 
       <div className={styles.statusLine}>
-        {StatusIcons[sprintStatus]}
-        {sprintStatusMessage}
+        {StatusIcons[props.sprintStatus]}
+        {props.sprintStatusMessage}
       </div>
 
       <div className={styles.cardContainer}>
-        <InfoCard
-          title="Total Person-Days"
-          firstLabel="Scheduled"
-          secondLabel="Reported"
-          firstValue={personDaysScheduled}
-          secondValue={personDaysReported}
-          secondValueEditable
-          icon="users-alt"
-          valuesAreNotEqualAttention="Attention: Total Person-Days from Outlook and Reported values are inconsistent."
-          onValueUpdate={({ firstValue, secondValue }) => {
-            onUpdate?.(secondValue);
-          }}
-        />
-        <InfoCard
-          title="Total Story Points"
-          firstLabel="Assigned"
-          secondLabel="Available"
-          firstValue={storyPointsAssigned}
-          secondValue={storyPointsAvailable}
-          icon="chart-line"
+        <SprintPlaningInfoCard
+          {...props}
+          valuesAreNotEqualAttention="Attention: Total person-days from calendar and reported values are inconsistent."
         />
       </div>
     </div>

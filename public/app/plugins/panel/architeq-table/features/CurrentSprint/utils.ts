@@ -5,7 +5,7 @@ import { getIssueTypeCellFieldConfig } from '../../components/IssueTypeCell';
 import { getLinkCellFieldConfig } from '../../components/LinkCell';
 import { getSimpleCellFieldConfig } from '../../components/SimpleCell';
 import { getUserCellFieldConfig } from '../../components/UserCell';
-import { updateFieldConfig } from '../../utils';
+import { updateFieldConfig, wrapTeamMemberField } from '../../utils';
 
 import { CurrentSprintColumns } from './constants';
 import { Filters } from './types';
@@ -20,9 +20,11 @@ export function configData(dataFrame: DataFrame): DataFrame {
     { fields: [CurrentSprintColumns.InProgress], config: getDaysCellFieldConfig({ width: 100, align: 'left' }) },
   ];
 
+  const dataWithTeamMembers = wrapTeamMemberField(dataFrame);
+
   return fieldConfigs.reduce(
     (configuredData, { fields, config }) => updateFieldConfig(configuredData, fields, config),
-    dataFrame
+    dataWithTeamMembers
   );
 }
 
@@ -56,7 +58,10 @@ export function filterData(data: DataFrame, filters: Filters) {
 
   const filteredIndexes = nameField?.values.map((_: any, index: number) => {
     const matchesStatus = filters.status ? statusField?.values[index] === filters.status : true;
-    const matchesAssignee = filters.teamMember ? nameField.values[index].name === filters.teamMember : true;
+    const matchesAssignee =
+      filters.teamMembers && filters.teamMembers.length > 0
+        ? filters.teamMembers.includes(nameField.values[index].name)
+        : true;
     const matchesSearch = filters.search
       ? includesCaseInsensitive(nameField.values[index].name, filters.search) ||
         includesCaseInsensitive(identifierField?.values[index], filters.search) ||

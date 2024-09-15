@@ -1,5 +1,5 @@
 export type Filters = {
-  teamMember?: string;
+  teamMembers: string[];
   status?: string;
   search?: string;
 };

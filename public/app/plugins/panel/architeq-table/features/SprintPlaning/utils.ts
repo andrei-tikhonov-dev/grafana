@@ -4,26 +4,30 @@ import { getCapacityCellFieldConfig } from '../../components/CapacityCell';
 import { getEditableCellFieldConfig } from '../../components/EditableCell';
 import { getSimpleCellFieldConfig } from '../../components/SimpleCell';
 import { getUserCellFieldConfig } from '../../components/UserCell';
-import { updateFieldConfig } from '../../utils';
-import { Filters } from '../CurrentSprint/types';
+import { TeamMember } from '../../types';
+import { updateFieldConfig, wrapCapacityField, wrapTeamMemberField } from '../../utils';
 
 import { SprintPlaningColumns } from './constants';
+import { SprintPlaningFiltersType } from './types';
 
 export function configData(dataFrame: DataFrame): DataFrame {
   const fieldConfigs = [
-    { fields: [SprintPlaningColumns.TeamMember], config: getUserCellFieldConfig({}) },
-    { fields: [SprintPlaningColumns.ScheduledPD], config: getSimpleCellFieldConfig({ align: 'right' }) },
-    { fields: [SprintPlaningColumns.SelfReportedPD], config: getEditableCellFieldConfig({ align: 'right' }) },
-    {
-      fields: [SprintPlaningColumns.AssignedAvailableCapacitySP],
-      config: getCapacityCellFieldConfig({ align: 'right' }),
-    },
+    { field: SprintPlaningColumns.TeamMember, config: getUserCellFieldConfig({}) },
+    { field: SprintPlaningColumns.ScheduledPD, config: getSimpleCellFieldConfig({ align: 'right' }) },
+    { field: SprintPlaningColumns.SelfReportedPD, config: getEditableCellFieldConfig({ align: 'right' }) },
+    { field: SprintPlaningColumns.AssignedAvailableCapacitySP, config: getCapacityCellFieldConfig({ align: 'right' }) },
   ];
 
-  return fieldConfigs.reduce(
-    (configuredData, { fields, config }) => updateFieldConfig(configuredData, fields, config),
-    dataFrame
-  );
+  const wrapHandlers: Record<string, (df: DataFrame, field: string) => DataFrame> = {
+    [SprintPlaningColumns.TeamMember]: wrapTeamMemberField,
+    [SprintPlaningColumns.AssignedAvailableCapacitySP]: wrapCapacityField,
+  };
+
+  return fieldConfigs.reduce((df, { field, config }) => {
+    const wrapHandler: (df: DataFrame, field: string) => DataFrame = wrapHandlers[field];
+    const wrappedDf = wrapHandler ? wrapHandler(df, field) : df;
+    return updateFieldConfig(wrappedDf, [field], config);
+  }, dataFrame);
 }
 
 export function getFilterOptions(data: DataFrame) {
@@ -40,11 +44,11 @@ export function getFilterOptions(data: DataFrame) {
   };
 }
 
-export function filterData(data: DataFrame, filters: Filters) {
+export function filterData(data: DataFrame, filters: SprintPlaningFiltersType) {
   const teamMemberField = data.fields.find((field: any) => field.name === SprintPlaningColumns.TeamMember);
 
-  const filteredIndexes = teamMemberField?.values.map((_: any, index: number) => {
-    return filters.teamMember ? teamMemberField.values[index].name === filters.teamMember : true;
+  const filteredIndexes = teamMemberField?.values.map((value: TeamMember) => {
+    return filters.teamMembers && filters.teamMembers.length > 0 ? filters.teamMembers.includes(value.name) : true;
   });
 
   return {

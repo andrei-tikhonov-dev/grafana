@@ -1,6 +1,7 @@
 import { DataFrame, FieldConfig, FieldOverrideContext, getFieldDisplayName } from '@grafana/data';
 
 import { TableType } from '../constants';
+import { Capacity, CapacityClass, TeamMember, TeamMemberClass } from '../types';
 
 export function getCircularReplacer() {
   const seen = new WeakSet();
@@ -67,5 +68,35 @@ export function updateFieldConfig(
   return {
     ...dataFrame,
     fields: updatedFields,
+  };
+}
+
+export function wrapTeamMemberField(data: DataFrame, fieldName = 'Team member'): DataFrame {
+  return {
+    ...data,
+    fields: data.fields.map((field: DataFrame['fields'][number]) => {
+      if (field.name === fieldName && field.type === 'other') {
+        return {
+          ...field,
+          values: field.values.map((value: TeamMember) => new TeamMemberClass(value)),
+        };
+      }
+      return field;
+    }),
+  };
+}
+
+export function wrapCapacityField(data: DataFrame, fieldName: string): DataFrame {
+  return {
+    ...data,
+    fields: data.fields.map((field: DataFrame['fields'][number]) => {
+      if (field.name === fieldName && field.type === 'other') {
+        return {
+          ...field,
+          values: field.values.map((value: Capacity) => new CapacityClass(value)),
+        };
+      }
+      return field;
+    }),
   };
 }

@@ -10,7 +10,7 @@ import { configData, filterData, getFilterOptions } from './utils';
 interface Props extends TablePanelProps {}
 
 export const CurrentSprint: React.FC<Props> = ({ options, data, width, height }) => {
-  const [filters, setFilters] = useState<Filters>({});
+  const [filters, setFilters] = useState<Filters>({ teamMembers: [] });
   const dataFrame = data.series[0];
   const configuredData = configData(dataFrame);
   const handleOnChange = (filters: Filters) => {

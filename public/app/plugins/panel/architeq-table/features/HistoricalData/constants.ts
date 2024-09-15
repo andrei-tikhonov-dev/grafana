@@ -4,4 +4,5 @@ export const enum HistoricDataColumns {
   StoryPoints = 'Story points',
   Capacity = 'Capacity',
   Happiness = 'Happiness',
+  RelevantForVelocity = 'Relevant for velocity',
 }

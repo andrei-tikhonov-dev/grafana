@@ -1,8 +1,8 @@
-export type Filters = {
-  teamMember?: string;
+export type SprintPlaningFiltersType = {
+  teamMembers: string[];
 };
 
-export interface Info {
+export interface SprintPlaningInfoType {
   sprintName: string;
   sprintStatus: string;
   sprintStatusMessage: string;

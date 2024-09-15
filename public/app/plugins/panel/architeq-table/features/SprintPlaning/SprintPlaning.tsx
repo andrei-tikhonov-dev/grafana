@@ -9,22 +9,22 @@ import { TablePanelProps } from '../../types';
 import { FILTER_HEIGHT, SprintPlaningFilters } from './SprintPlaningFilters';
 import { INFO_HEIGHT, SprintPlaningInfo } from './SprintPlaningInfo';
 import { SprintPlaningColumns } from './constants';
-import { Filters, Info, SprintPlaningPayload } from './types';
+import { SprintPlaningFiltersType, SprintPlaningInfoType, SprintPlaningPayload } from './types';
 import { configData, filterData, getFilterOptions } from './utils';
 
 interface Props extends TablePanelProps {}
 
 export const SprintPlaning: React.FC<Props> = ({ options, data, width, height }) => {
-  const [filters, setFilters] = useState<Filters>({});
+  const [filters, setFilters] = useState<SprintPlaningFiltersType>({ teamMembers: [] });
   const dataFrame = data.series[0];
   const configuredData = configData(dataFrame);
-  const handleOnChange = (filters: Filters) => {
+  const handleOnChange = (filters: SprintPlaningFiltersType) => {
     setFilters(filters);
   };
 
   const { names } = getFilterOptions(configuredData);
   const filteredData = filterData(configuredData, filters);
-  const info = dataFrame.meta?.custom as Info;
+  const info = dataFrame.meta?.custom as SprintPlaningInfoType;
 
   const { update, loading } = useRequest<SprintPlaningPayload>(options);
 
