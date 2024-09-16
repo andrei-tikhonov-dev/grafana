@@ -9,7 +9,7 @@ import { LoadingMode } from '../../constants';
 import { SprintPlaningInfoCard } from './SprintPlaningInfoCard';
 import { SprintPlaningInfoType } from './types';
 
-export const INFO_HEIGHT = 280;
+export const INFO_HEIGHT = 260;
 
 const getStyles = (theme: GrafanaTheme2) => {
   return {

@@ -17,6 +17,7 @@ interface Props extends TablePanelProps {}
 export const SprintPlaning: React.FC<Props> = ({ options, data, width, height }) => {
   const [filters, setFilters] = useState<SprintPlaningFiltersType>({ teamMembers: [] });
   const dataFrame = data.series[0];
+  const tableHeight = height - FILTER_HEIGHT - INFO_HEIGHT - 20;
   const configuredData = configData(dataFrame);
   const handleOnChange = (filters: SprintPlaningFiltersType) => {
     setFilters(filters);
@@ -56,7 +57,7 @@ export const SprintPlaning: React.FC<Props> = ({ options, data, width, height })
       <SprintPlaningFilters onChange={handleOnChange} assignees={names} />
       <DataTable
         width={width}
-        height={height - FILTER_HEIGHT - INFO_HEIGHT}
+        height={tableHeight}
         data={filteredData}
         baseUrl={options.baseUrl}
         loading={loading}
