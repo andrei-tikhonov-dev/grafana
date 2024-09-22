@@ -11,6 +11,9 @@ export interface PanelOptions {
   };
   tableType: TableType;
   editableFields?: string[];
+  updateUrl?: string;
+  createUrl?: string;
+  deleteUrl?: string;
   idField?: string;
 
   baseUrl?: string;
@@ -21,7 +24,7 @@ export interface HeaderParameter {
   value: string;
 }
 
-export type UpdateHandler = (value: number, cellProps: CustomCellRendererProps) => Promise<boolean>;
+export type UpdateHandler = (value: number | string, cellProps: CustomCellRendererProps) => Promise<boolean>;
 
 export interface TablePanelProps extends PanelProps<PanelOptions> {}
 
@@ -75,3 +78,14 @@ export class CapacityClass implements Capacity {
     return `${this.assignSP}/${this.plannedSP}`;
   }
 }
+
+export const enum Status {
+  OK = 'OK',
+  WARNING = 'WARNING',
+  CRITICAL = 'CRITICAL',
+}
+
+export type InfoStatusType = {
+  status: Status;
+  message?: string;
+};

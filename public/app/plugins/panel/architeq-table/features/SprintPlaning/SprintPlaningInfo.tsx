@@ -107,7 +107,7 @@ export const SprintPlaningInfo: React.FC<Props> = (props) => {
       <div className={styles.cardContainer}>
         <SprintPlaningInfoCard
           {...props}
-          valuesAreNotEqualAttention="Attention: Total person-days from calendar and reported values are inconsistent."
+          valuesAreNotEqualAttention="Total person-days from calendar and reported values are inconsistent."
         />
       </div>
     </div>

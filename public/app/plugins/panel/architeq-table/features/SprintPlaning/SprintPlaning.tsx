@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { CustomCellRendererProps } from '@grafana/ui';
 
 import { DataTable } from '../../components/DataTable/DataTable';
-import { useRequest } from '../../hooks/useRequest';
+import { useRequestDeprecated } from '../../hooks/useRequestDeprecated';
 import { TablePanelProps } from '../../types';
 
 import { FILTER_HEIGHT, SprintPlaningFilters } from './SprintPlaningFilters';
@@ -27,16 +27,16 @@ export const SprintPlaning: React.FC<Props> = ({ options, data, width, height })
   const filteredData = filterData(configuredData, filters);
   const info = dataFrame.meta?.custom as SprintPlaningInfoType;
 
-  const { update, loading } = useRequest<SprintPlaningPayload>(options);
+  const { update, loading } = useRequestDeprecated<SprintPlaningPayload>(options);
 
-  const handleUpdate = async (value: number, props: CustomCellRendererProps) => {
+  const handleUpdate = async (value: number | string, props: CustomCellRendererProps) => {
     const { frame, rowIndex } = props;
     const teamMembers = frame.fields.find((field: any) => field.name === SprintPlaningColumns.TeamMember)?.values || [];
     const email = teamMembers[rowIndex]?.email;
     const payload = {
       sprintId: info.sprintId,
       teamMemberEmail: email,
-      capacity: value,
+      capacity: value as number,
     };
 
     return update(payload);

@@ -2,9 +2,11 @@ import { css } from '@emotion/css';
 import React, { ChangeEvent, useState } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { Icon, IconButton, Tooltip, useStyles2 } from '@grafana/ui';
+import { Icon, IconButton, useStyles2 } from '@grafana/ui';
 
+import { InfoStatus } from '../../components/InfoStatus/InfoStatus';
 import { LoadingMode } from '../../constants';
+import { Status } from '../../types';
 
 import { SprintPlaningInfoType } from './types';
 
@@ -54,6 +56,15 @@ const getStyles = (theme: GrafanaTheme2) => {
       line-height: ${theme.typography.h1.lineHeight};
       display: flex;
       gap: 8px;
+      padding-right: 56px;
+    `,
+
+    editableValue: css`
+      padding-right: 28px;
+    `,
+
+    inputValue: css`
+      padding-right: 0;
     `,
 
     input: css`
@@ -127,7 +138,7 @@ export const SprintPlaningInfoCard: React.FC<Props> = ({
   loading,
 }) => {
   const styles = useStyles2(getStyles);
-  const hasWarning = personDaysReported !== personDaysScheduled;
+  const hasPDWarning = personDaysReported !== personDaysScheduled;
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(personDaysReported);
 
@@ -149,14 +160,11 @@ export const SprintPlaningInfoCard: React.FC<Props> = ({
         <div className={`${styles.cell} ${styles.cellLeftAligned}`}>
           <div className={styles.cellContainer}>
             <div className={styles.tableTitle}>
-              Total Person-Days
-              {hasWarning && valuesAreNotEqualAttention && (
-                <span className={styles.warning}>
-                  <Tooltip content={valuesAreNotEqualAttention} placement="top">
-                    <Icon size="md" name="exclamation-triangle" />
-                  </Tooltip>
-                </span>
-              )}
+              <InfoStatus
+                title="Total Person-Days"
+                status={hasPDWarning ? Status.WARNING : Status.OK}
+                message={valuesAreNotEqualAttention}
+              />
             </div>
           </div>
         </div>
@@ -165,9 +173,7 @@ export const SprintPlaningInfoCard: React.FC<Props> = ({
         </div>
         <div className={`${styles.cell} ${styles.cellLeftAligned}`}>
           <div className={styles.cellContainer}>
-            <div className={styles.tableTitle}>
-              <div>Total Story Points</div>
-            </div>
+            <InfoStatus title="Total Story Points" status={Status.WARNING} message="Total Story Points are not equal" />
           </div>
         </div>
 
@@ -180,7 +186,7 @@ export const SprintPlaningInfoCard: React.FC<Props> = ({
               <span>Scheduled</span>
               <span className={styles.value}>{personDaysScheduled}</span>
             </div>
-            <div className={styles.description}>Team's total PD from calendar</div>
+            <div className={styles.description}>Team&apos;s total PD from calendar</div>
           </div>
         </div>
         <div className={`${styles.cell} ${styles.cellCentered} ${styles.cellWhiteBackground}`}>
@@ -207,7 +213,7 @@ export const SprintPlaningInfoCard: React.FC<Props> = ({
               </span>
               <span>Reported</span>
               {isEditing ? (
-                <div className={styles.value}>
+                <div className={`${styles.value} ${styles.inputValue}`}>
                   <input
                     className={styles.input}
                     value={value}
@@ -220,7 +226,7 @@ export const SprintPlaningInfoCard: React.FC<Props> = ({
                 </div>
               ) : (
                 <div>
-                  <div className={styles.value}>
+                  <div className={`${styles.value} ${styles.editableValue}`}>
                     {personDaysReported}
                     <IconButton name="edit" size="md" tooltip="Edit" onClick={() => setIsEditing(true)} />
                   </div>

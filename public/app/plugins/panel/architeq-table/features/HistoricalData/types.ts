@@ -1,4 +1,4 @@
-export interface UpdatePayload {
+export interface HistoricalDataUpdatePayload {
   sprintId: string;
   propertyName: string;
   value?: number;

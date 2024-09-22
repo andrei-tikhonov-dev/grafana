@@ -5,9 +5,9 @@ import { getEditableCellFieldConfig } from '../../components/EditableCell';
 import { updateFieldConfig } from '../../utils';
 
 import { HistoricDataColumns } from './constants';
-import { UpdatePayload } from './types';
+import { HistoricalDataUpdatePayload } from './types';
 
-export const mapPayload = (value: number, id: string, propertyName: string): UpdatePayload => {
+export const mapPayload = (value: number, id: string, propertyName: string): HistoricalDataUpdatePayload => {
   if (propertyName === HistoricDataColumns.RelevantForVelocity) {
     return {
       sprintId: id,

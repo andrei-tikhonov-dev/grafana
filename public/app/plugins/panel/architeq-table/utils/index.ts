@@ -44,6 +44,7 @@ export const getTableTypeOptions = async () => {
     { label: 'Historical Data', value: TableType.HistoricalData },
     { label: 'Current Sprint', value: TableType.CurrentSprint },
     { label: 'Sprint Planing', value: TableType.SprintPlaning },
+    { label: 'Team Admin Tool', value: TableType.TeamAdminTool },
   ]);
 };
 
@@ -98,5 +99,12 @@ export function wrapCapacityField(data: DataFrame, fieldName: string): DataFrame
       }
       return field;
     }),
+  };
+}
+
+export function removeHiddenFields(dataFrame: DataFrame, hiddenFields?: string[]): DataFrame {
+  return {
+    ...dataFrame,
+    fields: dataFrame.fields.filter((field) => !hiddenFields?.includes(field.name)),
   };
 }

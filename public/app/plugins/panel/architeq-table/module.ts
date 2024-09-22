@@ -74,6 +74,39 @@ export const plugin = new PanelPlugin<PanelOptions>(TablePanel).setPanelOptions(
       },
       showIf: (config) => config.tableType === TableType.HistoricalData || config.tableType === TableType.SprintPlaning,
     })
+    .addTextInput({
+      path: 'updateUrl',
+      name: 'Update URL [POST]',
+      category: ['Request URLs'],
+      description: 'The URL to update one cell.',
+      settings: {
+        placeholder: 'http://',
+      },
+      showIf: (config) =>
+        config.tableType === TableType.HistoricalData ||
+        config.tableType === TableType.SprintPlaning ||
+        config.tableType === TableType.TeamAdminTool,
+    })
+    .addTextInput({
+      path: 'createUrl',
+      name: 'Create URL [POST]',
+      category: ['Request URLs'],
+      description: 'The URL to create new team member.',
+      settings: {
+        placeholder: 'http://',
+      },
+      showIf: (config) => config.tableType === TableType.TeamAdminTool,
+    })
+    .addTextInput({
+      path: 'deleteUrl',
+      name: 'Delete URL [DELETE]',
+      category: ['Request URLs'],
+      description: 'The URL to delete team member.',
+      settings: {
+        placeholder: 'http://',
+      },
+      showIf: (config) => config.tableType === TableType.TeamAdminTool,
+    })
     .addCustomEditor({
       id: 'update.header',
       path: 'update.header',

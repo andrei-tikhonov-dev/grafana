@@ -9,17 +9,19 @@ import { TableType } from '../constants';
 import { CurrentSprint } from '../features/CurrentSprint';
 import { HistoricalData } from '../features/HistoricalData';
 import { SprintPlaning } from '../features/SprintPlaning';
+import { TeamAdminTool } from '../features/TeamAdminTool';
 import { TablePanelProps } from '../types';
 
 const TablePanels = {
   [TableType.HistoricalData]: HistoricalData,
   [TableType.CurrentSprint]: CurrentSprint,
   [TableType.SprintPlaning]: SprintPlaning,
+  [TableType.TeamAdminTool]: TeamAdminTool,
 };
 
 export const TablePanel: React.FC<TablePanelProps> = (props) => {
   const { data, fieldConfig, id } = props;
-  const getStyles = (theme: GrafanaTheme2) => {
+  const getStyles = (_: GrafanaTheme2) => {
     return {
       container: css`
         overflow: hidden;
