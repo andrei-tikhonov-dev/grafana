@@ -16,6 +16,21 @@ type UseRequestOptionsType = {
   delete?: ActionOptionsType;
 };
 
+function generateHeaders(headers?: Array<Record<string, string>>) {
+  const initHeaders: HeadersInit = new Headers({
+    'Content-Type': 'application/json',
+  });
+
+  headers?.forEach((parameter) => {
+    const { name, value } = parameter;
+    if (name && value) {
+      initHeaders.set(name, value);
+    }
+  });
+
+  return initHeaders;
+}
+
 export function useRequest({ create, update, delete: deleteAction }: UseRequestOptionsType) {
   const { notifyError, notifySuccess } = useNotifications();
   const { loading, setLoadingNone, setLoadingUpdate } = useLoading();
@@ -31,6 +46,7 @@ export function useRequest({ create, update, delete: deleteAction }: UseRequestO
     try {
       const response = await fetch(action.url, {
         method: action.method,
+        headers: generateHeaders(),
         body: JSON.stringify(payload),
       });
 
