@@ -2,7 +2,7 @@ import { PanelPlugin } from '@grafana/data';
 
 import { HeaderParametersEditor } from './components/HeaderParametersEditor';
 import { TablePanel } from './components/TablePanel';
-import { RequestMethod, TableType, UPDATE_REQUEST_METHOD_OPTIONS } from './constants';
+import { TableType } from './constants';
 import { PanelOptions } from './types';
 import { getPanelSelectOptions, getTableTypeOptions } from './utils';
 
@@ -53,26 +53,6 @@ export const plugin = new PanelPlugin<PanelOptions>(TablePanel).setPanelOptions(
         placeholder: 'http://',
       },
       showIf: (config) => config.tableType === TableType.CurrentSprint,
-    })
-    .addRadio({
-      path: 'update.method',
-      name: 'Update Action',
-      category: ['Update Request'],
-      settings: {
-        options: UPDATE_REQUEST_METHOD_OPTIONS,
-      },
-      defaultValue: RequestMethod.POST,
-      showIf: (config) => config.tableType === TableType.HistoricalData || config.tableType === TableType.SprintPlaning,
-    })
-    .addTextInput({
-      path: 'update.url',
-      name: 'URL',
-      category: ['Update Request'],
-      description: 'The URL to call.',
-      settings: {
-        placeholder: 'http://',
-      },
-      showIf: (config) => config.tableType === TableType.HistoricalData || config.tableType === TableType.SprintPlaning,
     })
     .addTextInput({
       path: 'updateUrl',

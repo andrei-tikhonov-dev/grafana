@@ -3,7 +3,8 @@ import React from 'react';
 import { CustomCellRendererProps } from '@grafana/ui';
 
 import { DataTable } from '../../components/DataTable/DataTable';
-import { useRequestDeprecated } from '../../hooks/useRequestDeprecated';
+import { RequestMethod } from '../../constants';
+import { useRequest } from '../../hooks/useRequest';
 import { TablePanelProps } from '../../types';
 import { getRowIdentifiers } from '../../utils';
 
@@ -22,11 +23,16 @@ export const HistoricalData: React.FC<Props> = ({ options, data, width, height }
   const configuredData = configData(dataFrame, editableFields, [idField]);
   const rowIdentifiers = getRowIdentifiers(idField, dataFrame);
 
-  const { update, loading } = useRequestDeprecated<HistoricalDataUpdatePayload>(options);
+  const { updateRequest, loading } = useRequest({
+    update: {
+      url: options.updateUrl,
+      method: RequestMethod.POST,
+    },
+  });
 
   const handleUpdate = async (value: number | string, { rowIndex, field }: CustomCellRendererProps) => {
-    const payload = mapPayload(value as number, rowIdentifiers[rowIndex], field.name);
-    return update(payload);
+    const payload: HistoricalDataUpdatePayload = mapPayload(value as number, rowIdentifiers[rowIndex], field.name);
+    return updateRequest(payload);
   };
 
   return <DataTable width={width} height={height} onUpdate={handleUpdate} data={configuredData} loading={loading} />;

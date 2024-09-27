@@ -12,44 +12,48 @@ export const FILTER_HEIGHT = 45;
 const getStyles = () => {
   return {
     container: css`
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      max-width: 300px;
-    `,
-    input: css`
       flex: 1;
     `,
   };
 };
 
 type Props = {
-  assignees: string[];
+  teamMembers: string[];
+  roles: string[];
+  isGroupedByRole: boolean;
   onChange: (filter: SprintPlaningFiltersType) => void;
 };
 
-export const SprintPlaningFilters: React.FC<Props> = ({ assignees, onChange }) => {
-  const [filter, setFilter] = useState<SprintPlaningFiltersType>({ teamMembers: [] });
+export const SprintPlaningFilters: React.FC<Props> = ({ teamMembers, roles, isGroupedByRole, onChange }) => {
+  const [filter, setFilter] = useState<SprintPlaningFiltersType>({ teamMembers: [], roles: [] });
   const styles = useStyles2(getStyles);
 
-  const handleAssigneesChange = (selected: Array<SelectableValue<string>>) => {
+  const handleSelectionChange = (selected: Array<SelectableValue<string>>) => {
     const selectedValues = selected.map((item) => item.value || '');
-    const newFilter = { ...filter, teamMembers: selectedValues };
+    const newFilter = isGroupedByRole
+      ? { ...filter, roles: selectedValues }
+      : { ...filter, teamMembers: selectedValues };
     setFilter(newFilter);
     onChange(newFilter);
   };
 
   return (
     <div className={styles.container}>
-      <div className={styles.input}>
-        <MultiSelect
-          options={assignees.map((teamMember) => ({ label: teamMember, value: teamMember }))}
-          value={filter.teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}
-          onChange={handleAssigneesChange}
-          placeholder={SprintPlaningColumns.TeamMember}
-          isClearable
-        />
-      </div>
+      <MultiSelect
+        options={
+          isGroupedByRole
+            ? roles.map((role) => ({ label: role, value: role }))
+            : teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))
+        }
+        value={
+          isGroupedByRole
+            ? filter.roles.map((role) => ({ label: role, value: role }))
+            : filter.teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))
+        }
+        onChange={handleSelectionChange}
+        placeholder={isGroupedByRole ? SprintPlaningColumns.TeamMemberRole : SprintPlaningColumns.TeamMember}
+        isClearable
+      />
     </div>
   );
 };

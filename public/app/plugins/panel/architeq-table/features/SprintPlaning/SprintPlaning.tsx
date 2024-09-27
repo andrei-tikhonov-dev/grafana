@@ -1,64 +1,111 @@
+import { css } from '@emotion/css';
 import React, { useState } from 'react';
 
-import { CustomCellRendererProps } from '@grafana/ui';
+import { CustomCellRendererProps, useStyles2 } from '@grafana/ui';
 
 import { DataTable } from '../../components/DataTable/DataTable';
-import { useRequestDeprecated } from '../../hooks/useRequestDeprecated';
+import { RequestMethod } from '../../constants';
+import { useRequest } from '../../hooks/useRequest';
+import { useSwitch } from '../../hooks/useSwitch';
 import { TablePanelProps } from '../../types';
 
 import { FILTER_HEIGHT, SprintPlaningFilters } from './SprintPlaningFilters';
 import { INFO_HEIGHT, SprintPlaningInfo } from './SprintPlaningInfo';
 import { SprintPlaningColumns } from './constants';
 import { SprintPlaningFiltersType, SprintPlaningInfoType, SprintPlaningPayload } from './types';
-import { configData, filterData, getFilterOptions } from './utils';
+import {
+  configRolesFrame,
+  configTeamMembersFrame,
+  filterRoles,
+  filterTeamMembers,
+  getRoleOptions,
+  getTeamMemberOptions,
+} from './utils';
 
 interface Props extends TablePanelProps {}
 
+const getStyles = () => {
+  return {
+    filterContainer: css`
+      display: flex;
+      gap: 10px;
+      max-width: 800px;
+      padding-bottom: 20px;
+    `,
+  };
+};
+
 export const SprintPlaning: React.FC<Props> = ({ options, data, width, height }) => {
-  const [filters, setFilters] = useState<SprintPlaningFiltersType>({ teamMembers: [] });
-  const dataFrame = data.series[0];
+  const styles = useStyles2(getStyles);
+  const { switchComponent, isChecked: isGroupedByRole } = useSwitch({ label: 'Group by roles' });
+  const [filters, setFilters] = useState<SprintPlaningFiltersType>({ teamMembers: [], roles: [] });
+
+  const teamMembersFrame = data.series[0];
+  const rolesFrame = data.series[1];
+
   const tableHeight = height - FILTER_HEIGHT - INFO_HEIGHT - 20;
-  const configuredData = configData(dataFrame);
-  const handleOnChange = (filters: SprintPlaningFiltersType) => {
+  const info = teamMembersFrame.meta?.custom as SprintPlaningInfoType;
+
+  const configuredTeamMembersFrame = configTeamMembersFrame(teamMembersFrame);
+  const configuredRolesFrame = configRolesFrame(rolesFrame);
+
+  const handleFiltersChange = (filters: SprintPlaningFiltersType) => {
     setFilters(filters);
   };
 
-  const { names } = getFilterOptions(configuredData);
-  const filteredData = filterData(configuredData, filters);
-  const info = dataFrame.meta?.custom as SprintPlaningInfoType;
+  const teamMembers = getTeamMemberOptions(configuredTeamMembersFrame);
+  const roles = getRoleOptions(configuredRolesFrame);
+  const filteredTeamMembersFrame = filterTeamMembers(configuredTeamMembersFrame, filters);
+  const filteredRolesFrame = filterRoles(configuredRolesFrame, filters);
 
-  const { update, loading } = useRequestDeprecated<SprintPlaningPayload>(options);
+  const dataFrame = isGroupedByRole ? filteredRolesFrame : filteredTeamMembersFrame;
+
+  const { updateRequest, loading } = useRequest({
+    update: {
+      url: options.updateUrl,
+      method: RequestMethod.POST,
+    },
+  });
 
   const handleUpdate = async (value: number | string, props: CustomCellRendererProps) => {
     const { frame, rowIndex } = props;
     const teamMembers = frame.fields.find((field: any) => field.name === SprintPlaningColumns.TeamMember)?.values || [];
     const email = teamMembers[rowIndex]?.email;
-    const payload = {
+    const payload: SprintPlaningPayload = {
       sprintId: info.sprintId,
       teamMemberEmail: email,
       capacity: value as number,
     };
 
-    return update(payload);
+    return updateRequest(payload);
   };
 
   const handleTotalUpdate = async (value?: number) => {
-    const payload = {
+    const payload: SprintPlaningPayload = {
       sprintId: info.sprintId,
       capacity: Number(value),
     };
 
-    return update(payload);
+    return updateRequest(payload);
   };
 
   return (
     <>
       <SprintPlaningInfo {...info} loading={loading} onUpdate={handleTotalUpdate} />
-      <SprintPlaningFilters onChange={handleOnChange} assignees={names} />
+      <div className={styles.filterContainer}>
+        <SprintPlaningFilters
+          onChange={handleFiltersChange}
+          teamMembers={teamMembers}
+          roles={roles}
+          isGroupedByRole={isGroupedByRole}
+        />
+        <div>{switchComponent}</div>
+      </div>
+
       <DataTable
         width={width}
         height={tableHeight}
-        data={filteredData}
+        data={dataFrame}
         baseUrl={options.baseUrl}
         loading={loading}
         onUpdate={handleUpdate}

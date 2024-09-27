@@ -3,7 +3,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { Button, Field, Input, Select } from '@grafana/ui';
 
-import { TeamAdminToolCreatePayload, TeamAdminToolCreateTableType, TeamAdminToolRoleType } from './types';
+import { TeamAdminToolCreateTableType, TeamAdminToolRoleType } from './types';
 
 interface Props {
   onClose: () => void;
@@ -18,11 +18,11 @@ export const TeamAdminToolAddUserForm: React.FC<Props> = ({ onClose, onCreate, r
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<TeamAdminToolCreatePayload>();
+  } = useForm<TeamAdminToolCreateTableType>();
 
   const roleOptions = roles.map((role) => ({ value: role.id, label: role.name }));
 
-  const onSubmit = async (data: TeamAdminToolCreatePayload) => {
+  const onSubmit = async (data: TeamAdminToolCreateTableType) => {
     await onCreate(data);
     onClose();
   };
@@ -66,7 +66,7 @@ export const TeamAdminToolAddUserForm: React.FC<Props> = ({ onClose, onCreate, r
         />
       </Field>
 
-      <Field label="Workload ratio" invalid={!!errors.workloadRatio} error={errors.workloadRatio?.message}>
+      <Field label="Workload ratio, %" invalid={!!errors.workloadRatio} error={errors.workloadRatio?.message}>
         <Input
           type="number"
           {...register('workloadRatio', {

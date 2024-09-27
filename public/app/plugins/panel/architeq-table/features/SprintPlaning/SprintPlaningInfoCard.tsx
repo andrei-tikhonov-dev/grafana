@@ -10,9 +10,6 @@ import { Status } from '../../types';
 
 import { SprintPlaningInfoType } from './types';
 
-const iconArrow =
-  'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzgiIGhlaWdodD0iMzciIHZpZXdCb3g9IjAgMCAzOCAzNyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTM3LjAyNDcgMTkuNTkwMkwyMC4yMTc1IDM2LjM5NzVDMTkuOTMxOCAzNi42ODQ4IDE5LjU0MzcgMzYuODQ1MiAxOS4xMzczIDM2Ljg0NTJIMi4zMjk5OUMxLjcxMjY4IDM2Ljg0NTIgMS4xNTM0NiAzNi40NzM5IDAuOTE4MTgxIDM1LjkwMjVDMC42ODEzMjggMzUuMzMxIDAuODEyNzU0IDM0LjY3NCAxLjI0OTcyIDM0LjIzN0wxNi45NzY3IDE4LjUxTDEuMjQ5NzkgMi43ODI5OEMwLjgxMjgyNiAyLjM0NjAyIDAuNjgxNCAxLjY4ODk2IDAuOTE4MjUzIDEuMTE3NTZDMS4xNTM1MyAwLjU0NjA5IDEuNzEyNzUgMC4xNzQ4MDQgMi4zMzAwNiAwLjE3NDgwNEgxOS4xMzczQzE5LjU0MzggMC4xNzQ4MDQgMTkuOTMxOCAwLjMzNTIzNSAyMC4yMTc2IDAuNjIyNTFMMzcuMDI0OSAxNy40Mjk4QzM3LjYyMjIgMTguMDI3MiAzNy42MjIyIDE4Ljk5MjggMzcuMDI0NyAxOS41OTAyWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==';
-
 const getStyles = (theme: GrafanaTheme2) => {
   return {
     container: css`
@@ -110,9 +107,8 @@ const getStyles = (theme: GrafanaTheme2) => {
       display: flex;
       justify-content: center;
       align-items: center;
-      background-image: url(${iconArrow});
-      background-repeat: no-repeat;
-      background-position: center;
+      color: ${theme.colors.border.medium};
+      margin-right: 30px;
     `,
 
     cellContainer: css`
@@ -123,7 +119,6 @@ const getStyles = (theme: GrafanaTheme2) => {
 
 interface Props extends SprintPlaningInfoType {
   onUpdate?: (value?: number) => void;
-  valuesAreNotEqualAttention?: string;
   loading?: LoadingMode;
 }
 
@@ -132,15 +127,20 @@ export const SprintPlaningInfoCard: React.FC<Props> = ({
   storyPointsAvailable,
   personDaysReported,
   personDaysScheduled,
-  valuesAreNotEqualAttention,
   teamVelocityFactor,
   onUpdate,
+  sprintStatus,
   loading,
 }) => {
   const styles = useStyles2(getStyles);
   const hasPDWarning = personDaysReported !== personDaysScheduled;
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(personDaysReported);
+  const totalStoryPointsInfo = sprintStatus.assignedAvailableRatioInfo;
+  const totalPersonDaysInfo = {
+    status: hasPDWarning ? Status.WARNING : Status.OK,
+    message: 'Total person-days from calendar and reported values are inconsistent.',
+  };
 
   const handleSave = () => {
     if (onUpdate) {
@@ -162,8 +162,8 @@ export const SprintPlaningInfoCard: React.FC<Props> = ({
             <div className={styles.tableTitle}>
               <InfoStatus
                 title="Total Person-Days"
-                status={hasPDWarning ? Status.WARNING : Status.OK}
-                message={valuesAreNotEqualAttention}
+                status={totalPersonDaysInfo.status}
+                message={totalPersonDaysInfo.message}
               />
             </div>
           </div>
@@ -173,7 +173,11 @@ export const SprintPlaningInfoCard: React.FC<Props> = ({
         </div>
         <div className={`${styles.cell} ${styles.cellLeftAligned}`}>
           <div className={styles.cellContainer}>
-            <InfoStatus title="Total Story Points" status={Status.WARNING} message="Total Story Points are not equal" />
+            <InfoStatus
+              title="Total Story Points"
+              status={totalStoryPointsInfo?.status}
+              message={totalStoryPointsInfo?.message}
+            />
           </div>
         </div>
 
@@ -237,7 +241,9 @@ export const SprintPlaningInfoCard: React.FC<Props> = ({
           </div>
         </div>
         <div className={`${styles.cell} ${styles.cellCentered} ${styles.cellWithIcon}`}>
-          <div className={styles.cellContainer}></div>
+          <div className={styles.cellContainer}>
+            <Icon size="xxxl" name="arrow-right" />
+          </div>
         </div>
         <div className={`${styles.cell} ${styles.cellLeftAligned}`}>
           <div className={styles.cellContainer}>

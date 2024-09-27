@@ -57,25 +57,25 @@ export class TeamMemberClass implements TeamMember {
 }
 
 export interface Capacity {
-  assignSP: number;
-  plannedSP: number;
+  assignedSP: number;
+  availableSP: number;
 }
 
 export class CapacityClass implements Capacity {
-  assignSP: number;
-  plannedSP: number;
+  assignedSP: number;
+  availableSP: number;
 
   constructor(capacity: Capacity) {
-    this.assignSP = capacity.assignSP;
-    this.plannedSP = capacity.plannedSP;
+    this.assignedSP = capacity.assignedSP;
+    this.availableSP = capacity.availableSP;
   }
 
   valueOf(): number {
-    return this.assignSP + this.plannedSP / 1_000_000;
+    return this.assignedSP + this.availableSP / 1_000_000;
   }
 
   toString(): string {
-    return `${this.assignSP}/${this.plannedSP}`;
+    return `${this.assignedSP}/${this.availableSP}`;
   }
 }
 

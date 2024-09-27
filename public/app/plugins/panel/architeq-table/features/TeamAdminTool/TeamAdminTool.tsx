@@ -25,7 +25,7 @@ interface Props extends TablePanelProps {}
 
 const getStyles = () => {
   return {
-    container: css`
+    filterContainer: css`
       display: flex;
       gap: 10px;
       margin-bottom: 20px;
@@ -87,7 +87,7 @@ export const TeamAdminTool: React.FC<Props> = ({ options, data, width, height })
 
   return (
     <>
-      <div className={styles.container}>
+      <div className={styles.filterContainer}>
         <TeamAdminToolFilters onChange={handleFiltersChange} teamMembers={filterOptions.teamMembers} />
         <TeamAdminToolAddUserButton onHandleCreate={handleCreate} roles={roles} maxWorkload={maxWorkload} />
       </div>

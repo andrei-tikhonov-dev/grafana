@@ -61,13 +61,11 @@ export function mapTeamAdminToolCreatePayload(
     email: data.email,
     internalOrgId: data.internalOrgId,
     name: data.name,
-    role: data.role,
     hourlyRate: data.hourlyRate,
     yearlyHours: data.yearlyHours,
-    workloadRatio: data.workloadRatio,
     teamIdsToDetails: {
       [teamId]: {
-        role: data.role,
+        roleId: data.role,
         workload: data.workloadRatio,
       },
     },

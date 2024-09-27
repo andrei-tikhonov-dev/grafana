@@ -5,6 +5,7 @@ import { dateTime, GrafanaTheme2 } from '@grafana/data';
 import { Icon, useStyles2 } from '@grafana/ui';
 
 import { LoadingMode } from '../../constants';
+import { Status } from '../../types';
 
 import { SprintPlaningInfoCard } from './SprintPlaningInfoCard';
 import { SprintPlaningInfoType } from './types';
@@ -51,8 +52,11 @@ const getStyles = (theme: GrafanaTheme2) => {
     statusOk: css`
       color: ${theme.colors.success.text};
     `,
-    statusBad: css`
+    statusCritical: css`
       color: ${theme.colors.error.text};
+    `,
+    statusWarning: css`
+      color: ${theme.colors.warning.text};
     `,
   };
 };
@@ -64,15 +68,21 @@ interface Props extends SprintPlaningInfoType {
 
 export const SprintPlaningInfo: React.FC<Props> = (props) => {
   const styles = useStyles2(getStyles);
+  const sprintStatusStories = props.sprintStatus.storiesInfo;
 
   const StatusIcons: Record<string, ReactElement> = {
-    OK: (
+    [Status.OK]: (
       <span className={styles.statusOk}>
         <Icon name="check-circle" />
       </span>
     ),
-    BAD: (
-      <span className={styles.statusBad}>
+    [Status.WARNING]: (
+      <span className={styles.statusWarning}>
+        <Icon name="exclamation-circle" />
+      </span>
+    ),
+    [Status.CRITICAL]: (
+      <span className={styles.statusCritical}>
         <Icon name="times-circle" />
       </span>
     ),
@@ -100,15 +110,12 @@ export const SprintPlaningInfo: React.FC<Props> = (props) => {
       </div>
 
       <div className={styles.statusLine}>
-        {StatusIcons[props.sprintStatus]}
-        {props.sprintStatusMessage}
+        {StatusIcons[sprintStatusStories?.status]}
+        {sprintStatusStories?.message}
       </div>
 
       <div className={styles.cardContainer}>
-        <SprintPlaningInfoCard
-          {...props}
-          valuesAreNotEqualAttention="Total person-days from calendar and reported values are inconsistent."
-        />
+        <SprintPlaningInfoCard {...props} />
       </div>
     </div>
   );

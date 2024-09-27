@@ -11,7 +11,7 @@ export const FILTER_HEIGHT = 45;
 
 const getStyles = () => {
   return {
-    input: css`
+    container: css`
       flex: 1;
     `,
   };
@@ -36,7 +36,7 @@ export const TeamAdminToolFilters: React.FC<Props> = ({ teamMembers, onChange })
   };
 
   return (
-    <div className={styles.input}>
+    <div className={styles.container}>
       <MultiSelect
         options={teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}
         value={filter.teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}

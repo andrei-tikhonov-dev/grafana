@@ -13,11 +13,11 @@ const getStyles = () => {
 
 export const CapacityCell = ({ value }: CustomCellRendererProps) => {
   const styles = useStyles2(getStyles);
-  const { assignSP, plannedSP } = value as Capacity;
+  const { assignedSP, availableSP } = value as Capacity;
 
   return (
     <div className={styles.cell}>
-      {String(assignSP)} / {String(plannedSP)}
+      {String(assignedSP)} / {String(availableSP)}
     </div>
   );
 };

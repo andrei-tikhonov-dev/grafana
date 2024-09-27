@@ -1,10 +1,12 @@
+import { Status } from '../../types';
+
 export type SprintPlaningFiltersType = {
   teamMembers: string[];
+  roles: string[];
 };
 
 export interface SprintPlaningInfoType {
   sprintName: string;
-  sprintStatus: string;
   sprintStatusMessage: string;
   startDate: string;
   endDate: string;
@@ -12,10 +14,18 @@ export interface SprintPlaningInfoType {
   personDaysReported: number;
   storyPointsAssigned: number;
   storyPointsAvailable: number;
-  possibleSP: number;
-  estimatedPD: number;
   teamVelocityFactor: number;
   sprintId: string;
+  sprintStatus: {
+    storiesInfo: {
+      status: Status;
+      message: string;
+    };
+    assignedAvailableRatioInfo: {
+      status: Status;
+      message: string;
+    };
+  };
 }
 
 export interface SprintPlaningPayload {

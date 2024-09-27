@@ -10,7 +10,7 @@ import { updateFieldConfig, wrapCapacityField, wrapTeamMemberField } from '../..
 import { SprintPlaningColumns } from './constants';
 import { SprintPlaningFiltersType } from './types';
 
-export function configData(dataFrame: DataFrame): DataFrame {
+export function configTeamMembersFrame(dataFrame: DataFrame): DataFrame {
   const fieldConfigs = [
     { field: SprintPlaningColumns.TeamMember, config: getUserCellFieldConfig({}) },
     { field: SprintPlaningColumns.ScheduledPD, config: getSimpleCellFieldConfig({ align: 'right' }) },
@@ -25,30 +25,49 @@ export function configData(dataFrame: DataFrame): DataFrame {
 
   return fieldConfigs.reduce((df, { field, config }) => {
     const wrapHandler: (df: DataFrame, field: string) => DataFrame = wrapHandlers[field];
-    const wrappedDf = wrapHandler ? wrapHandler(df, field) : df;
+    const wrappedDf: any = wrapHandler ? wrapHandler(df, field) : df;
     return updateFieldConfig(wrappedDf, [field], config);
   }, dataFrame);
 }
 
-export function getFilterOptions(data: DataFrame) {
-  const namesSet = new Set<string>();
+export function configRolesFrame(dataFrame: DataFrame): DataFrame {
+  const fieldConfigs = [
+    { field: SprintPlaningColumns.AssignedAvailableCapacitySP, config: getCapacityCellFieldConfig({ align: 'right' }) },
+  ];
 
-  data.fields.forEach((field) => {
-    if (field.name === SprintPlaningColumns.TeamMember) {
-      field.values.forEach((value) => namesSet.add(value.name));
-    }
-  });
-
-  return {
-    names: Array.from(namesSet),
+  const wrapHandlers: Record<string, (df: DataFrame, field: string) => DataFrame> = {
+    [SprintPlaningColumns.AssignedAvailableCapacitySP]: wrapCapacityField,
   };
+
+  return fieldConfigs.reduce((df, { field, config }) => {
+    const wrapHandler: (df: DataFrame, field: string) => DataFrame = wrapHandlers[field];
+    const wrappedDf: any = wrapHandler ? wrapHandler(df, field) : df;
+    return updateFieldConfig(wrappedDf, [field], config);
+  }, dataFrame);
 }
 
-export function filterData(data: DataFrame, filters: SprintPlaningFiltersType) {
+export function getTeamMemberOptions(data: DataFrame) {
+  return Array.from(
+    new Set(
+      data.fields
+        .find((field) => field.name === SprintPlaningColumns.TeamMember)
+        ?.values.toArray()
+        .map((value) => value.name) || []
+    )
+  );
+}
+
+export function getRoleOptions(data: DataFrame) {
+  return Array.from(
+    new Set(data.fields.find((field) => field.name === SprintPlaningColumns.TeamMemberRole)?.values.toArray() || [])
+  );
+}
+
+export function filterTeamMembers(data: DataFrame, { teamMembers }: SprintPlaningFiltersType) {
   const teamMemberField = data.fields.find((field: any) => field.name === SprintPlaningColumns.TeamMember);
 
   const filteredIndexes = teamMemberField?.values.map((value: TeamMember) => {
-    return filters.teamMembers && filters.teamMembers.length > 0 ? filters.teamMembers.includes(value.name) : true;
+    return teamMembers && teamMembers.length > 0 ? teamMembers.includes(value.name) : true;
   });
 
   return {
@@ -58,5 +77,30 @@ export function filterData(data: DataFrame, filters: SprintPlaningFiltersType) {
       ...field,
       values: field.values.filter((_: any, index: number) => (filteredIndexes || [])[index]),
     })),
+  };
+}
+
+export function filterRoles(data: DataFrame, { roles }: SprintPlaningFiltersType) {
+  if (!roles || roles.length === 0) {
+    return data;
+  }
+
+  const rolesField = data.fields.find((field) => field.name === SprintPlaningColumns.TeamMemberRole);
+
+  if (!rolesField) {
+    return data;
+  }
+
+  const filteredIndexes = Array.from(rolesField.values).map((value: string) => roles.includes(value));
+
+  const filteredFields = data.fields.map((field) => ({
+    ...field,
+    values: field.values.filter((_: any, index: number) => filteredIndexes[index]),
+  }));
+
+  return {
+    ...data,
+    length: filteredIndexes.filter(Boolean).length,
+    fields: filteredFields,
   };
 }
