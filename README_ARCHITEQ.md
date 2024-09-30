@@ -1,3 +1,32 @@
+# Development
+
+### Install dependencies macOS
+```shell
+brew install git
+brew install go
+brew install node@20
+brew install corepack
+corepack enable
+
+yarn install --immutable
+```
+
+### Backend
+```shell
+make run
+```
+
+### Frontend
+```shell
+yarn start
+```
+
+### Plugins
+```shell
+yarn workspace <name_of_plugin> dev
+```
+
+
 # Docker
 
 ### Run docker compose

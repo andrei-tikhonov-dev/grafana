@@ -6,6 +6,7 @@ import { Icon, useStyles2 } from '@grafana/ui';
 
 import { PanelOptions, SprintMeta } from '../types';
 
+import { SprintStatus } from './SprintStatus';
 import { SprintTimeline } from './SprintTimeline';
 
 interface Props extends PanelProps<PanelOptions> {}
@@ -41,15 +42,15 @@ const getStyles = (theme: GrafanaTheme2) => {
     `,
     footer: css`
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
     `,
   };
 };
 
-export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, fieldConfig, id }) => {
+export const TimelinePanel: React.FC<Props> = ({ data, width, height }) => {
   const styles = useStyles2(getStyles);
   const meta = data.series[0]?.meta as SprintMeta;
-  const { name, team, from, till, weeks, isSprintOnTarget, completedIssues, totalIssues } = meta.custom;
+  const { name, team, from, till, weeks, sprintOnTarget, completedIssues, totalIssues } = meta.custom;
 
   return (
     <div
@@ -81,23 +82,7 @@ export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, f
         <SprintTimeline weeks={weeks} />
       </div>
       <div className={styles.footer}>
-        <div className={styles.status}>
-          {isSprintOnTarget ? (
-            <>
-              <span className={styles.statusOk}>
-                <Icon name="check-circle" />
-              </span>
-              Sprint is on target
-            </>
-          ) : (
-            <>
-              <span className={styles.statusBad}>
-                <Icon name="times-circle" />
-              </span>
-              Sprint is not on target
-            </>
-          )}
-        </div>
+        <SprintStatus status={sprintOnTarget.status} message={sprintOnTarget.message} />
         <div>
           {completedIssues} of {totalIssues} issues have been completed
         </div>

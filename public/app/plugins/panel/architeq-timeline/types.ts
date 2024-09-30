@@ -2,6 +2,12 @@ export interface PanelOptions {
   text: string;
 }
 
+export const enum Status {
+  OK = 'OK',
+  WARNING = 'WARNING',
+  CRITICAL = 'CRITICAL',
+}
+
 export interface DayStatus {
   dayOfWeek: number;
   status: 'FINISHED' | 'IN_PROGRESS' | 'NOT_STARTED';
@@ -22,6 +28,9 @@ export interface SprintMeta {
     completedIssues: number;
     totalStoryPoints: number;
     completedStoryPoints: number;
-    isSprintOnTarget: boolean;
+    sprintOnTarget: {
+      message: string;
+      status: Status;
+    };
   };
 }
