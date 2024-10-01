@@ -3,7 +3,5 @@ export const enum SprintPlaningColumns {
   ScheduledPD = 'Scheduled PD',
   SelfReportedPD = 'Self-reported PD',
   AssignedAvailableCapacitySP = 'Assigned SP / Available SP',
-  RoleToCapacityPD = 'Role to Capacity PD',
-  RoleToCapacitySP = 'Role to Capacity in SP',
-  TeamMemberRole = 'Team member role',
+  TeamMemberRole = 'Role',
 }

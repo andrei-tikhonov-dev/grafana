@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { CustomCellRendererProps, useStyles2 } from '@grafana/ui';
 
 import { DataTable } from '../../components/DataTable/DataTable';
+import { FilterInputWrapper } from '../../components/FilterInputWrapper';
 import { RequestMethod } from '../../constants';
 import { useRequest } from '../../hooks/useRequest';
 import { useSwitch } from '../../hooks/useSwitch';
@@ -28,7 +29,7 @@ const getStyles = () => {
   return {
     filterContainer: css`
       display: flex;
-      gap: 10px;
+      gap: 2px;
       max-width: 800px;
       padding-bottom: 20px;
     `,
@@ -99,7 +100,7 @@ export const SprintPlaning: React.FC<Props> = ({ options, data, width, height })
           roles={roles}
           isGroupedByRole={isGroupedByRole}
         />
-        <div>{switchComponent}</div>
+        <FilterInputWrapper>{switchComponent}</FilterInputWrapper>
       </div>
 
       <DataTable

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 import { Button, Modal } from '@grafana/ui';
 
+import { FilterInputWrapper } from '../../components/FilterInputWrapper';
+
 import { TeamAdminToolAddUserForm } from './TeamAdminToolAddUserForm';
 import { TeamAdminToolCreateTableType, TeamAdminToolRoleType } from './types';
 
@@ -24,7 +26,9 @@ export const TeamAdminToolAddUserButton: React.FC<Props> = ({ onHandleCreate, ro
 
   return (
     <>
-      <Button onClick={handleAddUserClick}>Add team member</Button>
+      <FilterInputWrapper>
+        <Button onClick={handleAddUserClick}>Add team member</Button>
+      </FilterInputWrapper>
       {isModalOpen && (
         <Modal title="Add team member" isOpen={isModalOpen} onDismiss={handleCloseModal}>
           <TeamAdminToolAddUserForm

@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { SelectableValue } from '@grafana/data';
 import { MultiSelect, useStyles2 } from '@grafana/ui';
 
+import { FilterInputWrapper } from '../../components/FilterInputWrapper';
+
 import { TeamAdminToolFields } from './constants';
 import { TeamAdminFiltersType } from './types';
 
@@ -37,13 +39,15 @@ export const TeamAdminToolFilters: React.FC<Props> = ({ teamMembers, onChange })
 
   return (
     <div className={styles.container}>
-      <MultiSelect
-        options={teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}
-        value={filter.teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}
-        onChange={handleChange}
-        placeholder={TeamAdminToolFields.TeamMember}
-        isClearable
-      />
+      <FilterInputWrapper>
+        <MultiSelect
+          options={teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}
+          value={filter.teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}
+          onChange={handleChange}
+          placeholder={TeamAdminToolFields.TeamMember}
+          isClearable
+        />
+      </FilterInputWrapper>
     </div>
   );
 };

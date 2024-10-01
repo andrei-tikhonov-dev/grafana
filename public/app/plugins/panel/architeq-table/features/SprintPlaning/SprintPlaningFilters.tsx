@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { SelectableValue } from '@grafana/data';
 import { MultiSelect, useStyles2 } from '@grafana/ui';
 
+import { FilterInputWrapper } from '../../components/FilterInputWrapper';
+
 import { SprintPlaningColumns } from './constants';
 import { SprintPlaningFiltersType } from './types';
 
@@ -39,21 +41,23 @@ export const SprintPlaningFilters: React.FC<Props> = ({ teamMembers, roles, isGr
 
   return (
     <div className={styles.container}>
-      <MultiSelect
-        options={
-          isGroupedByRole
-            ? roles.map((role) => ({ label: role, value: role }))
-            : teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))
-        }
-        value={
-          isGroupedByRole
-            ? filter.roles.map((role) => ({ label: role, value: role }))
-            : filter.teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))
-        }
-        onChange={handleSelectionChange}
-        placeholder={isGroupedByRole ? SprintPlaningColumns.TeamMemberRole : SprintPlaningColumns.TeamMember}
-        isClearable
-      />
+      <FilterInputWrapper>
+        <MultiSelect
+          options={
+            isGroupedByRole
+              ? roles.map((role) => ({ label: role, value: role }))
+              : teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))
+          }
+          value={
+            isGroupedByRole
+              ? filter.roles.map((role) => ({ label: role, value: role }))
+              : filter.teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))
+          }
+          onChange={handleSelectionChange}
+          placeholder={isGroupedByRole ? SprintPlaningColumns.TeamMemberRole : SprintPlaningColumns.TeamMember}
+          isClearable
+        />
+      </FilterInputWrapper>
     </div>
   );
 };

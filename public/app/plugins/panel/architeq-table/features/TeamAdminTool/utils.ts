@@ -3,6 +3,7 @@ import { DataFrame } from '@grafana/data';
 import { addActionsColumn } from '../../components/ActionsCell';
 import { getInputCellFieldConfig } from '../../components/InputCell';
 import { getRoleSelectCellFieldConfig } from '../../components/RoleSelectCell';
+import { FieldValidation } from '../../types';
 import { removeHiddenFields, updateFieldConfig } from '../../utils';
 
 import { TeamAdminToolFields } from './constants';
@@ -12,20 +13,37 @@ interface ConfigTeamAdminToolData {
   dataFrame: DataFrame;
   handleDelete: (rowIndex: number) => void;
   hiddenFields?: string[];
+  maxWorkload: number;
 }
-export function configTeamAdminToolData({ dataFrame, hiddenFields, handleDelete }: ConfigTeamAdminToolData): DataFrame {
+export function configTeamAdminToolData({
+  dataFrame,
+  hiddenFields,
+  handleDelete,
+  maxWorkload,
+}: ConfigTeamAdminToolData): DataFrame {
   const options = {
     align: 'left',
   };
+
+  const emailOptions = {
+    ...options,
+    validation: [{ type: FieldValidation.EMAIL }],
+  };
+
+  const workloadRatioOptions = {
+    ...options,
+    validation: [{ type: FieldValidation.MAX, value: maxWorkload }],
+  };
+
   const fieldConfigs = [
-    { fields: [TeamAdminToolFields.Email], config: getInputCellFieldConfig({ ...options }) },
+    { fields: [TeamAdminToolFields.Email], config: getInputCellFieldConfig({ ...emailOptions }) },
     { fields: [TeamAdminToolFields.TeamMember], config: getInputCellFieldConfig({ ...options }) },
     { fields: [TeamAdminToolFields.JiraID], config: getInputCellFieldConfig({ ...options }) },
     { fields: [TeamAdminToolFields.OrgID], config: getInputCellFieldConfig({ ...options }) },
     { fields: [TeamAdminToolFields.HourlyRate], config: getInputCellFieldConfig({ ...options }) },
     { fields: [TeamAdminToolFields.YearlyHours], config: getInputCellFieldConfig({ ...options }) },
     { fields: [TeamAdminToolFields.TeamID], config: getInputCellFieldConfig({ ...options }) },
-    { fields: [TeamAdminToolFields.WorkloadRatio], config: getInputCellFieldConfig({ ...options }) },
+    { fields: [TeamAdminToolFields.WorkloadRatio], config: getInputCellFieldConfig({ ...workloadRatioOptions }) },
     { fields: [TeamAdminToolFields.Role], config: getRoleSelectCellFieldConfig({ ...options }) },
   ];
   const visibleDataFrame = removeHiddenFields(dataFrame, hiddenFields);

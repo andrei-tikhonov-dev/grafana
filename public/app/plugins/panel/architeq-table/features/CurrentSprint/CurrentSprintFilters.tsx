@@ -4,6 +4,7 @@ import React, { useState, ChangeEvent } from 'react';
 import { SelectableValue } from '@grafana/data';
 import { Input, MultiSelect, Select, useStyles2 } from '@grafana/ui';
 
+import { FilterInputWrapper } from '../../components/FilterInputWrapper';
 import { SprintPlaningColumns } from '../SprintPlaning/constants';
 
 import { CurrentSprintColumns } from './constants';
@@ -15,7 +16,7 @@ const getStyles = () => {
   return {
     container: css`
       display: flex;
-      gap: 10px;
+      gap: 2px;
       margin-bottom: 20px;
       max-width: 800px;
     `,
@@ -61,25 +62,31 @@ export const CurrentSprintFilters: React.FC<Props> = ({ assignees, statuses, onC
   return (
     <div className={styles.container}>
       <div className={styles.input}>
-        <Input value={filter.search} onChange={handleInputChange} placeholder="Search" />
+        <FilterInputWrapper>
+          <Input value={filter.search} onChange={handleInputChange} placeholder="Search" />
+        </FilterInputWrapper>
       </div>
       <div className={styles.input}>
-        <MultiSelect
-          options={assignees.map((teamMember) => ({ label: teamMember, value: teamMember }))}
-          value={filter.teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}
-          onChange={handleAssigneesChange}
-          placeholder={SprintPlaningColumns.TeamMember}
-          isClearable
-        />
+        <FilterInputWrapper>
+          <MultiSelect
+            options={assignees.map((teamMember) => ({ label: teamMember, value: teamMember }))}
+            value={filter.teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}
+            onChange={handleAssigneesChange}
+            placeholder={SprintPlaningColumns.TeamMember}
+            isClearable
+          />
+        </FilterInputWrapper>
       </div>
       <div className={styles.input}>
-        <Select
-          options={statuses.map((status) => ({ label: status, value: status }))}
-          value={filter.status ? { label: filter.status, value: filter.status } : null}
-          onChange={handleStatusChange}
-          placeholder={CurrentSprintColumns.Status}
-          isClearable
-        />
+        <FilterInputWrapper>
+          <Select
+            options={statuses.map((status) => ({ label: status, value: status }))}
+            value={filter.status ? { label: filter.status, value: filter.status } : null}
+            onChange={handleStatusChange}
+            placeholder={CurrentSprintColumns.Status}
+            isClearable
+          />
+        </FilterInputWrapper>
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import { PanelPlugin } from '@grafana/data';
 
-import { HeaderParametersEditor } from './components/HeaderParametersEditor';
 import { TablePanel } from './components/TablePanel';
 import { TableType } from './constants';
 import { PanelOptions } from './types';
@@ -86,13 +85,5 @@ export const plugin = new PanelPlugin<PanelOptions>(TablePanel).setPanelOptions(
         placeholder: 'http://',
       },
       showIf: (config) => config.tableType === TableType.TeamAdminTool,
-    })
-    .addCustomEditor({
-      id: 'update.header',
-      path: 'update.header',
-      name: 'Header Parameters',
-      category: ['Update Request'],
-      editor: HeaderParametersEditor,
-      showIf: (config) => config.tableType === TableType.HistoricalData || config.tableType === TableType.SprintPlaning,
     });
 });

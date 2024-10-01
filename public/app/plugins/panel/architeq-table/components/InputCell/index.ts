@@ -1,11 +1,11 @@
 import { TableCellDisplayMode } from '@grafana/ui';
 
-import { UpdateDataType } from '../../features/TeamAdminTool/types';
+import { FieldValidationType } from '../../types';
 
 import { InputCell } from './InputCell';
 
 interface InputCellOptions extends Record<string, any> {
-  inputOptions?: { validation?: any; handleUpdate?: (data: UpdateDataType) => void };
+  validation?: FieldValidationType[];
 }
 
 export const getInputCellFieldConfig = (customOptions: InputCellOptions = {}) => {

@@ -27,7 +27,7 @@ const getStyles = () => {
   return {
     filterContainer: css`
       display: flex;
-      gap: 10px;
+      gap: 2px;
       margin-bottom: 20px;
       max-width: 800px;
     `,
@@ -81,7 +81,7 @@ export const TeamAdminTool: React.FC<Props> = ({ options, data, width, height })
     return createRequest(payload);
   };
 
-  const configuredData = configTeamAdminToolData({ dataFrame, hiddenFields, handleDelete });
+  const configuredData = configTeamAdminToolData({ dataFrame, hiddenFields, handleDelete, maxWorkload });
 
   const { handleFiltersChange, filteredData, filterOptions } = useTeamAdminFilters(configuredData);
 

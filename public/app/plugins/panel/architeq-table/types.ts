@@ -89,3 +89,13 @@ export type InfoStatusType = {
   status: Status;
   message?: string;
 };
+
+export const enum FieldValidation {
+  EMAIL = 'email',
+  MAX = 'max',
+}
+
+export type FieldValidationType = {
+  type: FieldValidation;
+  value?: number;
+};
