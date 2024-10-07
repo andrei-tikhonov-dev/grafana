@@ -36,12 +36,12 @@ yarn workspace <name_of_plugin> dev
 
 ### Build and publish docker file
 ```shell
-docker buildx build --platform linux/amd64 -t imarchiteq/sprintometer-ui-test:11.1.13 --load .
+docker buildx build --platform linux/amd64 -t imarchiteq/sprintometer-ui-test:11.1.14 --load .
 # or --platform linux/arm64
 
 docker login
 
-docker push imarchiteq/sprintometer-ui-test:11.1.13
+docker push imarchiteq/sprintometer-ui-test:11.1.14
 ```
 
 

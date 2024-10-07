@@ -25,6 +25,7 @@ const alertmanagerPlugin = async () =>
 import { config } from '@grafana/runtime';
 import * as alertListPanel from 'app/plugins/panel/alertlist/module';
 import * as annoListPanel from 'app/plugins/panel/annolist/module';
+import * as architeqLinks from 'app/plugins/panel/architeq-links/module';
 import * as architeqTable from 'app/plugins/panel/architeq-table/module';
 import * as architeqTimeline from 'app/plugins/panel/architeq-timeline/module';
 import * as barChartPanel from 'app/plugins/panel/barchart/module';
@@ -101,6 +102,7 @@ const builtInPlugins: Record<string, System.Module | (() => Promise<System.Modul
   'core:plugin/sankey': sankeyPanel,
   'core:plugin/architeq-table': architeqTable,
   'core:plugin/architeq-timeline': architeqTimeline,
+  'core:plugin/architeq-links': architeqLinks,
   'core:plugin/annolist': annoListPanel,
   'core:plugin/heatmap': heatmapPanel,
   'core:plugin/table': tablePanel,
