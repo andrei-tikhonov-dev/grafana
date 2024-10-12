@@ -23,7 +23,7 @@ const getStyles = () => ({
   `,
   wrapper: css`
     display: flex;
-    gap: 8px;
+    gap: 24px;
     padding-bottom: 10px;
     overflow: auto;
   `,

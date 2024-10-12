@@ -17,6 +17,7 @@ const getStyles = (theme: GrafanaTheme2) => {
       display: flex;
       gap: 5px;
       align-items: baseline;
+      margin-bottom: 12px;
     `,
     ok: css`
       color: ${theme.colors.success.text};
@@ -61,7 +62,7 @@ export const SprintStatus: React.FC<Props> = ({ status, message }) => {
   return (
     <div className={styles.status}>
       {renderIconAndStyle()}
-      {message}
+      <strong>{message}</strong>
     </div>
   );
 };

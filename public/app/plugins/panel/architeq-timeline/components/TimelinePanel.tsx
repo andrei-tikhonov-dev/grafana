@@ -6,6 +6,7 @@ import { Icon, useStyles2 } from '@grafana/ui';
 
 import { PanelOptions, SprintMeta } from '../types';
 
+import { Goals } from './Goals';
 import { SprintStatus } from './SprintStatus';
 import { SprintTimeline } from './SprintTimeline';
 
@@ -19,7 +20,8 @@ const getStyles = (theme: GrafanaTheme2) => {
     `,
     info: css`
       display: flex;
-      gap: 3rem;
+      gap: 24px;
+      margin-bottom: 24px;
     `,
     infoItem: css`
       display: flex;
@@ -27,7 +29,7 @@ const getStyles = (theme: GrafanaTheme2) => {
       align-items: center;
     `,
     timeline: css`
-      padding: 24px 0;
+      margin-bottom: 24px;
     `,
     status: css`
       display: flex;
@@ -43,14 +45,31 @@ const getStyles = (theme: GrafanaTheme2) => {
     footer: css`
       display: flex;
       flex-direction: column;
+      margin-bottom: 12px;
     `,
   };
 };
 
-export const TimelinePanel: React.FC<Props> = ({ data, width, height }) => {
+export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, fieldConfig, id }) => {
   const styles = useStyles2(getStyles);
   const meta = data.series[0]?.meta as SprintMeta;
-  const { name, team, from, till, weeks, sprintOnTarget, completedIssues, totalIssues } = meta.custom;
+  const {
+    name,
+    team,
+    from,
+    till,
+    weeks,
+    goals,
+    sprintOnTarget,
+    infoStatus,
+    completedIssues,
+    totalIssues,
+    description,
+  } = meta.custom;
+  const descriptionIssues =
+    completedIssues !== undefined && totalIssues !== undefined
+      ? `${completedIssues} of ${totalIssues} issues have been completed`
+      : '';
 
   return (
     <div
@@ -62,11 +81,10 @@ export const TimelinePanel: React.FC<Props> = ({ data, width, height }) => {
         `
       )}
     >
+      <h1>
+        {options.header} {name}
+      </h1>
       <div className={styles.info}>
-        <div className={styles.infoItem}>
-          <strong>Sprint:</strong>
-          {name}
-        </div>
         <div className={styles.infoItem}>
           <Icon name="users-alt" size="md" />
           <strong>Team:</strong>
@@ -74,19 +92,29 @@ export const TimelinePanel: React.FC<Props> = ({ data, width, height }) => {
         </div>
         <div className={styles.infoItem}>
           <Icon name="calendar-alt" size="md" />
-          <strong>Date:</strong>
-          {dateTime(from).format('DD MMM, YYYY')} - {dateTime(till).format('DD MMM, YYYY')}
+          <strong>Start:</strong>
+          {dateTime(from).format('DD MMM, YYYY')}
+        </div>
+        <div className={styles.infoItem}>
+          <Icon name="calendar-alt" size="md" />
+          <strong>End:</strong>
+          {dateTime(till).format('DD MMM, YYYY')}
         </div>
       </div>
-      <div className={styles.timeline}>
-        <SprintTimeline weeks={weeks} />
-      </div>
-      <div className={styles.footer}>
-        <SprintStatus status={sprintOnTarget.status} message={sprintOnTarget.message} />
-        <div>
-          {completedIssues} of {totalIssues} issues have been completed
+      {goals && <Goals data={goals} title={options.goalsTitle} />}
+
+      {weeks && (
+        <div className={styles.timeline}>
+          <SprintTimeline weeks={weeks} />
         </div>
-      </div>
+      )}
+
+      <footer className={styles.footer}>
+        {sprintOnTarget && <SprintStatus status={sprintOnTarget.status} message={sprintOnTarget.message} />}
+        {infoStatus && <SprintStatus status={infoStatus.status} message={infoStatus.message} />}
+        {descriptionIssues && <div>{descriptionIssues}</div>}
+        {description && <div>{description}</div>}
+      </footer>
     </div>
   );
 };

@@ -163,11 +163,13 @@ function processFrame({
   return { pluginDataPaths, pluginDataNodes, rows };
 }
 
-function parseNodeValue(
-  nodeValue: string,
-  baseUrl = '',
-  delimiter = ''
-): { name: string; tooltip: string; link: string } {
+type NodeValueDataType = { name: string; tooltip: string; link: string };
+
+function parseNodeValue(nodeValue: string | NodeValueDataType, baseUrl = '', delimiter = ''): NodeValueDataType {
+  if (typeof nodeValue === 'object') {
+    return { ...nodeValue, link: nodeValue.link ? `${baseUrl}${nodeValue.link}` : '' };
+  }
+
   const parts = nodeValue.split(delimiter);
   const name = parts[0];
   const tooltip = parts.length > 1 ? parts[1] : name;
