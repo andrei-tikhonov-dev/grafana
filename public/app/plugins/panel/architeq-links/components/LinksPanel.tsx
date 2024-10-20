@@ -5,24 +5,25 @@ import { PanelProps } from '@grafana/data';
 import { PanelDataErrorView } from '@grafana/runtime';
 import { useStyles2 } from '@grafana/ui';
 
-import { LinkDataType, SimpleOptions } from '../types';
+import { LinkCardDataType, SimpleOptions } from '../types';
 
-import { LinkCard } from './LinkCard';
+import { LinkCardRow } from './LinkCardRow';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
 const getStyles = () => {
   return {
     wrapper: css`
+      overflow: auto;
+    `,
+    header: css`
+      margin-bottom: 24px;
+    `,
+    rowContainer: css`
       display: flex;
       flex-direction: column;
-    `,
-    linksContainer: css`
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      overflow: auto;
-      padding: 4px;
+      gap: 24px;
+      padding-bottom: 12px;
     `,
   };
 };
@@ -35,7 +36,9 @@ export const LinksPanel: React.FC<Props> = ({ options, data, width, height, fiel
   }
 
   const dataFrame = data.series[0];
-  const values: LinkDataType[] = dataFrame.fields[0].values;
+  const linkCardData = dataFrame.meta?.custom as LinkCardDataType;
+  const { header, description, rows } = linkCardData;
+  const hasHeader = header || description;
 
   return (
     <div
@@ -47,11 +50,14 @@ export const LinksPanel: React.FC<Props> = ({ options, data, width, height, fiel
         `
       )}
     >
-      {options.header && <h3>{options.header}</h3>}
-      <div className={styles.linksContainer}>
-        {values.map((data) => (
-          <LinkCard data={data} key={data.title} />
-        ))}
+      {hasHeader && (
+        <div className={styles.header}>
+          {linkCardData.header && <h2>{linkCardData.header}</h2>}
+          {linkCardData.description && <p>{linkCardData.description}</p>}
+        </div>
+      )}
+      <div className={styles.rowContainer}>
+        {rows?.map((rowData) => <LinkCardRow key={rowData.title} {...rowData} />)}
       </div>
     </div>
   );

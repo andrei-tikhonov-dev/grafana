@@ -1,109 +1,131 @@
 import { css } from '@emotion/css';
+import cn from 'classnames';
 import React from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { Icon, Tooltip, useStyles2 } from '@grafana/ui';
+import { Icon, Tag, useStyles2 } from '@grafana/ui';
 
-import { LinkDataType } from '../../types';
+import { LinkCardType } from '../../types';
+import { ColoredIcon } from '../ColoredIcon';
+import { InfoListItem } from '../InfoListItem';
 
 const getStyles = (theme: GrafanaTheme2) => {
   return {
     container: css`
-      background-color: ${theme.colors.background.canvas};
       border-radius: 8px;
+      border: 1px solid ${theme.colors.warning.text};
       padding: 16px;
-      min-width: 250px;
+      width: 350px;
+      min-width: 350px;
+      position: relative;
       cursor: pointer;
-      flex: 1;
+      transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
       &:hover {
         background-color: ${theme.colors.warning.transparent};
         box-shadow: ${theme.shadows.z2};
+        transform: translate(-1px, -3px);
       }
     `,
     containerDisabled: css`
-      background-color: ${theme.colors.background.canvas};
+      position: relative;
       border-radius: 8px;
+      border: 1px solid ${theme.colors.border.medium};
       padding: 16px;
-      min-width: 250px;
+      width: 350px;
+      min-width: 350px;
     `,
     title: css`
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 22px;
+      margin-bottom: 12px;
+    `,
+    linkIcon: css`
+      color: ${theme.colors.warning.text};
+      position: absolute;
+      right: 12px;
+    `,
+    comingSoon: css`
+      color: ${theme.colors.secondary.text};
+      position: absolute;
+      right: 8px;
+      top: 8px;
     `,
     body: css`
       display: flex;
       gap: 12px;
-      min-height: 100px;
-      align-items: flex-start;
-    `,
-    icon: css`
-      width: 80px;
+      align-items: center;
+      margin-bottom: 12px;
     `,
     value: css`
       display: flex;
       gap: 4px;
-      font-size: 32px;
+      font-size: 48px;
       font-weight: 700;
-      align-items: baseline;
+      align-items: flex-start;
+      line-height: 48px;
     `,
     unit: css`
       font-size: 14px;
+      line-height: 22px;
       font-weight: 400;
     `,
-    description: css`
-      font-size: 12px;
-    `,
-    status: css`
-      font-size: 12px;
-      font-weight: 700;
+    infoItems: css``,
+    disabled: css`
+      opacity: 0.5;
     `,
   };
 };
 
-type Props = {
-  data: LinkDataType;
-};
+interface Props extends LinkCardType {}
 
-export const LinkCard = ({ data }: Props) => {
+export const LinkCard = ({ title, url, icon, unit, value, newTab, info, isComingSoon }: Props) => {
   const styles = useStyles2(getStyles);
+  const shouldShowBody = icon || unit || value !== undefined;
 
   const Content = (
     <>
-      <div className={styles.title}>{data.title}</div>
-      <div className={styles.body}>
-        <img className={styles.icon} src={data.icon} alt={data.title} />
-        <div>
-          {data.value !== undefined && (
+      {url && (
+        <div className={styles.linkIcon}>
+          <Icon name="link" size="lg" />
+        </div>
+      )}
+      {isComingSoon && (
+        <div className={styles.comingSoon}>
+          <Tag name="coming soon" />
+        </div>
+      )}
+      {shouldShowBody && (
+        <div className={styles.body}>
+          {icon && <ColoredIcon alt={title} path={icon} />}
+          {value !== undefined && (
             <div className={styles.value}>
-              {data.value}
-
-              <span className={styles.unit}>{data.unit}</span>
+              {value}
+              {unit && <div className={styles.unit}>{unit}</div>}
             </div>
           )}
-          <div className={styles.description}>
-            {data.description}{' '}
-            {data.tooltip && (
-              <Tooltip content={<div dangerouslySetInnerHTML={{ __html: data.tooltip }} />}>
-                <Icon name="question-circle" />
-              </Tooltip>
-            )}
-          </div>
         </div>
-      </div>
+      )}
+      {title && <h4 className={styles.title}>{title}</h4>}
+      {info && (
+        <div className={styles.infoItems}>
+          {info.map((infoItem) => (
+            <InfoListItem key={infoItem.name} {...infoItem} />
+          ))}
+        </div>
+      )}
     </>
   );
 
-  return data.disabled ? (
-    <div className={styles.containerDisabled}>{Content}</div>
-  ) : (
+  return url ? (
     <a
-      href={data.url}
-      target={data.newTab ? '_blank' : '_self'}
-      rel={data.newTab ? 'noopener noreferrer' : undefined}
-      className={styles.container}
+      href={url}
+      target={newTab ? '_blank' : '_self'}
+      rel={newTab ? 'noopener noreferrer' : undefined}
+      className={cn(styles.container, { [styles.disabled]: isComingSoon })}
     >
       {Content}
     </a>
+  ) : (
+    <div className={cn(styles.containerDisabled, { [styles.disabled]: isComingSoon })}>{Content}</div>
   );
 };
