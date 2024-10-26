@@ -4,11 +4,14 @@ import React from 'react';
 import { GrafanaTheme2 } from '@grafana/data';
 import { Checkbox, useStyles2 } from '@grafana/ui';
 
+import { RequestMethod } from '../constants';
+import { useRequest } from '../hooks/useRequest';
 import { GoalType } from '../types';
 
 type Props = {
   data: GoalType[];
   title?: string;
+  updateUrl?: string;
 };
 
 const getStyles = (theme: GrafanaTheme2) => {
@@ -26,11 +29,30 @@ const getStyles = (theme: GrafanaTheme2) => {
   };
 };
 
-export const Goals: React.FC<Props> = ({ data, title }) => {
+export const Goals: React.FC<Props> = ({ data, title, updateUrl }) => {
   const styles = useStyles2(getStyles);
 
+  const { updateRequest } = useRequest({
+    update: {
+      url: updateUrl,
+      method: RequestMethod.POST,
+    },
+  });
+
+  const handleUpdate = async (value: boolean, id: string | number) => {
+    const payload = { value, id };
+    console.log(payload);
+    return updateRequest(payload);
+  };
+
   const renderCheckbox = (goal: GoalType) => {
-    return <Checkbox value={goal.isCompleted} label={goal.text} />;
+    return (
+      <Checkbox
+        value={goal.isCompleted}
+        label={goal.text}
+        onChange={(event: any) => handleUpdate(event.target.checked, goal.id)}
+      />
+    );
   };
 
   return (

@@ -2,12 +2,16 @@ import { css, cx } from '@emotion/css';
 import React from 'react';
 
 import { dateTime, GrafanaTheme2, PanelProps } from '@grafana/data';
-import { Icon, useStyles2 } from '@grafana/ui';
+import { useStyles2 } from '@grafana/ui';
 
-import { PanelOptions, SprintMeta } from '../types';
+import { PanelOptions, PanelDataType } from '../types';
 
+import { BreadCrumbs } from './BreadCrumbs';
 import { Goals } from './Goals';
-import { SprintStatus } from './SprintStatus';
+import { InfoFooter } from './InfoFooter';
+import { InfoLine } from './InfoLine/InfoLine';
+import { ProgressBar } from './ProgressBar';
+import { Select } from './Select';
 import { SprintTimeline } from './SprintTimeline';
 
 interface Props extends PanelProps<PanelOptions> {}
@@ -17,6 +21,11 @@ const getStyles = (theme: GrafanaTheme2) => {
     wrapper: css`
       position: relative;
       overflow: auto;
+    `,
+    header: css`
+      display: flex;
+      align-items: center;
+      gap: 24px;
     `,
     info: css`
       display: flex;
@@ -31,17 +40,6 @@ const getStyles = (theme: GrafanaTheme2) => {
     timeline: css`
       margin-bottom: 24px;
     `,
-    status: css`
-      display: flex;
-      gap: 5px;
-      align-items: baseline;
-    `,
-    statusOk: css`
-      color: ${theme.colors.success.text};
-    `,
-    statusBad: css`
-      color: ${theme.colors.error.text};
-    `,
     footer: css`
       display: flex;
       flex-direction: column;
@@ -52,20 +50,24 @@ const getStyles = (theme: GrafanaTheme2) => {
 
 export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, fieldConfig, id }) => {
   const styles = useStyles2(getStyles);
-  const meta = data.series[0]?.meta as SprintMeta;
+  const panelData = data.series[0]?.meta?.custom as PanelDataType;
   const {
-    name,
-    team,
+    title,
     from,
     till,
     weeks,
+    progress,
     goals,
+    select,
+    info,
+    infoFooter,
     sprintOnTarget,
+    team,
+    name,
     infoStatus,
     completedIssues,
     totalIssues,
-    description,
-  } = meta.custom;
+  } = panelData;
   const descriptionIssues =
     completedIssues !== undefined && totalIssues !== undefined
       ? `${completedIssues} of ${totalIssues} issues have been completed`
@@ -81,27 +83,18 @@ export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, f
         `
       )}
     >
-      <h1>
-        {options.header} {name}
+      <BreadCrumbs items={[{ label: 'Solution Train', link: '/' }, { label: 'ART', link: '/art' }, { label: 'PI' }]} />
+      <h1 className={styles.header}>
+        {options.header} {name || title} {select && <Select options={select.options} label={select.label} />}
       </h1>
+
       <div className={styles.info}>
-        <div className={styles.infoItem}>
-          <Icon name="users-alt" size="md" />
-          <strong>Team:</strong>
-          {team}
-        </div>
-        <div className={styles.infoItem}>
-          <Icon name="calendar-alt" size="md" />
-          <strong>Start:</strong>
-          {dateTime(from).format('DD MMM, YYYY')}
-        </div>
-        <div className={styles.infoItem}>
-          <Icon name="calendar-alt" size="md" />
-          <strong>End:</strong>
-          {dateTime(till).format('DD MMM, YYYY')}
-        </div>
+        {info?.map((infoItem) => <InfoLine key={infoItem.name} {...infoItem} />)}
+        {team && <InfoLine value={team} name="Team:" icon="fa6/FaUsersLine" />}
+        {from && <InfoLine value={dateTime(from).format('DD MMM, YYYY')} name="Start:" icon="fa6/FaCalendarDays" />}
+        {till && <InfoLine value={dateTime(till).format('DD MMM, YYYY')} name="End:" icon="fa6/FaCalendarDays" />}
       </div>
-      {goals && <Goals data={goals} title={options.goalsTitle} />}
+      {goals && <Goals data={goals} title={options.goalsTitle} updateUrl={options.goalsUpdateUrl} />}
 
       {weeks && (
         <div className={styles.timeline}>
@@ -109,11 +102,15 @@ export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, f
         </div>
       )}
 
+      {progress && <ProgressBar {...progress} />}
+
       <footer className={styles.footer}>
-        {sprintOnTarget && <SprintStatus status={sprintOnTarget.status} message={sprintOnTarget.message} />}
-        {infoStatus && <SprintStatus status={infoStatus.status} message={infoStatus.message} />}
-        {descriptionIssues && <div>{descriptionIssues}</div>}
-        {description && <div>{description}</div>}
+        {sprintOnTarget && <InfoFooter status={sprintOnTarget.status} value={sprintOnTarget.message} />}
+        {infoFooter?.map((info) => <InfoFooter {...info} key={info.name} />)}
+        {/* Deprecated */}
+        {descriptionIssues && <InfoFooter value={descriptionIssues} />}
+        {/* Deprecated */}
+        {infoStatus && <InfoFooter value={infoStatus.message} status={infoStatus.status} />}
       </footer>
     </div>
   );

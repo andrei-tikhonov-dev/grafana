@@ -14,5 +14,12 @@ export const plugin = new PanelPlugin<PanelOptions>(TimelinePanel).setPanelOptio
       path: 'goalsTitle',
       name: 'Goals title',
       settings: {},
+    })
+    .addTextInput({
+      path: 'goalsUpdateUrl',
+      name: 'Goals update url',
+      settings: {
+        placeholder: 'http://',
+      },
     });
 });
