@@ -7,7 +7,7 @@ import { Icon, Tag, useStyles2 } from '@grafana/ui';
 
 import { LinkCardType } from '../../types';
 import { ColoredIcon } from '../ColoredIcon';
-import { InfoListItem } from '../InfoListItem';
+import { InfoLine } from '../InfoLine';
 
 const getStyles = (theme: GrafanaTheme2) => {
   return {
@@ -109,7 +109,7 @@ export const LinkCard = ({ title, url, icon, unit, value, newTab, info, isComing
       {info && (
         <div className={styles.infoItems}>
           {info.map((infoItem) => (
-            <InfoListItem key={infoItem.name} {...infoItem} />
+            <InfoLine key={infoItem.name} {...infoItem} />
           ))}
         </div>
       )}

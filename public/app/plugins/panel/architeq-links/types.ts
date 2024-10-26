@@ -1,5 +1,3 @@
-import { IconName } from '@grafana/data';
-
 export interface SimpleOptions {}
 
 export const enum Status {
@@ -68,9 +66,12 @@ export const enum CardSize {
 
 export interface InfoListItemType {
   name?: string;
-  value?: string | number;
-  icon?: IconName;
-  status?: Status;
+  value?: string;
+  icon?: string;
+  status?: `${Status}`;
+  link?: string;
+  button?: boolean;
+  newTab?: boolean;
 }
 
 export interface LinkCardType {

@@ -31,7 +31,7 @@ export const LinkCardRow = ({ cards, title, size, tooltip }: Props) => {
     <>
       <div className={styles.container}>
         {title && <h3 className={styles.title}>{title}</h3>}
-        <div className={styles.row}>{cards?.map((card) => <LinkCard key={card.title} {...card} />)}</div>
+        <div className={styles.row}>{cards?.map((card) => <LinkCard {...card} key={card.title} />)}</div>
       </div>
     </>
   );
