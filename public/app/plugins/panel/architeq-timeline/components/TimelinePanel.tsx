@@ -61,6 +61,7 @@ export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, f
     select,
     info,
     infoFooter,
+    breadCrumbs,
     sprintOnTarget,
     team,
     name,
@@ -83,13 +84,15 @@ export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, f
         `
       )}
     >
-      <BreadCrumbs items={[{ label: 'Solution Train', link: '/' }, { label: 'ART', link: '/art' }, { label: 'PI' }]} />
+      {breadCrumbs && <BreadCrumbs items={breadCrumbs} />}
       <h1 className={styles.header}>
         {options.header} {name || title} {select && <Select options={select.options} label={select.label} />}
       </h1>
 
       <div className={styles.info}>
-        {info?.map((infoItem) => <InfoLine key={infoItem.name} {...infoItem} />)}
+        {info?.map((infoItem) => (
+          <InfoLine key={infoItem.name} {...infoItem} />
+        ))}
         {team && <InfoLine value={team} name="Team:" icon="fa6/FaUsersLine" />}
         {from && <InfoLine value={dateTime(from).format('DD MMM, YYYY')} name="Start:" icon="fa6/FaCalendarDays" />}
         {till && <InfoLine value={dateTime(till).format('DD MMM, YYYY')} name="End:" icon="fa6/FaCalendarDays" />}
@@ -106,7 +109,9 @@ export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, f
 
       <footer className={styles.footer}>
         {sprintOnTarget && <InfoFooter status={sprintOnTarget.status} value={sprintOnTarget.message} />}
-        {infoFooter?.map((info) => <InfoFooter {...info} key={info.name} />)}
+        {infoFooter?.map((info) => (
+          <InfoFooter {...info} key={info.name} />
+        ))}
         {/* Deprecated */}
         {descriptionIssues && <InfoFooter value={descriptionIssues} />}
         {/* Deprecated */}
