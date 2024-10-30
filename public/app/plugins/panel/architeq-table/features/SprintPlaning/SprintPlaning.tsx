@@ -48,14 +48,14 @@ export const SprintPlaning: React.FC<Props> = ({ options, data, width, height })
   const info = teamMembersFrame.meta?.custom as SprintPlaningInfoType;
 
   const configuredTeamMembersFrame = configTeamMembersFrame(teamMembersFrame);
-  const configuredRolesFrame = configRolesFrame(rolesFrame);
+  const configuredRolesFrame = rolesFrame ? configRolesFrame(rolesFrame) : rolesFrame;
 
   const handleFiltersChange = (filters: SprintPlaningFiltersType) => {
     setFilters(filters);
   };
 
   const teamMembers = getTeamMemberOptions(configuredTeamMembersFrame);
-  const roles = getRoleOptions(configuredRolesFrame);
+  const roles = rolesFrame ? getRoleOptions(configuredRolesFrame) : [];
   const filteredTeamMembersFrame = filterTeamMembers(configuredTeamMembersFrame, filters);
   const filteredRolesFrame = filterRoles(configuredRolesFrame, filters);
 
@@ -100,7 +100,7 @@ export const SprintPlaning: React.FC<Props> = ({ options, data, width, height })
           roles={roles}
           isGroupedByRole={isGroupedByRole}
         />
-        <FilterInputWrapper>{switchComponent}</FilterInputWrapper>
+        {rolesFrame && <FilterInputWrapper>{switchComponent}</FilterInputWrapper>}
       </div>
 
       <DataTable
