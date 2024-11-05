@@ -21,6 +21,8 @@ const mssqlPlugin = async () =>
   await import(/* webpackChunkName: "mssqlPlugin" */ 'app/plugins/datasource/mssql/module');
 const alertmanagerPlugin = async () =>
   await import(/* webpackChunkName: "alertmanagerPlugin" */ 'app/plugins/datasource/alertmanager/module');
+const jsonPlugin = async () =>
+  await import(/* webpackChunkName: "jsonPlugin" */ 'app/plugins/datasource/architeq-json/module');
 
 import { config } from '@grafana/runtime';
 import * as alertListPanel from 'app/plugins/panel/alertlist/module';
@@ -86,6 +88,7 @@ const builtInPlugins: Record<string, System.Module | (() => Promise<System.Modul
   'core:plugin/mssql': mssqlPlugin,
   'core:plugin/prometheus': prometheusPlugin,
   'core:plugin/alertmanager': alertmanagerPlugin,
+  'core:plugin/architeq-json': jsonPlugin,
   // panels
   'core:plugin/text': textPanel,
   'core:plugin/timeseries': timeseriesPanel,

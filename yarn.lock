@@ -17335,6 +17335,7 @@ __metadata:
     tracelib: "npm:1.0.1"
     ts-jest: "npm:29.1.4"
     ts-node: "npm:10.9.2"
+    ts-pattern: "npm:^5.5.0"
     tslib: "npm:2.6.3"
     tween-functions: "npm:^1.2.0"
     type-fest: "npm:^4.18.2"
@@ -17354,6 +17355,7 @@ __metadata:
     xlsx: "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
     yaml: "npm:^2.0.0"
     yargs: "npm:^17.5.1"
+    zod: "npm:^3.23.8"
   dependenciesMeta:
     prettier@3.3.1:
       unplugged: true
@@ -29247,6 +29249,13 @@ __metadata:
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
   checksum: 10/a91a15b3c9f76ac462f006fa88b6bfa528130dcfb849dd7ef7f9d640832ab681e235b8a2bc58ecde42f72851cc1d5d4e22c901b0c11aa51001ea1d395074b794
+  languageName: node
+  linkType: hard
+
+"ts-pattern@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "ts-pattern@npm:5.5.0"
+  checksum: 10/d07b22cc65ea4601be588f9ac6e9aeafdc36e13bb3779bcb2ca298e9010b14eca34305c61ad89c0c68e52c5ea5725584fab5e500f5efdf5922289b36b398b684
   languageName: node
   linkType: hard
 
