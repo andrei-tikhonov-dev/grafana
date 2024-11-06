@@ -99,3 +99,13 @@ export type FieldValidationType = {
   type: FieldValidation;
   value?: number;
 };
+
+export interface InfoListItemType {
+  name?: string;
+  value?: string;
+  icon?: string;
+  status?: `${Status}`;
+  link?: string;
+  button?: boolean;
+  newTab?: boolean;
+}

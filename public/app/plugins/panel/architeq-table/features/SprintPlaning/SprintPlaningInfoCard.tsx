@@ -4,10 +4,10 @@ import React, { ChangeEvent, useState } from 'react';
 import { GrafanaTheme2 } from '@grafana/data';
 import { Icon, IconButton, useStyles2 } from '@grafana/ui';
 
-import { InfoStatus } from '../../components/InfoStatus/InfoStatus';
 import { LoadingMode } from '../../constants';
 import { Status } from '../../types';
 
+import { SprintPlaningInfoStatus } from './SprintPlaningInfoStatus';
 import { SprintPlaningInfoType } from './types';
 
 const getStyles = (theme: GrafanaTheme2) => {
@@ -160,7 +160,7 @@ export const SprintPlaningInfoCard: React.FC<Props> = ({
         <div className={`${styles.cell} ${styles.cellLeftAligned}`}>
           <div className={styles.cellContainer}>
             <div className={styles.tableTitle}>
-              <InfoStatus
+              <SprintPlaningInfoStatus
                 title="Total Person-Days"
                 status={totalPersonDaysInfo.status}
                 message={totalPersonDaysInfo.message}
@@ -173,7 +173,7 @@ export const SprintPlaningInfoCard: React.FC<Props> = ({
         </div>
         <div className={`${styles.cell} ${styles.cellLeftAligned}`}>
           <div className={styles.cellContainer}>
-            <InfoStatus
+            <SprintPlaningInfoStatus
               title="Total Story Points"
               status={totalStoryPointsInfo?.status}
               message={totalStoryPointsInfo?.message}

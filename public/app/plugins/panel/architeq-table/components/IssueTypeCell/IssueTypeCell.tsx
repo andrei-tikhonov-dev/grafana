@@ -2,6 +2,8 @@ import { css } from '@emotion/css';
 import React from 'react';
 
 import { CustomCellRendererProps, useStyles2 } from '@grafana/ui';
+import { InfoLine } from '../InfoLine';
+import { InfoListItemType } from '../../types';
 
 const getStyles = () => {
   return {
@@ -23,8 +25,12 @@ const icons: Record<string, string> = {
 
 export const IssueTypeCell = ({ value }: CustomCellRendererProps) => {
   const styles = useStyles2(getStyles);
-  const type = String(value);
 
+  if (typeof value === 'object') {
+    return <InfoLine {...(value as InfoListItemType)} />;
+  }
+
+  const type = String(value);
   return (
     <div className={styles.cell}>
       <img src={icons[type] || icons.default} alt={type} /> {type}

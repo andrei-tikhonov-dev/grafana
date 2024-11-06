@@ -2,7 +2,7 @@ import { css } from '@emotion/css';
 import React, { useState, ChangeEvent } from 'react';
 
 import { SelectableValue } from '@grafana/data';
-import { Input, MultiSelect, Select, useStyles2 } from '@grafana/ui';
+import { Input, MultiSelect, useStyles2 } from '@grafana/ui';
 
 import { FilterInputWrapper } from '../../components/FilterInputWrapper';
 import { SprintPlaningColumns } from '../SprintPlaning/constants';
@@ -35,7 +35,7 @@ type Props = {
 export const CurrentSprintFilters: React.FC<Props> = ({ assignees, statuses, onChange }) => {
   const [filter, setFilter] = useState<Filters>({
     teamMembers: [],
-    status: '',
+    status: [],
     search: '',
   });
   const styles = useStyles2(getStyles);
@@ -53,8 +53,9 @@ export const CurrentSprintFilters: React.FC<Props> = ({ assignees, statuses, onC
     onChange(newFilter);
   };
 
-  const handleStatusChange = (selected: SelectableValue<string> | null) => {
-    const newFilter = { ...filter, status: selected?.value || '' };
+  const handleStatusChange = (selected: Array<SelectableValue<string>>) => {
+    const selectedValues = selected.map((item) => item.value || '');
+    const newFilter = { ...filter, status: selectedValues };
     setFilter(newFilter);
     onChange(newFilter);
   };
@@ -79,9 +80,9 @@ export const CurrentSprintFilters: React.FC<Props> = ({ assignees, statuses, onC
       </div>
       <div className={styles.input}>
         <FilterInputWrapper>
-          <Select
+          <MultiSelect
             options={statuses.map((status) => ({ label: status, value: status }))}
-            value={filter.status ? { label: filter.status, value: filter.status } : null}
+            value={filter.status.map((status) => ({ label: status, value: status }))}
             onChange={handleStatusChange}
             placeholder={CurrentSprintColumns.Status}
             isClearable

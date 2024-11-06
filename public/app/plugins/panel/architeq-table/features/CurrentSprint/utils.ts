@@ -10,7 +10,7 @@ import { updateFieldConfig, wrapTeamMemberField } from '../../utils';
 import { CurrentSprintColumns } from './constants';
 import { Filters } from './types';
 
-export function configData(dataFrame: DataFrame): DataFrame {
+export function configCurrentSprintData(dataFrame: DataFrame): DataFrame {
   const fieldConfigs = [
     { fields: [CurrentSprintColumns.Identifier], config: getLinkCellFieldConfig({ width: 100 }) },
     { fields: [CurrentSprintColumns.SP], config: getSimpleCellFieldConfig({ width: 60, align: 'left' }) },
@@ -44,7 +44,7 @@ export function getFilterOptions(data: DataFrame) {
 
   return {
     statuses: Array.from(statusesSet),
-    names: Array.from(namesSet),
+    assignees: Array.from(namesSet),
   };
 }
 
@@ -57,7 +57,8 @@ export function filterData(data: DataFrame, filters: Filters) {
   const taskTitleField = data.fields.find((field: any) => field.name === CurrentSprintColumns.TaskTitle);
 
   const filteredIndexes = nameField?.values.map((_: any, index: number) => {
-    const matchesStatus = filters.status ? statusField?.values[index] === filters.status : true;
+    const matchesStatus =
+      filters.status && filters.status.length > 0 ? filters.status.includes(statusField?.values[index]) : true;
     const matchesAssignee =
       filters.teamMembers && filters.teamMembers.length > 0
         ? filters.teamMembers.includes(nameField.values[index].name)
