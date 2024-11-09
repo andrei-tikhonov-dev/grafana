@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Button, Field, Input, Select } from '@grafana/ui';
+import { Button, Field, Input, Select, Switch } from '@grafana/ui';
 
 import { TeamAdminToolCreateTableType, TeamAdminToolRoleType } from './types';
 
@@ -70,7 +70,7 @@ export const TeamAdminToolAddUserForm: React.FC<Props> = ({ onClose, onCreate, r
         <Input
           type="number"
           {...register('workloadRatio', {
-            required: 'Workload ratio is required   ',
+            required: 'Workload ratio is required',
             valueAsNumber: true,
             max: {
               value: maxWorkload,
@@ -88,9 +88,44 @@ export const TeamAdminToolAddUserForm: React.FC<Props> = ({ onClose, onCreate, r
           render={({ field }) => (
             <Select
               options={roleOptions}
-              value={field.value}
+              value={roleOptions.find((option) => option.value === field.value)}
               onChange={(v) => field.onChange(v.value)}
               placeholder="Select Role"
+            />
+          )}
+        />
+      </Field>
+
+      {/* Start Date Field */}
+      <Field label="Start Date" invalid={!!errors.startDate} error={errors.startDate?.message}>
+        <Input
+          type="date"
+          {...register('startDate', {
+            required: 'Start date is required',
+          })}
+        />
+      </Field>
+
+      {/* End Date Field */}
+      <Field label="End Date" invalid={!!errors.endDate} error={errors.endDate?.message}>
+        <Input
+          type="date"
+          {...register('endDate', {
+            required: 'End date is required',
+          })}
+        />
+      </Field>
+
+      {/* Exclude From Capacity Field */}
+      <Field label="Exclude From Capacity" description="Exclude this user from capacity calculations">
+        <Controller
+          name="excludeFromCapacity"
+          control={control}
+          render={({ field }) => (
+            <Switch
+              label="Exclude From Capacity"
+              checked={field.value}
+              onChange={(v) => field.onChange(v.currentTarget.checked)}
             />
           )}
         />

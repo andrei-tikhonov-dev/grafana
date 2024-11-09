@@ -1,9 +1,6 @@
 import { DataFrame } from '@grafana/data';
 
-import { getCapacityCellFieldConfig } from '../../components/CapacityCell';
-import { getEditableCellFieldConfig } from '../../components/EditableCell';
-import { getSimpleCellFieldConfig } from '../../components/SimpleCell';
-import { getUserCellFieldConfig } from '../../components/UserCell';
+import { Cells, getFieldConfig } from '../../components/cells';
 import { TeamMember } from '../../types';
 import { updateFieldConfig, wrapCapacityField, wrapTeamMemberField } from '../../utils';
 
@@ -12,10 +9,13 @@ import { SprintPlaningFiltersType } from './types';
 
 export function configTeamMembersFrame(dataFrame: DataFrame): DataFrame {
   const fieldConfigs = [
-    { field: SprintPlaningColumns.TeamMember, config: getUserCellFieldConfig({}) },
-    { field: SprintPlaningColumns.ScheduledPD, config: getSimpleCellFieldConfig({ align: 'right' }) },
-    { field: SprintPlaningColumns.SelfReportedPD, config: getEditableCellFieldConfig({ align: 'right' }) },
-    { field: SprintPlaningColumns.AssignedAvailableCapacitySP, config: getCapacityCellFieldConfig({ align: 'right' }) },
+    { field: SprintPlaningColumns.TeamMember, config: getFieldConfig(Cells.User, {}) },
+    { field: SprintPlaningColumns.ScheduledPD, config: getFieldConfig(Cells.Simple, { align: 'right' }) },
+    { field: SprintPlaningColumns.SelfReportedPD, config: getFieldConfig(Cells.Editable, { align: 'right' }) },
+    {
+      field: SprintPlaningColumns.AssignedAvailableCapacitySP,
+      config: getFieldConfig(Cells.Capacity, { align: 'right' }),
+    },
   ];
 
   const wrapHandlers: Record<string, (df: DataFrame, field: string) => DataFrame> = {
@@ -32,7 +32,10 @@ export function configTeamMembersFrame(dataFrame: DataFrame): DataFrame {
 
 export function configRolesFrame(dataFrame: DataFrame): DataFrame {
   const fieldConfigs = [
-    { field: SprintPlaningColumns.AssignedAvailableCapacitySP, config: getCapacityCellFieldConfig({ align: 'right' }) },
+    {
+      field: SprintPlaningColumns.AssignedAvailableCapacitySP,
+      config: getFieldConfig(Cells.Capacity, { align: 'right' }),
+    },
   ];
 
   const wrapHandlers: Record<string, (df: DataFrame, field: string) => DataFrame> = {

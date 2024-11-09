@@ -39,6 +39,9 @@ export interface TeamAdminToolCreateTableType {
   yearlyHours: number;
   workloadRatio: number;
   role: number;
+  endDate: string;
+  startDate: string;
+  excludeFromCapacity: boolean;
 }
 
 export interface TeamAdminToolCreatePayload {
@@ -47,6 +50,9 @@ export interface TeamAdminToolCreatePayload {
   internalOrgId: string;
   hourlyRate: number;
   yearlyHours: number;
+  startDate: string;
+  endDate: string;
+  excludeFromCapacity: boolean;
   teamIdsToDetails: {
     [key: string]: {
       roleId: number;

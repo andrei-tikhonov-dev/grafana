@@ -1,10 +1,8 @@
 import { DataFrame } from '@grafana/data';
 
-import { addActionsColumn } from '../../components/ActionsCell';
-import { getInputCellFieldConfig } from '../../components/InputCell';
-import { getRoleSelectCellFieldConfig } from '../../components/RoleSelectCell';
+import { Cells, getFieldConfig, addActionsColumn } from '../../components/cells';
 import { FieldValidation } from '../../types';
-import { removeHiddenFields, updateFieldConfig } from '../../utils';
+import { convertDateToBE, removeHiddenFields, updateFieldConfig } from '../../utils';
 
 import { TeamAdminToolFields } from './constants';
 import { TeamAdminToolCreatePayload, TeamAdminToolCreateTableType } from './types';
@@ -36,15 +34,24 @@ export function configTeamAdminToolData({
   };
 
   const fieldConfigs = [
-    { fields: [TeamAdminToolFields.Email], config: getInputCellFieldConfig({ ...emailOptions }) },
-    { fields: [TeamAdminToolFields.TeamMember], config: getInputCellFieldConfig({ ...options }) },
-    { fields: [TeamAdminToolFields.JiraID], config: getInputCellFieldConfig({ ...options }) },
-    { fields: [TeamAdminToolFields.OrgID], config: getInputCellFieldConfig({ ...options }) },
-    { fields: [TeamAdminToolFields.HourlyRate], config: getInputCellFieldConfig({ ...options }) },
-    { fields: [TeamAdminToolFields.YearlyHours], config: getInputCellFieldConfig({ ...options }) },
-    { fields: [TeamAdminToolFields.TeamID], config: getInputCellFieldConfig({ ...options }) },
-    { fields: [TeamAdminToolFields.WorkloadRatio], config: getInputCellFieldConfig({ ...workloadRatioOptions }) },
-    { fields: [TeamAdminToolFields.Role], config: getRoleSelectCellFieldConfig({ ...options }) },
+    { fields: [TeamAdminToolFields.Email], config: getFieldConfig(Cells.Input, { ...emailOptions }) },
+    { fields: [TeamAdminToolFields.TeamMember], config: getFieldConfig(Cells.Input, { ...options }) },
+    { fields: [TeamAdminToolFields.JiraID], config: getFieldConfig(Cells.Input, { ...options }) },
+    { fields: [TeamAdminToolFields.OrgID], config: getFieldConfig(Cells.Input, { ...options, width: 120 }) },
+    { fields: [TeamAdminToolFields.HourlyRate], config: getFieldConfig(Cells.Input, { ...options, width: 120 }) },
+    { fields: [TeamAdminToolFields.YearlyHours], config: getFieldConfig(Cells.Input, { ...options, width: 120 }) },
+    { fields: [TeamAdminToolFields.TeamID], config: getFieldConfig(Cells.Input, { ...options, width: 100 }) },
+    {
+      fields: [TeamAdminToolFields.WorkloadRatio],
+      config: getFieldConfig(Cells.Input, { ...workloadRatioOptions, width: 120 }),
+    },
+    { fields: [TeamAdminToolFields.Role], config: getFieldConfig(Cells.RoleSelect, { ...options }) },
+    { fields: [TeamAdminToolFields.StartDate], config: getFieldConfig(Cells.Date, { ...options, width: 120 }) },
+    { fields: [TeamAdminToolFields.EndDate], config: getFieldConfig(Cells.Date, { ...options, width: 80 }) },
+    {
+      fields: [TeamAdminToolFields.ExcludeFromCapacity],
+      config: getFieldConfig(Cells.Checkbox, { ...options, width: 120, align: 'center' }),
+    },
   ];
   const visibleDataFrame = removeHiddenFields(dataFrame, hiddenFields);
   const dataFrameWithActions = addActionsColumn(visibleDataFrame, handleDelete);
@@ -81,6 +88,9 @@ export function mapTeamAdminToolCreatePayload(
     name: data.name,
     hourlyRate: data.hourlyRate,
     yearlyHours: data.yearlyHours,
+    startDate: convertDateToBE(data.startDate),
+    endDate: convertDateToBE(data.endDate),
+    excludeFromCapacity: data.excludeFromCapacity,
     teamIdsToDetails: {
       [teamId]: {
         roleId: data.role,

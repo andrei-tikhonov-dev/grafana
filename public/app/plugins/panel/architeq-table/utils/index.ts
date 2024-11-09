@@ -108,3 +108,17 @@ export function removeHiddenFields(dataFrame: DataFrame, hiddenFields?: string[]
     fields: dataFrame.fields.filter((field) => !hiddenFields?.includes(field.name)),
   };
 }
+
+export function convertDateToFE(dateStr: string): string {
+  const [year, month, day] = dateStr.split('-');
+  return `${day}.${month}.${year}`;
+}
+
+export function convertDateToBE(dateStr: string): string {
+  const date = new Date(dateStr);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}

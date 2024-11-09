@@ -1,10 +1,6 @@
 import { DataFrame } from '@grafana/data';
 
-import { getDaysCellFieldConfig } from '../../components/DaysCell';
-import { getIssueTypeCellFieldConfig } from '../../components/IssueTypeCell';
-import { getLinkCellFieldConfig } from '../../components/LinkCell';
-import { getSimpleCellFieldConfig } from '../../components/SimpleCell';
-import { getUserCellFieldConfig } from '../../components/UserCell';
+import { Cells, getFieldConfig } from '../../components/cells';
 import { updateFieldConfig, wrapTeamMemberField } from '../../utils';
 
 import { CurrentSprintColumns } from './constants';
@@ -12,12 +8,12 @@ import { Filters } from './types';
 
 export function configCurrentSprintData(dataFrame: DataFrame): DataFrame {
   const fieldConfigs = [
-    { fields: [CurrentSprintColumns.Identifier], config: getLinkCellFieldConfig({ width: 100 }) },
-    { fields: [CurrentSprintColumns.SP], config: getSimpleCellFieldConfig({ width: 60, align: 'left' }) },
-    { fields: [CurrentSprintColumns.Status], config: getSimpleCellFieldConfig({ width: 100 }) },
-    { fields: [CurrentSprintColumns.Type], config: getIssueTypeCellFieldConfig({ width: 100 }) },
-    { fields: [CurrentSprintColumns.TeamMember], config: getUserCellFieldConfig({ width: 220 }) },
-    { fields: [CurrentSprintColumns.InProgress], config: getDaysCellFieldConfig({ width: 100, align: 'left' }) },
+    { fields: [CurrentSprintColumns.Identifier], config: getFieldConfig(Cells.Link, { width: 100 }) },
+    { fields: [CurrentSprintColumns.SP], config: getFieldConfig(Cells.Simple, { width: 60, align: 'left' }) },
+    { fields: [CurrentSprintColumns.Status], config: getFieldConfig(Cells.Simple, { width: 100 }) },
+    { fields: [CurrentSprintColumns.Type], config: getFieldConfig(Cells.IssueType, { width: 100 }) },
+    { fields: [CurrentSprintColumns.TeamMember], config: getFieldConfig(Cells.User, { width: 220 }) },
+    { fields: [CurrentSprintColumns.InProgress], config: getFieldConfig(Cells.Days, { width: 100, align: 'left' }) },
   ];
 
   const dataWithTeamMembers = wrapTeamMemberField(dataFrame);

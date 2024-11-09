@@ -24,7 +24,7 @@ export interface HeaderParameter {
   value: string;
 }
 
-export type UpdateHandler = (value: number | string, cellProps: CustomCellRendererProps) => Promise<boolean>;
+export type UpdateHandler = (value: any, cellProps: CustomCellRendererProps) => Promise<boolean>;
 
 export interface TablePanelProps extends PanelProps<PanelOptions> {}
 
