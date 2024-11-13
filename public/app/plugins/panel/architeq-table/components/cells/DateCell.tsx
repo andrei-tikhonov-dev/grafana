@@ -5,8 +5,7 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { CustomCellRendererProps, DatePickerWithInput, IconButton, useStyles2 } from '@grafana/ui';
 
 import { LoadingMode } from '../../constants';
-import { useParentWidth } from '../../hooks/useParentWidth';
-import { convertDateToBE, convertDateToFE } from '../../utils';
+import { convertDateToBE, convertDateToUI } from '../../utils';
 import { useDataTableContext } from '../DataTable/DataTableContext';
 
 const getStyles = (_: GrafanaTheme2) => {
@@ -21,10 +20,21 @@ const getStyles = (_: GrafanaTheme2) => {
       align-items: center;
       gap: 6px;
     `,
+    cellInput: css`
+      width: 80px;
+      flex-basis: 80px;
+      flex-grow: 0;
+      flex-shrink: 0;
+    `,
     input: css`
-      height: 26px;
-      margin-top: -2px;
+      height: 24px;
+      width: 90px;
+      flex-basis: 90px;
+      flex-grow: 0;
+      flex-shrink: 0;
+      margin-top: -4px;
       margin-right: -2px;
+      margin-left: -6px;
     `,
     inputButtons: css`
       width: 25px;
@@ -35,12 +45,10 @@ const getStyles = (_: GrafanaTheme2) => {
 export const DateCell = (props: CustomCellRendererProps) => {
   const { field, rowIndex, value } = props;
   const styles = useStyles2(getStyles);
-  const { parentWidth, ref } = useParentWidth();
   const seriesIndex = Number(field.state?.seriesIndex);
   const { addItem, removeItem, hasItem, loading, updateData } = useDataTableContext();
-  const cellWidth = parentWidth - 55;
 
-  const initialValue = value as string;
+  const initialValue = new Date(value as string).toISOString();
   const [inputValue, setInputValue] = React.useState<string>(initialValue);
 
   const handleEdit = () => {
@@ -62,25 +70,26 @@ export const DateCell = (props: CustomCellRendererProps) => {
     }
   };
 
-  const handleChange = (value: string) => {
+  const handleChange = (value: any) => {
     setInputValue(value);
   };
 
   return hasItem(seriesIndex, rowIndex) ? (
     <div className={styles.inputCell}>
-      <div className={styles.input} style={{ width: cellWidth }}>
+      <div className={styles.input}>
         <DatePickerWithInput
           disabled={loading !== LoadingMode.NONE}
-          value={String(inputValue)}
-          onChange={(newDate) => handleChange(String(newDate))}
+          value={inputValue}
+          onChange={(newDate) => handleChange(newDate)}
         />
       </div>
       <IconButton name="check" size="xs" onClick={handleSave} disabled={loading !== LoadingMode.NONE} tooltip="Save" />
       <IconButton name="times" size="xs" tooltip="Close" onClick={handleClose} />
     </div>
   ) : (
-    <div className={styles.cell} ref={ref}>
-      {convertDateToFE(inputValue)} <IconButton aria-label="Edit" size="xs" name="edit" onClick={handleEdit} />
+    <div className={styles.cell}>
+      <div className={styles.cellInput}>{convertDateToUI(inputValue)}</div>{' '}
+      <IconButton aria-label="Edit" size="xs" name="edit" onClick={handleEdit} />
     </div>
   );
 };

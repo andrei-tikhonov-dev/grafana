@@ -7,7 +7,7 @@ import { useStyles2 } from '@grafana/ui';
 import { LoadingMode } from '../../constants';
 
 import { SprintPlaningInfoCard } from './SprintPlaningInfoCard';
-import { SprintPlaningInfoType } from './types';
+import { SprintPlaningMetaResponse } from './types';
 
 export const INFO_HEIGHT = 190;
 
@@ -21,7 +21,7 @@ const getStyles = (theme: GrafanaTheme2) => {
   };
 };
 
-interface Props extends SprintPlaningInfoType {
+interface Props extends SprintPlaningMetaResponse {
   onUpdate?: (value?: number) => void;
   loading?: LoadingMode;
 }

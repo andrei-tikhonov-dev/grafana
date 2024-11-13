@@ -109,8 +109,11 @@ export function removeHiddenFields(dataFrame: DataFrame, hiddenFields?: string[]
   };
 }
 
-export function convertDateToFE(dateStr: string): string {
-  const [year, month, day] = dateStr.split('-');
+export function convertDateToUI(dateStr: string): string {
+  const date = new Date(dateStr);
+  const day = ('0' + date.getDate()).slice(-2); // Ensures two digits
+  const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-indexed
+  const year = date.getFullYear();
   return `${day}.${month}.${year}`;
 }
 

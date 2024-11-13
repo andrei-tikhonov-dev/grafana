@@ -1,11 +1,23 @@
-import { Status } from '../../types';
+import { InfoLineType, Status } from '../../types';
 
 export type SprintPlaningFiltersType = {
   teamMembers: string[];
   roles: string[];
 };
 
-export interface SprintPlaningInfoType {
+interface DependencyTask extends InfoLineType {}
+
+export interface ExternalDependency {
+  team: string; // Имя текущей команды
+  tasks: DependencyTask[]; // Массив задач других команд, от которых зависит текущая команда
+}
+
+export interface ExternalDependencies {
+  total: number;
+  dependencies: ExternalDependency[];
+}
+
+export interface SprintPlaningMetaResponse {
   sprintName: string;
   sprintStatusMessage: string;
   startDate: string;
@@ -16,6 +28,7 @@ export interface SprintPlaningInfoType {
   storyPointsAvailable: number;
   teamVelocityFactor: number;
   sprintId: string;
+  externalDependencies?: ExternalDependencies;
   sprintStatus: {
     storiesInfo: {
       status: Status;

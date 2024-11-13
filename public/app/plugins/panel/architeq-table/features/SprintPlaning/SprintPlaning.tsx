@@ -13,7 +13,7 @@ import { TablePanelProps } from '../../types';
 import { FILTER_HEIGHT, SprintPlaningFilters } from './SprintPlaningFilters';
 import { INFO_HEIGHT, SprintPlaningInfo } from './SprintPlaningInfo';
 import { SprintPlaningColumns } from './constants';
-import { SprintPlaningFiltersType, SprintPlaningInfoType, SprintPlaningPayload } from './types';
+import { SprintPlaningFiltersType, SprintPlaningMetaResponse, SprintPlaningPayload } from './types';
 import {
   configRolesFrame,
   configTeamMembersFrame,
@@ -45,7 +45,7 @@ export const SprintPlaning: React.FC<Props> = ({ options, data, width, height })
   const rolesFrame = data.series[1];
 
   const tableHeight = height - FILTER_HEIGHT - INFO_HEIGHT - 20;
-  const info = teamMembersFrame.meta?.custom as SprintPlaningInfoType;
+  const info = teamMembersFrame.meta?.custom as SprintPlaningMetaResponse;
 
   const configuredTeamMembersFrame = configTeamMembersFrame(teamMembersFrame);
   const configuredRolesFrame = rolesFrame ? configRolesFrame(rolesFrame) : rolesFrame;

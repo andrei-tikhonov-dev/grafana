@@ -100,7 +100,7 @@ export type FieldValidationType = {
   value?: number;
 };
 
-export interface InfoListItemType {
+export interface InfoLineType {
   name?: string;
   value?: string;
   icon?: string;

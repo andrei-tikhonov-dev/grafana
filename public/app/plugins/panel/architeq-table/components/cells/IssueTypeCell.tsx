@@ -3,7 +3,7 @@ import React from 'react';
 
 import { CustomCellRendererProps, useStyles2 } from '@grafana/ui';
 
-import { InfoListItemType } from '../../types';
+import { InfoLineType } from '../../types';
 import { InfoLine } from '../InfoLine';
 
 const getStyles = () => {
@@ -28,7 +28,7 @@ export const IssueTypeCell = ({ value }: CustomCellRendererProps) => {
   const styles = useStyles2(getStyles);
 
   if (typeof value === 'object') {
-    return <InfoLine {...(value as InfoListItemType)} />;
+    return <InfoLine {...(value as InfoLineType)} />;
   }
 
   const type = String(value);

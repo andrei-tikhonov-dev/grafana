@@ -5,11 +5,11 @@ import React from 'react';
 import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
 
-import { InfoListItemType, Status } from '../../types';
+import { InfoLineType, Status } from '../../types';
 
 import { DynamicIcon } from './DynamicIcon';
 
-type Props = Pick<InfoListItemType, 'status' | 'icon'>;
+type Props = Pick<InfoLineType, 'status' | 'icon'>;
 
 const getStyles = (theme: GrafanaTheme2) => {
   return {

@@ -37,20 +37,20 @@ export function configTeamAdminToolData({
     { fields: [TeamAdminToolFields.Email], config: getFieldConfig(Cells.Input, { ...emailOptions }) },
     { fields: [TeamAdminToolFields.TeamMember], config: getFieldConfig(Cells.Input, { ...options }) },
     { fields: [TeamAdminToolFields.JiraID], config: getFieldConfig(Cells.Input, { ...options }) },
-    { fields: [TeamAdminToolFields.OrgID], config: getFieldConfig(Cells.Input, { ...options, width: 120 }) },
-    { fields: [TeamAdminToolFields.HourlyRate], config: getFieldConfig(Cells.Input, { ...options, width: 120 }) },
-    { fields: [TeamAdminToolFields.YearlyHours], config: getFieldConfig(Cells.Input, { ...options, width: 120 }) },
+    { fields: [TeamAdminToolFields.OrgID], config: getFieldConfig(Cells.Input, { ...options, width: 115 }) },
+    { fields: [TeamAdminToolFields.HourlyRate], config: getFieldConfig(Cells.Input, { ...options, width: 110 }) },
+    { fields: [TeamAdminToolFields.YearlyHours], config: getFieldConfig(Cells.Input, { ...options, width: 110 }) },
     { fields: [TeamAdminToolFields.TeamID], config: getFieldConfig(Cells.Input, { ...options, width: 100 }) },
     {
       fields: [TeamAdminToolFields.WorkloadRatio],
       config: getFieldConfig(Cells.Input, { ...workloadRatioOptions, width: 120 }),
     },
-    { fields: [TeamAdminToolFields.Role], config: getFieldConfig(Cells.RoleSelect, { ...options }) },
+    { fields: [TeamAdminToolFields.Role], config: getFieldConfig(Cells.RoleSelect, { ...options, width: 120 }) },
     { fields: [TeamAdminToolFields.StartDate], config: getFieldConfig(Cells.Date, { ...options, width: 120 }) },
-    { fields: [TeamAdminToolFields.EndDate], config: getFieldConfig(Cells.Date, { ...options, width: 80 }) },
+    { fields: [TeamAdminToolFields.EndDate], config: getFieldConfig(Cells.Date, { ...options, width: 120 }) },
     {
       fields: [TeamAdminToolFields.ExcludeFromCapacity],
-      config: getFieldConfig(Cells.Checkbox, { ...options, width: 120, align: 'center' }),
+      config: getFieldConfig(Cells.Checkbox, { ...options, width: 80, align: 'center' }),
     },
   ];
   const visibleDataFrame = removeHiddenFields(dataFrame, hiddenFields);
