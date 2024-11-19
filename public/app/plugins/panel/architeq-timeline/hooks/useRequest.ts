@@ -14,6 +14,7 @@ type UseRequestOptionsType = {
   create?: ActionOptionsType;
   update?: ActionOptionsType;
   delete?: ActionOptionsType;
+  preventReload?: boolean;
 };
 
 function generateHeaders(headers?: Array<Record<string, string>>) {
@@ -31,7 +32,7 @@ function generateHeaders(headers?: Array<Record<string, string>>) {
   return initHeaders;
 }
 
-export function useRequest({ create, update, delete: deleteAction }: UseRequestOptionsType) {
+export function useRequest({ create, update, delete: deleteAction, preventReload }: UseRequestOptionsType) {
   const { notifyError, notifySuccess } = useNotifications();
   const { loading, setLoadingNone, setLoadingUpdate } = useLoading();
 
@@ -55,7 +56,9 @@ export function useRequest({ create, update, delete: deleteAction }: UseRequestO
       }
 
       notifySuccess(['Action completed successfully.']);
-      locationService.reload();
+      if (!preventReload) {
+        locationService.reload();
+      }
       return true;
     } catch (error: any) {
       notifyError([error.message || 'Failed to process request.']);

@@ -37,11 +37,11 @@ export const Goals: React.FC<Props> = ({ data, title, updateUrl }) => {
       url: updateUrl,
       method: RequestMethod.POST,
     },
+    preventReload: true,
   });
 
   const handleUpdate = async (value: boolean, id: string | number) => {
     const payload = { value, id };
-    console.log(payload);
     return updateRequest(payload);
   };
 
@@ -54,6 +54,10 @@ export const Goals: React.FC<Props> = ({ data, title, updateUrl }) => {
       />
     );
   };
+
+  if (data.length === 0) {
+    return null;
+  }
 
   return (
     <div className={styles.container}>
