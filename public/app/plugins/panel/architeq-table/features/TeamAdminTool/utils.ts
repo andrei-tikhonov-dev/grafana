@@ -88,9 +88,9 @@ export function mapTeamAdminToolCreatePayload(
     name: data.name,
     hourlyRate: data.hourlyRate,
     yearlyHours: data.yearlyHours,
-    startDate: convertDateToBE(data.startDate),
-    endDate: convertDateToBE(data.endDate),
-    excludeFromCapacity: data.excludeFromCapacity,
+    workStartDate: convertDateToBE(data.workStartDate),
+    workEndDate: convertDateToBE(data.workEndDate),
+    excludedFromCapacity: data.excludedFromCapacity,
     teamIdsToDetails: {
       [teamId]: {
         roleId: data.role,

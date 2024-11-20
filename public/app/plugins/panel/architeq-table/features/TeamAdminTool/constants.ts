@@ -9,9 +9,9 @@ export const enum TeamAdminToolFields {
   TeamID = 'Team ID',
   WorkloadRatio = 'Workload ratio',
   Role = 'Role',
-  StartDate = 'Start date',
-  EndDate = 'End date',
-  ExcludeFromCapacity = 'Exclude from capacity',
+  StartDate = 'Work start date',
+  EndDate = 'Work end date',
+  ExcludeFromCapacity = 'Excluded from capacity',
 }
 
 export const hiddenFields = [TeamAdminToolFields.TeamMemberID, TeamAdminToolFields.TeamID, TeamAdminToolFields.JiraID];

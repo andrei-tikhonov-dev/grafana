@@ -97,20 +97,20 @@ export const TeamAdminToolAddUserForm: React.FC<Props> = ({ onClose, onCreate, r
       </Field>
 
       {/* Start Date Field */}
-      <Field label="Start Date" invalid={!!errors.startDate} error={errors.startDate?.message}>
+      <Field label="Start Date" invalid={!!errors.workStartDate} error={errors.workStartDate?.message}>
         <Input
           type="date"
-          {...register('startDate', {
+          {...register('workStartDate', {
             required: 'Start date is required',
           })}
         />
       </Field>
 
       {/* End Date Field */}
-      <Field label="End Date" invalid={!!errors.endDate} error={errors.endDate?.message}>
+      <Field label="End Date" invalid={!!errors.workEndDate} error={errors.workEndDate?.message}>
         <Input
           type="date"
-          {...register('endDate', {
+          {...register('workEndDate', {
             required: 'End date is required',
           })}
         />
@@ -119,7 +119,7 @@ export const TeamAdminToolAddUserForm: React.FC<Props> = ({ onClose, onCreate, r
       {/* Exclude From Capacity Field */}
       <Field label="Exclude From Capacity" description="Exclude this user from capacity calculations">
         <Controller
-          name="excludeFromCapacity"
+          name="excludedFromCapacity"
           control={control}
           render={({ field }) => (
             <Switch
