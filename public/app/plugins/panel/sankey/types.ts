@@ -10,6 +10,8 @@ export interface SankeyOptions {
   labelSize: number;
   dataDelimiter: string;
   baseUrl: string;
+  hiddenFields: Array<string>;
+  fieldsOrder: Array<string>;
 }
 
 export interface PluginDataPath {

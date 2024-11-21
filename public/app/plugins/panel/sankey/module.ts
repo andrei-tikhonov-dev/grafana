@@ -3,7 +3,7 @@ import { PanelPlugin, FieldConfigProperty, FieldOverrideContext, getFieldDisplay
 import { Panel } from './Panel';
 import { SankeyOptions } from './types';
 
-const getOptions = async (context: FieldOverrideContext) => {
+const getFieldOptions = async (context: FieldOverrideContext) => {
   const options = [];
   if (context && context.data) {
     for (const frame of context.data) {
@@ -63,7 +63,7 @@ export const plugin = new PanelPlugin<SankeyOptions>(Panel)
         settings: {
           allowCustomValue: false,
           options: [],
-          getOptions: getOptions,
+          getOptions: getFieldOptions,
         },
       })
       .addSliderInput({
@@ -88,6 +88,24 @@ export const plugin = new PanelPlugin<SankeyOptions>(Panel)
         description:
           'Enter data in the format data [delimiter] tooltip [delimiter] relative URL (appended to "Base URL")',
         defaultValue: '',
+      })
+      .addStringArray({
+        path: 'fieldsOrder',
+        name: 'Fields Order',
+        defaultValue: [],
+        settings: {
+          placeholder: 'Enter column names...',
+        },
+        showIf: () => false,
+      })
+      .addStringArray({
+        path: 'hiddenFields',
+        name: 'Hidden Fields',
+        defaultValue: [],
+        settings: {
+          placeholder: 'Enter column names...',
+        },
+        showIf: () => false,
       });
   })
   .useFieldConfig({
