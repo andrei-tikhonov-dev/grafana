@@ -4,12 +4,12 @@ import React from 'react';
 import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2, LinkButton } from '@grafana/ui';
 
-import { InfoListItemType } from '../../types';
+import { InfoLineType } from '../../types';
 
 import { InfoIcon } from './InfoIcon';
 import { InfoLink } from './InfoLink';
 
-type Props = InfoListItemType & {
+type Props = InfoLineType & {
   newTab?: boolean;
 };
 

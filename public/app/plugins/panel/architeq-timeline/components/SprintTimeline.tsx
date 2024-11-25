@@ -1,4 +1,4 @@
-import { css, cx } from '@emotion/css';
+import { css } from '@emotion/css';
 import React from 'react';
 
 import { useStyles2 } from '@grafana/ui';
@@ -12,18 +12,13 @@ interface Props {
 }
 
 const getStyles = () => ({
-  day: css`
-    width: 85px;
-    height: 32px;
+  days: css`
     display: flex;
-  `,
-  week: css`
-    display: flex;
-    gap: 4px;
+    gap: 10px;
   `,
   wrapper: css`
     display: flex;
-    gap: 24px;
+    gap: 60px;
     padding-bottom: 10px;
     overflow: auto;
   `,
@@ -33,11 +28,11 @@ export const SprintTimeline: React.FC<Props> = ({ weeks }) => {
   const styles = useStyles2(getStyles);
 
   return (
-    <div className={cx(styles.wrapper, css``)}>
+    <div className={styles.wrapper}>
       {weeks.map((week, weekIndex) => (
-        <div key={weekIndex} className={styles.week}>
+        <div key={weekIndex} className={styles.days}>
           {week.days.map((day, dayIndex) => (
-            <Day key={dayIndex} status={day.status} dayOfWeek={day.dayOfWeek} />
+            <Day key={dayIndex} {...day} />
           ))}
         </div>
       ))}

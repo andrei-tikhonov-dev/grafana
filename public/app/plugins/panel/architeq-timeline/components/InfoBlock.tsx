@@ -4,11 +4,11 @@ import React from 'react';
 import { GrafanaTheme2, IconName } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
 
-import { InfoListItemType, Status } from '../types';
+import { InfoLineType, Status } from '../types';
 
 import { InfoLine } from './InfoLine/InfoLine';
 
-type Props = InfoListItemType;
+type Props = InfoLineType;
 
 const getStyles = (theme: GrafanaTheme2) => {
   return {
@@ -24,7 +24,7 @@ const statusIconNames = {
   [Status.CRITICAL]: 'fa6/FaCircleXmark',
 };
 
-export const InfoFooter: React.FC<Props> = ({ status, value, icon, name }) => {
+export const InfoBlock: React.FC<Props> = ({ status, value, icon, name }) => {
   const styles = useStyles2(getStyles);
   const iconName = icon || (status && (statusIconNames[status] as IconName));
 

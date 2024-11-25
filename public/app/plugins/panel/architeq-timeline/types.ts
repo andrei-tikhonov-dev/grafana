@@ -12,7 +12,9 @@ export const enum Status {
 
 export interface DayStatus {
   dayOfWeek: number;
-  status: 'FINISHED' | 'IN_PROGRESS' | 'NOT_STARTED';
+  status: 'FINISHED' | 'IN_PROGRESS' | 'NOT_STARTED' | 'HOLIDAY' | 'BLOCKED' | 'OFF_DAY';
+  date?: string;
+  events?: InfoLineType[];
 }
 
 export interface WeekStatus {
@@ -30,7 +32,7 @@ export type GoalType = {
   isCompleted?: boolean;
 };
 
-export interface InfoListItemType {
+export interface InfoLineType {
   name?: string;
   value?: string;
   icon?: string;
@@ -85,7 +87,7 @@ export interface PanelDataType {
    */
   sprintOnTarget?: DeprecatedInfoStatusType;
   goals?: GoalType[];
-  info?: InfoListItemType[];
+  info?: InfoLineType[];
   /**
    * @deprecated use infoFooter instead
    */
@@ -93,7 +95,8 @@ export interface PanelDataType {
     message: string;
     status: `${Status}`;
   };
-  infoFooter?: InfoListItemType[];
+  infoFooter?: InfoLineType[];
+  infoTimeline?: InfoLineType[];
 
   select?: {
     label: string;

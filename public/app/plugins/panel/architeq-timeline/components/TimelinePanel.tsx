@@ -8,7 +8,7 @@ import { PanelOptions, PanelDataType } from '../types';
 
 import { BreadCrumbs } from './BreadCrumbs';
 import { Goals } from './Goals';
-import { InfoFooter } from './InfoFooter';
+import { InfoBlock } from './InfoBlock';
 import { InfoLine } from './InfoLine/InfoLine';
 import { ProgressBar } from './ProgressBar';
 import { Select } from './Select';
@@ -40,6 +40,9 @@ const getStyles = (theme: GrafanaTheme2) => {
     timeline: css`
       margin-bottom: 24px;
     `,
+    infoTimeline: css`
+      margin-bottom: 24px;
+    `,
     footer: css`
       display: flex;
       flex-direction: column;
@@ -68,6 +71,7 @@ export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, f
     infoStatus,
     completedIssues,
     totalIssues,
+    infoTimeline,
   } = panelData;
   const descriptionIssues =
     completedIssues !== undefined && totalIssues !== undefined
@@ -90,9 +94,7 @@ export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, f
       </h1>
 
       <div className={styles.info}>
-        {info?.map((infoItem) => (
-          <InfoLine key={infoItem.name} {...infoItem} />
-        ))}
+        {info?.map((infoItem) => <InfoLine key={infoItem.name} {...infoItem} />)}
         {team && <InfoLine value={team} name="Team:" icon="fa6/FaUsersLine" />}
         {from && <InfoLine value={dateTime(from).format('DD MMM, YYYY')} name="Start:" icon="fa6/FaCalendarDays" />}
         {till && <InfoLine value={dateTime(till).format('DD MMM, YYYY')} name="End:" icon="fa6/FaCalendarDays" />}
@@ -105,17 +107,21 @@ export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, f
         </div>
       )}
 
+      {infoTimeline?.map((info) => (
+        <div key={info.name} className={styles.infoTimeline}>
+          <InfoBlock {...info} key={info.name} />
+        </div>
+      ))}
+
       {progress && <ProgressBar {...progress} />}
 
       <footer className={styles.footer}>
-        {sprintOnTarget && <InfoFooter status={sprintOnTarget.status} value={sprintOnTarget.message} />}
-        {infoFooter?.map((info) => (
-          <InfoFooter {...info} key={info.name} />
-        ))}
+        {sprintOnTarget && <InfoBlock status={sprintOnTarget.status} value={sprintOnTarget.message} />}
+        {infoFooter?.map((info) => <InfoBlock {...info} key={info.name} />)}
         {/* Deprecated */}
-        {descriptionIssues && <InfoFooter value={descriptionIssues} />}
+        {descriptionIssues && <InfoBlock value={descriptionIssues} />}
         {/* Deprecated */}
-        {infoStatus && <InfoFooter value={infoStatus.message} status={infoStatus.status} />}
+        {infoStatus && <InfoBlock value={infoStatus.message} status={infoStatus.status} />}
       </footer>
     </div>
   );
