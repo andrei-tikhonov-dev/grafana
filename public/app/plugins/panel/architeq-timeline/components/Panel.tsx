@@ -11,8 +11,9 @@ import { Goals } from './Goals';
 import { InfoBlock } from './InfoBlock';
 import { InfoLine } from './InfoLine/InfoLine';
 import { ProgressBar } from './ProgressBar';
+import { Range } from './Range';
 import { Select } from './Select';
-import { SprintTimeline } from './SprintTimeline';
+import { TimeLine } from './TimeLine';
 
 interface Props extends PanelProps<PanelOptions> {}
 
@@ -51,7 +52,7 @@ const getStyles = (theme: GrafanaTheme2) => {
   };
 };
 
-export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, fieldConfig, id }) => {
+export const Panel: React.FC<Props> = ({ options, data, width, height, fieldConfig, id }) => {
   const styles = useStyles2(getStyles);
   const panelData = data.series[0]?.meta?.custom as PanelDataType;
   const {
@@ -72,6 +73,7 @@ export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, f
     completedIssues,
     totalIssues,
     infoTimeline,
+    range,
   } = panelData;
   const descriptionIssues =
     completedIssues !== undefined && totalIssues !== undefined
@@ -92,6 +94,7 @@ export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, f
       <h1 className={styles.header}>
         {options.header} {name || title} {select && <Select options={select.options} label={select.label} />}
       </h1>
+      {<Range options={range?.options} lastId={range?.lastId} firstId={range?.firstId} />}
 
       <div className={styles.info}>
         {info?.map((infoItem) => <InfoLine key={infoItem.name} {...infoItem} />)}
@@ -103,7 +106,7 @@ export const TimelinePanel: React.FC<Props> = ({ options, data, width, height, f
 
       {weeks && (
         <div className={styles.timeline}>
-          <SprintTimeline weeks={weeks} />
+          <TimeLine weeks={weeks} />
         </div>
       )}
 

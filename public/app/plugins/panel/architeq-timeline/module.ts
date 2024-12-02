@@ -1,9 +1,9 @@
 import { PanelPlugin } from '@grafana/data';
 
-import { TimelinePanel } from './components/TimelinePanel';
+import { Panel } from './components/Panel';
 import { PanelOptions } from './types';
 
-export const plugin = new PanelPlugin<PanelOptions>(TimelinePanel).setPanelOptions((builder) => {
+export const plugin = new PanelPlugin<PanelOptions>(Panel).setPanelOptions((builder) => {
   return builder
     .addTextInput({
       path: 'header',

@@ -56,6 +56,12 @@ export type BreadCrumbsType = {
   items: BreadCrumbType[];
 };
 
+export type RangeType = {
+  firstId?: string;
+  lastId?: string;
+  options?: OptionType[];
+};
+
 export interface PanelDataType {
   /**
    * @deprecated use title
@@ -102,6 +108,7 @@ export interface PanelDataType {
     label: string;
     options: OptionType[];
   };
+  range?: RangeType;
 }
 
 export type TableType<T = {}> = {

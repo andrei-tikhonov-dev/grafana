@@ -24,7 +24,7 @@ const getStyles = () => ({
   `,
 });
 
-export const SprintTimeline: React.FC<Props> = ({ weeks }) => {
+export const TimeLine: React.FC<Props> = ({ weeks }) => {
   const styles = useStyles2(getStyles);
 
   return (
