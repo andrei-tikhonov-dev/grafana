@@ -84,7 +84,19 @@ export function useRequest({ create, update, delete: deleteAction, preventReload
     return performRequest(payload, actionWithId);
   };
 
-  const deleteRequest = (payload: any) => performRequest(payload, deleteAction);
+  const deleteRequest = (payload: any, id?: string) => {
+    if (!deleteAction) {
+      notifyError(['Invalid delete configuration.']);
+      return Promise.resolve(false);
+    }
+
+    const actionWithId: ActionOptionsType = {
+      ...deleteAction,
+      url: id ? `${deleteAction.url}/${id}` : deleteAction.url,
+    };
+
+    return performRequest(payload, actionWithId);
+  };
 
   return {
     createRequest,

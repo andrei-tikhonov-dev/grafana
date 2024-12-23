@@ -1,35 +1,39 @@
 import { DataFrame } from '@grafana/data';
 
-import { Cells, getFieldConfig, addActionsColumn } from '../../components/cells';
-import { removeHiddenFields, updateFieldConfig } from '../../utils';
+import { Cells } from '../../constants';
+import { CellCustomOptionsType, OptionType } from '../../types';
+import { configureDataFrame, getFieldConfig } from '../../utils';
 
 import { TeamHolidaysToolFields } from './constants';
-import { TeamHolidaysToolCreatePayload, TeamHolidaysToolCreateTableType } from './types';
 
 interface ConfigTeamAdminToolData {
   dataFrame: DataFrame;
   handleDelete: (rowIndex: number) => void;
+  typeOptions: OptionType[];
   hiddenFields?: string[];
 }
+
 export function configTeamHolidaysToolData({
   dataFrame,
   hiddenFields,
   handleDelete,
+  typeOptions,
 }: ConfigTeamAdminToolData): DataFrame {
-  const options = {
+  const options: CellCustomOptionsType = {
     align: 'left',
+  };
+  const typeFieldOptions: CellCustomOptionsType = {
+    ...options,
+    options: typeOptions,
   };
 
   const fieldConfigs = [
     { fields: [TeamHolidaysToolFields.HolidayDescription], config: getFieldConfig(Cells.Input, { ...options }) },
     { fields: [TeamHolidaysToolFields.HolidayDate], config: getFieldConfig(Cells.Date, { ...options }) },
+    { fields: [TeamHolidaysToolFields.TypeOfHoliday], config: getFieldConfig(Cells.Select, { ...typeFieldOptions }) },
   ];
-  const visibleDataFrame = removeHiddenFields(dataFrame, hiddenFields);
-  const dataFrameWithActions = addActionsColumn(visibleDataFrame, handleDelete);
-  return fieldConfigs.reduce(
-    (configuredData, { fields, config }) => updateFieldConfig(configuredData, fields, config),
-    dataFrameWithActions
-  );
+
+  return configureDataFrame(dataFrame, hiddenFields, handleDelete, fieldConfigs);
 }
 
 export function getPayloadIDs(data: DataFrame): { [index: number]: { id?: string } } {
@@ -45,15 +49,4 @@ export function getPayloadIDs(data: DataFrame): { [index: number]: { id?: string
       },
     ])
   );
-}
-
-export function mapTeamHolidayToolCreatePayload(
-  data: TeamHolidaysToolCreateTableType,
-  teamId: string
-): TeamHolidaysToolCreatePayload {
-  return {
-    date: data.date,
-    description: data.description,
-    teamId,
-  };
 }

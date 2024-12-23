@@ -1,8 +1,8 @@
 import { DataFrame } from '@grafana/data';
 
-import { Cells, getFieldConfig } from '../../components/cells';
+import { Cells } from '../../constants';
 import { TeamMember } from '../../types';
-import { updateFieldConfig, wrapCapacityField, wrapTeamMemberField } from '../../utils';
+import { getFieldConfig, updateFieldConfig, wrapCapacityField, wrapTeamMemberField } from '../../utils';
 
 import { SprintPlaningColumns } from './constants';
 import { SprintPlaningFiltersType } from './types';

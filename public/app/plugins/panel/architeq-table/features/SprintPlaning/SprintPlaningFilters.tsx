@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { SelectableValue } from '@grafana/data';
 import { MultiSelect, useStyles2 } from '@grafana/ui';
 
-import { FilterInputWrapper } from '../../components/FilterInputWrapper';
+import { HeaderItem } from '../../components/HeaderItem';
 
 import { SprintPlaningColumns } from './constants';
 import { SprintPlaningFiltersType } from './types';
@@ -41,7 +41,7 @@ export const SprintPlaningFilters: React.FC<Props> = ({ teamMembers, roles, isGr
 
   return (
     <div className={styles.container}>
-      <FilterInputWrapper>
+      <HeaderItem>
         <MultiSelect
           options={
             isGroupedByRole
@@ -57,7 +57,7 @@ export const SprintPlaningFilters: React.FC<Props> = ({ teamMembers, roles, isGr
           placeholder={isGroupedByRole ? SprintPlaningColumns.TeamMemberRole : SprintPlaningColumns.TeamMember}
           isClearable
         />
-      </FilterInputWrapper>
+      </HeaderItem>
     </div>
   );
 };

@@ -13,7 +13,6 @@ type Props = {
   iconName: string;
 };
 
-// 'fa/FaAccusoft'
 export const DynamicIcon = ({ iconName }: Props) => {
   if (!iconName) {
     return null;

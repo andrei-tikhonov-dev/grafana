@@ -2,11 +2,12 @@ import { css } from '@emotion/css';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { CustomCellRendererProps, IconButton, useStyles2, Modal, Button, Tooltip } from '@grafana/ui';
+import { CustomCellRendererProps, IconButton, useStyles2, Modal, Tooltip } from '@grafana/ui';
 
 import { LoadingMode } from '../../constants';
 import { RoleType } from '../../types';
 import { useDataTableContext } from '../DataTable/DataTableContext';
+import { FormFooter } from '../FormFooter';
 import { RolesFieldArray } from '../RolesFieldArray';
 
 const getStyles = () => {
@@ -133,12 +134,7 @@ export const RoleCell = (props: CustomCellRendererProps) => {
               setError={setError}
               clearErrors={clearErrors}
             />
-            <div className={styles.footer}>
-              <Button type="submit">Save</Button>
-              <Button variant="secondary" onClick={() => setModalOpen(false)}>
-                Cancel
-              </Button>
-            </div>
+            <FormFooter onClose={() => setModalOpen(false)} submitLabel="Save" />
           </form>
         </Modal>
       )}

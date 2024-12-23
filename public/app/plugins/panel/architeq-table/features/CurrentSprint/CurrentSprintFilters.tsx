@@ -4,7 +4,7 @@ import React, { useState, ChangeEvent } from 'react';
 import { SelectableValue } from '@grafana/data';
 import { Input, MultiSelect, useStyles2 } from '@grafana/ui';
 
-import { FilterInputWrapper } from '../../components/FilterInputWrapper';
+import { HeaderItem } from '../../components/HeaderItem';
 import { SprintPlaningColumns } from '../SprintPlaning/constants';
 
 import { CurrentSprintColumns } from './constants';
@@ -63,12 +63,12 @@ export const CurrentSprintFilters: React.FC<Props> = ({ assignees, statuses, onC
   return (
     <div className={styles.container}>
       <div className={styles.input}>
-        <FilterInputWrapper>
+        <HeaderItem>
           <Input value={filter.search} onChange={handleInputChange} placeholder="Search" />
-        </FilterInputWrapper>
+        </HeaderItem>
       </div>
       <div className={styles.input}>
-        <FilterInputWrapper>
+        <HeaderItem>
           <MultiSelect
             options={assignees.map((teamMember) => ({ label: teamMember, value: teamMember }))}
             value={filter.teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}
@@ -76,10 +76,10 @@ export const CurrentSprintFilters: React.FC<Props> = ({ assignees, statuses, onC
             placeholder={SprintPlaningColumns.TeamMember}
             isClearable
           />
-        </FilterInputWrapper>
+        </HeaderItem>
       </div>
       <div className={styles.input}>
-        <FilterInputWrapper>
+        <HeaderItem>
           <MultiSelect
             options={statuses.map((status) => ({ label: status, value: status }))}
             value={filter.status.map((status) => ({ label: status, value: status }))}
@@ -87,7 +87,7 @@ export const CurrentSprintFilters: React.FC<Props> = ({ assignees, statuses, onC
             placeholder={CurrentSprintColumns.Status}
             isClearable
           />
-        </FilterInputWrapper>
+        </HeaderItem>
       </div>
     </div>
   );

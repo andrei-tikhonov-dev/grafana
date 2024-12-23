@@ -1,7 +1,7 @@
 import { DataFrame } from '@grafana/data';
 
-import { Cells, getFieldConfig } from '../../components/cells';
-import { updateFieldConfig, wrapTeamMemberField } from '../../utils';
+import { Cells } from '../../constants';
+import { getFieldConfig, updateFieldConfig, wrapTeamMemberField } from '../../utils';
 
 import { CurrentSprintColumns } from './constants';
 import { Filters } from './types';

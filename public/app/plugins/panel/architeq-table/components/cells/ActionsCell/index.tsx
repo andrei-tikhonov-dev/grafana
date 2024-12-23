@@ -27,12 +27,10 @@ export function addActionsColumn(data: DataFrame, handleDelete: (rowIndex: numbe
     display: () => ({ text: '', numeric: 0 }),
   };
 
-  // Добавляем значение для каждой строки
   for (let i = 0; i < data.length; i++) {
     actionsField.values.add(null);
   }
 
-  // Добавляем новое поле в data
   data.fields = [...data.fields, actionsField];
 
   return data;

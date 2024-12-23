@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { CustomCellRendererProps, useStyles2 } from '@grafana/ui';
 
 import { DataTable } from '../../components/DataTable/DataTable';
-import { FilterInputWrapper } from '../../components/FilterInputWrapper';
+import { HeaderItem } from '../../components/HeaderItem';
 import { RequestMethod } from '../../constants';
 import { useRequest } from '../../hooks/useRequest';
 import { useSwitch } from '../../hooks/useSwitch';
@@ -100,7 +100,7 @@ export const SprintPlaning: React.FC<Props> = ({ options, data, width, height })
           roles={roles}
           isGroupedByRole={isGroupedByRole}
         />
-        {rolesFrame && <FilterInputWrapper>{switchComponent}</FilterInputWrapper>}
+        {rolesFrame && <HeaderItem>{switchComponent}</HeaderItem>}
       </div>
 
       <DataTable

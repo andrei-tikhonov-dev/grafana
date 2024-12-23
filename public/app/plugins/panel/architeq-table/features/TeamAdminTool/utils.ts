@@ -1,11 +1,11 @@
 import { DataFrame } from '@grafana/data';
 
-import { Cells, getFieldConfig, addActionsColumn } from '../../components/cells';
-import { FieldValidation } from '../../types';
-import { convertDateToBE, removeHiddenFields, updateFieldConfig } from '../../utils';
+import { Cells } from '../../constants';
+import { CellCustomOptionsType, FieldValidation } from '../../types';
+import { configureDataFrame, convertDateToBE, getFieldConfig } from '../../utils';
 
 import { TeamAdminToolFields } from './constants';
-import { TeamAdminToolCreatePayload, TeamAdminToolCreateTableType } from './types';
+import { TeamAdminFiltersType, TeamAdminToolCreatePayload, TeamAdminToolCreateTableType } from './types';
 
 interface ConfigTeamAdminToolData {
   dataFrame: DataFrame;
@@ -13,13 +13,14 @@ interface ConfigTeamAdminToolData {
   hiddenFields?: string[];
   maxWorkload: number;
 }
+
 export function configTeamAdminToolData({
   dataFrame,
   hiddenFields,
   handleDelete,
   maxWorkload,
 }: ConfigTeamAdminToolData): DataFrame {
-  const options = {
+  const options: CellCustomOptionsType = {
     align: 'left',
   };
 
@@ -53,12 +54,8 @@ export function configTeamAdminToolData({
       config: getFieldConfig(Cells.Checkbox, { ...options, width: 80, align: 'center' }),
     },
   ];
-  const visibleDataFrame = removeHiddenFields(dataFrame, hiddenFields);
-  const dataFrameWithActions = addActionsColumn(visibleDataFrame, handleDelete);
-  return fieldConfigs.reduce(
-    (configuredData, { fields, config }) => updateFieldConfig(configuredData, fields, config),
-    dataFrameWithActions
-  );
+
+  return configureDataFrame(dataFrame, hiddenFields, handleDelete, fieldConfigs);
 }
 
 export function getPayloadIDs(data: DataFrame): { [index: number]: { memberId?: number; teamId?: number } } {
@@ -78,20 +75,45 @@ export function getPayloadIDs(data: DataFrame): { [index: number]: { memberId?: 
   );
 }
 
-export function mapTeamAdminToolCreatePayload(
-  data: TeamAdminToolCreateTableType,
-  teamId: string
-): TeamAdminToolCreatePayload {
+export function mapCreateUserPayload(data: TeamAdminToolCreateTableType, teamId: string): TeamAdminToolCreatePayload {
   return {
     email: data.email,
     internalOrgId: data.internalOrgId,
     name: data.name,
     hourlyRate: data.hourlyRate,
     yearlyHours: data.yearlyHours,
-    workStartDate: convertDateToBE(data.workStartDate),
-    workEndDate: convertDateToBE(data.workEndDate),
-    excludedFromCapacity: data.excludedFromCapacity,
-    roles: data.roles.map(({ role, rate }) => ({ roleId: Number(role.value), rate: Number(rate) })),
-    teamId,
+    teamIdsToDetails: {
+      [teamId]: {
+        workload: data.workloadRatio,
+        roles: data.roles.map(({ role, rate }) => ({ roleId: Number(role.value), rate: Number(rate) })),
+        excludedFromCapacity: data.excludedFromCapacity,
+        workStartDate: convertDateToBE(data.workStartDate),
+        workEndDate: convertDateToBE(data.workEndDate),
+      },
+    },
+  };
+}
+
+export function filterTeamAdminTool(data: DataFrame, fieldName: string, filters: TeamAdminFiltersType): DataFrame {
+  const teamMemberField = data.fields.find((field) => field.name === fieldName);
+  const { teamMembers = [] } = filters || {};
+
+  if (!teamMemberField || teamMembers.length === 0) {
+    return data;
+  }
+
+  const filterMask = Array.from({ length: data.length }, (_, index) =>
+    teamMembers.includes(teamMemberField.values.get(index))
+  );
+
+  return {
+    ...data,
+    length: filterMask.filter(Boolean).length,
+    fields: data.fields.map((field) => ({
+      ...field,
+      values: Array.from({ length: data.length }, (_, index) => field.values.get(index)).filter(
+        (_, index) => filterMask[index]
+      ),
+    })),
   };
 }

@@ -8,8 +8,8 @@ export type SprintPlaningFiltersType = {
 interface DependencyTask extends InfoLineType {}
 
 export interface ExternalDependency {
-  team: string; // Имя текущей команды
-  tasks: DependencyTask[]; // Массив задач других команд, от которых зависит текущая команда
+  team: string;
+  tasks: DependencyTask[];
 }
 
 export interface ExternalDependencies {

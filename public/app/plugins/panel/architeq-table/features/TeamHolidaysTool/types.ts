@@ -1,31 +1,24 @@
-export type TeamAdminFiltersType = {
-  teamMembers: string[];
-};
-
 export type TeamHolidaysToolMetaType = {
   custom: {
-    teamId: string;
+    teamId: number;
+    types: string[];
   };
 };
 
-export interface TeamHolidaysToolUpdatePayload {
-  teamId: string;
+export interface HolidaysUpdatePayload {
   propertyName: string;
-  value: number | string;
+  value: string;
 }
 
-export interface TeamHolidaysToolDeletePayload {
-  id: string;
-  teamId: string;
-}
-
-export interface TeamHolidaysToolCreateTableType {
+export interface HolidaysCreateTableType {
   description: string;
+  type: string;
   date: string;
 }
 
-export interface TeamHolidaysToolCreatePayload {
+export interface HolidaysCreatePayload {
+  teamId: number;
   description: string;
   date: string;
-  teamId: string;
+  type: string;
 }

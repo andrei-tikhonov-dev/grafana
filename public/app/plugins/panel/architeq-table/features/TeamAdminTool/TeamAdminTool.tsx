@@ -1,42 +1,33 @@
-import { css } from '@emotion/css';
 import React from 'react';
 
-import { CustomCellRendererProps, useStyles2 } from '@grafana/ui';
+import { CustomCellRendererProps } from '@grafana/ui';
 
 import { DataTable } from '../../components/DataTable/DataTable';
+import { FormModalWrapper } from '../../components/FormModalWrapper';
+import { HeaderContainer } from '../../components/HeaderContainer';
 import { RequestMethod } from '../../constants';
+import { useFilters } from '../../hooks/useFilters';
 import { useRequest } from '../../hooks/useRequest';
 import { RoleType, TablePanelProps } from '../../types';
 
-import { TeamAdminToolAddUserButton } from './TeamAdminToolAddUserButton';
+import { AddUserForm } from './AddUserForm';
 import { TeamAdminToolFilters, FILTER_HEIGHT } from './TeamAdminToolFilters';
 import { hiddenFields, TeamAdminToolFields } from './constants';
-import { useTeamAdminFilters } from './hooks/useTeamAdminFilters';
 import {
+  TeamAdminFiltersType,
   TeamAdminToolCreateTableType,
   TeamAdminToolDeletePayload,
   TeamAdminToolMetaType,
   TeamAdminToolUpdatePayload,
 } from './types';
-import { configTeamAdminToolData, getPayloadIDs, mapTeamAdminToolCreatePayload } from './utils';
+import { configTeamAdminToolData, filterTeamAdminTool, getPayloadIDs, mapCreateUserPayload } from './utils';
 
 interface Props extends TablePanelProps {}
 
-const getStyles = () => {
-  return {
-    filterContainer: css`
-      display: flex;
-      gap: 2px;
-      margin-bottom: 20px;
-      max-width: 800px;
-    `,
-  };
-};
-
 export const TeamAdminTool: React.FC<Props> = ({ options, data, width, height }) => {
   const dataFrame = data.series[0];
+  const filterField = TeamAdminToolFields.TeamMember;
   const payloadIDs = getPayloadIDs(dataFrame);
-  const styles = useStyles2(getStyles);
   const {
     custom: { availableRoles, teamId, maxWorkload },
   } = dataFrame.meta as TeamAdminToolMetaType;
@@ -78,20 +69,28 @@ export const TeamAdminTool: React.FC<Props> = ({ options, data, width, height })
   };
 
   const handleCreate = async (data: TeamAdminToolCreateTableType) => {
-    const payload = mapTeamAdminToolCreatePayload(data, teamId);
+    const payload = mapCreateUserPayload(data, teamId);
     return createRequest(payload);
   };
 
   const configuredData = configTeamAdminToolData({ dataFrame, hiddenFields, handleDelete, maxWorkload });
 
-  const { handleFiltersChange, filteredData, filterOptions } = useTeamAdminFilters(configuredData);
+  const { handleFiltersChange, filteredData, filterOptions } = useFilters<TeamAdminFiltersType>(
+    configuredData,
+    filterField,
+    filterTeamAdminTool
+  );
 
   return (
     <>
-      <div className={styles.filterContainer}>
-        <TeamAdminToolFilters onChange={handleFiltersChange} teamMembers={filterOptions.teamMembers} />
-        <TeamAdminToolAddUserButton onHandleCreate={handleCreate} roles={roles} maxWorkload={maxWorkload} />
-      </div>
+      <HeaderContainer>
+        <TeamAdminToolFilters onChange={handleFiltersChange} teamMembers={filterOptions[filterField]} />
+        <FormModalWrapper title="Add team member">
+          {({ onClose }) => (
+            <AddUserForm onClose={onClose} roles={roles} maxWorkload={maxWorkload} onCreate={handleCreate} />
+          )}
+        </FormModalWrapper>
+      </HeaderContainer>
 
       <DataTable
         width={width}

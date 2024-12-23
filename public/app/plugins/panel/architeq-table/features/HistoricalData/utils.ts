@@ -1,7 +1,7 @@
 import { DataFrame } from '@grafana/data';
 
-import { Cells, getFieldConfig } from '../../components/cells';
-import { updateFieldConfig } from '../../utils';
+import { Cells } from '../../constants';
+import { getFieldConfig, updateFieldConfig } from '../../utils';
 
 import { HistoricDataColumns } from './constants';
 import { HistoricalDataUpdatePayload } from './types';

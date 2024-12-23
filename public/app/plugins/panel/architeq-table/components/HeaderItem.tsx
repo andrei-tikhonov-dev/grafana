@@ -11,7 +11,7 @@ const getStyles = () => {
   };
 };
 
-export const FilterInputWrapper = ({ children }: { children: React.ReactNode }) => {
+export const HeaderItem = ({ children }: { children: React.ReactNode }) => {
   const styles = useStyles2(getStyles);
 
   return <div className={styles.cell}>{children}</div>;

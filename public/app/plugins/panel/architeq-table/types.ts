@@ -1,7 +1,7 @@
 import { PanelProps } from '@grafana/data';
 import { CustomCellRendererProps } from '@grafana/ui';
 
-import { RequestMethod, TableType } from './constants';
+import { Cells, RequestMethod, TableType } from './constants';
 
 export interface PanelOptions {
   update: {
@@ -110,6 +110,13 @@ export interface InfoLineType {
   newTab?: boolean;
 }
 
+export type CellCustomOptionsType = {
+  width?: number;
+  align?: 'left' | 'center' | 'right';
+  validation?: { type: FieldValidation; value?: any }[];
+  options?: OptionType[];
+};
+
 export type RoleType = {
   currentRoles: {
     roleId: number;
@@ -120,3 +127,7 @@ export type RoleType = {
     name: string;
   }[];
 };
+
+export type CellType = (typeof Cells)[keyof typeof Cells];
+
+export type OptionType = { label: string; value: string };

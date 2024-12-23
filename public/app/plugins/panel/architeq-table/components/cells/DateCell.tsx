@@ -48,7 +48,7 @@ export const DateCell = (props: CustomCellRendererProps) => {
   const seriesIndex = Number(field.state?.seriesIndex);
   const { addItem, removeItem, hasItem, loading, updateData } = useDataTableContext();
 
-  const initialValue = new Date(value as string).toISOString();
+  const initialValue = value ? new Date(value as string).toISOString() : '';
   const [inputValue, setInputValue] = React.useState<string>(initialValue);
 
   const handleEdit = () => {
@@ -88,7 +88,7 @@ export const DateCell = (props: CustomCellRendererProps) => {
     </div>
   ) : (
     <div className={styles.cell}>
-      <div className={styles.cellInput}>{convertDateToUI(inputValue)}</div>{' '}
+      <div className={styles.cellInput}>{convertDateToUI(inputValue)}</div>
       <IconButton aria-label="Edit" size="xs" name="edit" onClick={handleEdit} />
     </div>
   );

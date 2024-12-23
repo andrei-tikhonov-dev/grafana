@@ -1,7 +1,9 @@
 import { DataFrame, FieldConfig, FieldOverrideContext, getFieldDisplayName } from '@grafana/data';
+import { TableCellDisplayMode } from '@grafana/ui';
 
+import { addActionsColumn } from '../components/cells';
 import { TableType } from '../constants';
-import { Capacity, CapacityClass, TeamMember, TeamMemberClass } from '../types';
+import { Capacity, CapacityClass, CellCustomOptionsType, CellType, TeamMember, TeamMemberClass } from '../types';
 
 export function getCircularReplacer() {
   const seen = new WeakSet();
@@ -46,6 +48,8 @@ export const getTableTypeOptions = async () => {
     { label: 'Sprint Planing', value: TableType.SprintPlaning },
     { label: 'Team Admin Tool', value: TableType.TeamAdminTool },
     { label: 'Team Holidays Tool', value: TableType.TeamHolidaysTool },
+    { label: 'Total Budget Tool', value: TableType.TotalBudgetTool },
+    { label: 'PI Admin Tool', value: TableType.PiAdminTool },
   ]);
 };
 
@@ -111,16 +115,19 @@ export function removeHiddenFields(dataFrame: DataFrame, hiddenFields?: string[]
 }
 
 export function convertDateToUI(dateStr: string): string {
+  if (!dateStr) {
+    return 'No date';
+  }
   const date = new Date(dateStr);
-  const day = ('0' + date.getDate()).slice(-2); // Ensures two digits
-  const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-indexed
+  const day = ('0' + date.getDate()).slice(-2);
+  const month = ('0' + (date.getMonth() + 1)).slice(-2);
   const year = date.getFullYear();
   return `${day}.${month}.${year}`;
 }
 
-export function convertDateToBE(dateStr?: string): string {
+export function convertDateToBE(dateStr?: string): string | null {
   if (!dateStr) {
-    return '';
+    return null;
   }
   const date = new Date(dateStr);
   const year = date.getFullYear();
@@ -128,4 +135,50 @@ export function convertDateToBE(dateStr?: string): string {
   const day = date.getDate().toString().padStart(2, '0');
 
   return `${year}-${month}-${day}`;
+}
+
+export const getFieldConfig = (cellComponent: CellType, customOptions: CellCustomOptionsType = {}) => {
+  return {
+    custom: {
+      ...customOptions,
+      cellOptions: {
+        type: TableCellDisplayMode.Custom,
+        cellComponent,
+      },
+    },
+  };
+};
+
+export function configureDataFrame(
+  dataFrame: DataFrame,
+  hiddenFields: string[] | undefined,
+  handleDelete: (rowIndex: number) => void,
+  fieldConfigs: Array<{ fields: string[]; config: ReturnType<typeof getFieldConfig> }>
+): DataFrame {
+  const visibleDataFrame = removeHiddenFields(dataFrame, hiddenFields);
+  const dataFrameWithActions = addActionsColumn(visibleDataFrame, handleDelete);
+
+  return fieldConfigs.reduce((configuredData, { fields, config }) => {
+    return updateFieldConfig(configuredData, fields, config);
+  }, dataFrameWithActions);
+}
+
+export function generateYearOptions(years = 10) {
+  const currentYear = new Date().getFullYear();
+
+  return Array.from({ length: years }, (_, i) => {
+    const year = (currentYear - i).toString();
+    return { label: year, value: year };
+  });
+}
+
+export function getFilterOptions(data: DataFrame, requestedFields: string[]): Record<string, string[]> {
+  const result: Record<string, string[]> = {};
+
+  for (const fieldName of requestedFields) {
+    const field = data.fields.find((f) => f.name === fieldName);
+    result[fieldName] = field ? Array.from(new Set(field.values)).map(String).sort() : [];
+  }
+
+  return result;
 }

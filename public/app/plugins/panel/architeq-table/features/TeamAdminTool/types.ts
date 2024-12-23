@@ -43,9 +43,13 @@ export interface TeamAdminToolCreatePayload {
   internalOrgId: string;
   hourlyRate: number;
   yearlyHours: number;
-  workStartDate: string;
-  workEndDate: string;
-  excludedFromCapacity: boolean;
-  roles: { roleId?: string | number; rate: number }[];
-  teamId: string | number;
+  teamIdsToDetails: {
+    [key: string]: {
+      workload: number;
+      roles: { roleId?: string | number; rate: number }[];
+      excludedFromCapacity: boolean;
+      workStartDate: string | null;
+      workEndDate: string | null;
+    };
+  };
 }

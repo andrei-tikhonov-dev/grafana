@@ -5,6 +5,16 @@ import { TableType } from './constants';
 import { PanelOptions } from './types';
 import { getPanelSelectOptions, getTableTypeOptions } from './utils';
 
+const HISTORICAL_DATA_TYPES = [TableType.HistoricalData];
+const CURRENT_SPRINT_TYPES = [TableType.CurrentSprint];
+const ADMIN_TYPES = [
+  TableType.TeamAdminTool,
+  TableType.TeamHolidaysTool,
+  TableType.TotalBudgetTool,
+  TableType.PiAdminTool,
+];
+const UPDATE_URL_TYPES = [TableType.HistoricalData, TableType.SprintPlaning, ...ADMIN_TYPES];
+
 export const plugin = new PanelPlugin<PanelOptions>(TablePanel).setPanelOptions((builder) => {
   return builder
     .addSelect({
@@ -29,7 +39,7 @@ export const plugin = new PanelPlugin<PanelOptions>(TablePanel).setPanelOptions(
         options: [],
         getOptions: getPanelSelectOptions,
       },
-      showIf: (config) => config.tableType === TableType.HistoricalData,
+      showIf: (config) => HISTORICAL_DATA_TYPES.includes(config.tableType),
     })
     .addSelect({
       category: ['Table Configuration'],
@@ -41,7 +51,7 @@ export const plugin = new PanelPlugin<PanelOptions>(TablePanel).setPanelOptions(
         options: [],
         getOptions: getPanelSelectOptions,
       },
-      showIf: (config) => config.tableType === TableType.HistoricalData,
+      showIf: (config) => HISTORICAL_DATA_TYPES.includes(config.tableType),
     })
     .addTextInput({
       path: 'baseUrl',
@@ -51,7 +61,7 @@ export const plugin = new PanelPlugin<PanelOptions>(TablePanel).setPanelOptions(
       settings: {
         placeholder: 'http://',
       },
-      showIf: (config) => config.tableType === TableType.CurrentSprint,
+      showIf: (config) => CURRENT_SPRINT_TYPES.includes(config.tableType),
     })
     .addTextInput({
       path: 'updateUrl',
@@ -61,11 +71,7 @@ export const plugin = new PanelPlugin<PanelOptions>(TablePanel).setPanelOptions(
       settings: {
         placeholder: 'http://',
       },
-      showIf: (config) =>
-        config.tableType === TableType.HistoricalData ||
-        config.tableType === TableType.SprintPlaning ||
-        config.tableType === TableType.TeamAdminTool ||
-        config.tableType === TableType.TeamHolidaysTool,
+      showIf: (config) => UPDATE_URL_TYPES.includes(config.tableType),
     })
     .addTextInput({
       path: 'createUrl',
@@ -75,8 +81,7 @@ export const plugin = new PanelPlugin<PanelOptions>(TablePanel).setPanelOptions(
       settings: {
         placeholder: 'http://',
       },
-      showIf: (config) =>
-        config.tableType === TableType.TeamAdminTool || config.tableType === TableType.TeamHolidaysTool,
+      showIf: (config) => ADMIN_TYPES.includes(config.tableType),
     })
     .addTextInput({
       path: 'deleteUrl',
@@ -86,7 +91,6 @@ export const plugin = new PanelPlugin<PanelOptions>(TablePanel).setPanelOptions(
       settings: {
         placeholder: 'http://',
       },
-      showIf: (config) =>
-        config.tableType === TableType.TeamAdminTool || config.tableType === TableType.TeamHolidaysTool,
+      showIf: (config) => ADMIN_TYPES.includes(config.tableType),
     });
 });

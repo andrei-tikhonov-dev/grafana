@@ -10,26 +10,21 @@ import { useRequest } from '../../hooks/useRequest';
 import { TablePanelProps } from '../../types';
 import { convertDateToBE } from '../../utils';
 
-import { AddHoliday } from './AddHoliday';
-import { hiddenFields } from './constants';
-import {
-  HolidaysCreateTableType,
-  TeamHolidaysToolMetaType,
-  HolidaysUpdatePayload,
-  HolidaysCreatePayload,
-} from './types';
-import { configTeamHolidaysToolData, getPayloadIDs } from './utils';
+import { AddPiForm } from './AddPiForm';
+import { PiFields, hiddenFields } from './constants';
+import { BudgetCreateFormType, BudgetCreatePayload, BudgetMetaType, BudgetUpdatePayload } from './types';
+import { configBudgetData, getPayloadIDs } from './utils';
 
 const HEADER_HEIGHT = 45;
 
 interface Props extends TablePanelProps {}
 
-export const TeamHolidaysTool: React.FC<Props> = ({ options, data, width, height }) => {
+export const PiAdminTool: React.FC<Props> = ({ options, data, width, height }) => {
   const dataFrame = data.series[0];
   const payloadIDs = getPayloadIDs(dataFrame);
   const {
-    custom: { teamId, types },
-  } = dataFrame.meta as TeamHolidaysToolMetaType;
+    custom: { artName },
+  } = dataFrame.meta as BudgetMetaType;
   const { createRequest, updateRequest, deleteRequest, loading } = useRequest({
     create: {
       url: options.createUrl,
@@ -44,39 +39,35 @@ export const TeamHolidaysTool: React.FC<Props> = ({ options, data, width, height
       method: RequestMethod.DELETE,
     },
   });
-
-  const typeOptions = types.map((type) => ({ label: type, value: type }));
-
-  const handleUpdate = async (value: string, { rowIndex, field }: CustomCellRendererProps) => {
-    const payload: HolidaysUpdatePayload = {
+  const handleUpdate = async (value: number | string, { rowIndex, field }: CustomCellRendererProps) => {
+    const payload: BudgetUpdatePayload = {
       propertyName: field.name,
       value,
     };
-    return updateRequest(payload, payloadIDs[rowIndex].id);
+    return updateRequest(payload, String(payloadIDs[rowIndex].id));
   };
 
   const handleDelete = (rowIndex: number) => {
-    const id = String(payloadIDs[rowIndex].id);
-    return deleteRequest(null, id);
+    return deleteRequest(null, payloadIDs[rowIndex].id);
   };
 
-  const handleCreate = async (data: HolidaysCreateTableType) => {
-    const payload: HolidaysCreatePayload = {
-      teamId,
-      description: data.description,
-      date: convertDateToBE(data.date) || '',
-      type: data.type,
+  const handleCreate = async (data: BudgetCreateFormType) => {
+    const payload: BudgetCreatePayload = {
+      artName,
+      startDate: convertDateToBE(data[PiFields.StartDay]) || '',
+      endDate: convertDateToBE(data[PiFields.endDate]) || '',
+      name: data[PiFields.PiName],
     };
     return createRequest(payload);
   };
 
-  const configuredData = configTeamHolidaysToolData({ dataFrame, hiddenFields, handleDelete, typeOptions });
+  const configuredData = configBudgetData({ dataFrame, hiddenFields, handleDelete });
 
   return (
     <>
       <HeaderContainer>
-        <FormModalWrapper title="Add holiday">
-          {({ onClose }) => <AddHoliday onClose={onClose} onCreate={handleCreate} typeOptions={typeOptions} />}
+        <FormModalWrapper title="Add PI">
+          {({ onClose }) => <AddPiForm onClose={onClose} onCreate={handleCreate} />}
         </FormModalWrapper>
       </HeaderContainer>
 
