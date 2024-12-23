@@ -10,9 +10,9 @@ import { InfoLineCell } from './InfoLineCell';
 import { InputCell } from './InputCell';
 import { IssueTypeCell } from './IssueTypeCell';
 import { LinkCell } from './LinkCell';
-import { RoleSelectCell } from './RoleSelectCell';
 import { SimpleCell } from './SimpleCell';
 import { UserCell } from './UserCell';
+import { RoleCell } from './RoleCell';
 
 export { addActionsColumn } from './ActionsCell';
 
@@ -27,7 +27,7 @@ export const Cells = {
   Input: InputCell,
   IssueType: IssueTypeCell,
   Link: LinkCell,
-  RoleSelect: RoleSelectCell,
+  Role: RoleCell,
   Simple: SimpleCell,
   User: UserCell,
 };

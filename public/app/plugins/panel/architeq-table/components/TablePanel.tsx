@@ -10,6 +10,7 @@ import { CurrentSprint } from '../features/CurrentSprint';
 import { HistoricalData } from '../features/HistoricalData';
 import { SprintPlaning } from '../features/SprintPlaning';
 import { TeamAdminTool } from '../features/TeamAdminTool';
+import { TeamHolidaysTool } from '../features/TeamHolidaysTool';
 import { TablePanelProps } from '../types';
 
 const TablePanels = {
@@ -17,6 +18,7 @@ const TablePanels = {
   [TableType.CurrentSprint]: CurrentSprint,
   [TableType.SprintPlaning]: SprintPlaning,
   [TableType.TeamAdminTool]: TeamAdminTool,
+  [TableType.TeamHolidaysTool]: TeamHolidaysTool,
 };
 
 export const TablePanel: React.FC<TablePanelProps> = (props) => {

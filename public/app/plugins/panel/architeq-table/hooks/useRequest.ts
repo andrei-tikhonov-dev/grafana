@@ -69,7 +69,21 @@ export function useRequest({ create, update, delete: deleteAction, preventReload
   };
 
   const createRequest = (payload: any) => performRequest(payload, create);
-  const updateRequest = (payload: any) => performRequest(payload, update);
+
+  const updateRequest = (payload: any, id?: string) => {
+    if (!update) {
+      notifyError(['Invalid update configuration.']);
+      return Promise.resolve(false);
+    }
+
+    const actionWithId: ActionOptionsType = {
+      ...update,
+      url: id ? `${update.url}/${id}` : update.url,
+    };
+
+    return performRequest(payload, actionWithId);
+  };
+
   const deleteRequest = (payload: any) => performRequest(payload, deleteAction);
 
   return {

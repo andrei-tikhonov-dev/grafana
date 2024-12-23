@@ -7,24 +7,6 @@ import { Button, RangeSlider, useStyles2 } from '@grafana/ui';
 import { RangeType } from '../types';
 import { setVariables } from '../utils';
 
-function ellipsis(input?: string, maxLength = 22): string {
-  if (!input) {
-    return '';
-  }
-
-  if (input.length <= maxLength) {
-    return input;
-  }
-
-  let trimmed = input.slice(0, maxLength - 3);
-  if (trimmed.includes(' ')) {
-    const lastSpaceIndex = trimmed.lastIndexOf(' ');
-    trimmed = trimmed.slice(0, lastSpaceIndex);
-  }
-
-  return trimmed + '...';
-}
-
 const getStyles = (theme: GrafanaTheme2) => {
   return {
     container: css`
@@ -85,14 +67,14 @@ export const Range: React.FC<Props> = ({ options = [], lastId, firstId }) => {
           step={1}
           value={range}
           onChange={handleChange}
-          formatTooltipResult={(value: any) => ellipsis(options[value]?.name)}
+          formatTooltipResult={() => ' '}
         />
       </div>
       <div className={styles.footer}>
         {rangeName}
         {isDifferentFromInitial && (
           <Button size="sm" onClick={handleSet}>
-            Set
+            Set range
           </Button>
         )}
       </div>

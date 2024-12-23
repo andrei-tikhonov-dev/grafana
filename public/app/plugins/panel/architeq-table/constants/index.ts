@@ -5,6 +5,7 @@ export const enum TableType {
   CurrentSprint = 'CurrentSprint',
   SprintPlaning = 'SprintPlaning',
   TeamAdminTool = 'TeamAdminTool',
+  TeamHolidaysTool = 'TeamHolidaysTool',
 }
 
 export const enum RequestMethod {

@@ -45,7 +45,7 @@ export function configTeamAdminToolData({
       fields: [TeamAdminToolFields.WorkloadRatio],
       config: getFieldConfig(Cells.Input, { ...workloadRatioOptions, width: 120 }),
     },
-    { fields: [TeamAdminToolFields.Role], config: getFieldConfig(Cells.RoleSelect, { ...options, width: 120 }) },
+    { fields: [TeamAdminToolFields.Role], config: getFieldConfig(Cells.Role, { ...options, width: 120 }) },
     { fields: [TeamAdminToolFields.StartDate], config: getFieldConfig(Cells.Date, { ...options, width: 120 }) },
     { fields: [TeamAdminToolFields.EndDate], config: getFieldConfig(Cells.Date, { ...options, width: 120 }) },
     {
@@ -91,11 +91,7 @@ export function mapTeamAdminToolCreatePayload(
     workStartDate: convertDateToBE(data.workStartDate),
     workEndDate: convertDateToBE(data.workEndDate),
     excludedFromCapacity: data.excludedFromCapacity,
-    teamIdsToDetails: {
-      [teamId]: {
-        roleId: data.role,
-        workload: data.workloadRatio,
-      },
-    },
+    roles: data.roles.map(({ role, rate }) => ({ roleId: Number(role.value), rate: Number(rate) })),
+    teamId,
   };
 }

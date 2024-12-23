@@ -109,3 +109,14 @@ export interface InfoLineType {
   button?: boolean;
   newTab?: boolean;
 }
+
+export type RoleType = {
+  currentRoles: {
+    roleId: number;
+    rate: number;
+  }[];
+  availableRoles: {
+    id: number;
+    name: string;
+  }[];
+};

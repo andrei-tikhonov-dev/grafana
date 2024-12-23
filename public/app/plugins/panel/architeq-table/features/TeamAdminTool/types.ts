@@ -1,34 +1,27 @@
+import { RoleType } from '../../types';
+
 export type TeamAdminFiltersType = {
   teamMembers: string[];
 };
 
 export type TeamAdminToolMetaType = {
   custom: {
-    availableRoles: TeamAdminToolRoleType[];
+    availableRoles: RoleType['availableRoles'];
     maxWorkload: number;
     teamId: string;
   };
-};
-
-export type UpdateDataType = {
-  value: number | string;
 };
 
 export interface TeamAdminToolUpdatePayload {
   memberId: number;
   teamId: number;
   propertyName: string;
-  value: number | string;
+  value: any;
 }
 
 export interface TeamAdminToolDeletePayload {
   memberId: number;
   teamId: number;
-}
-
-export interface TeamAdminToolRoleType {
-  id: number;
-  name: string;
 }
 
 export interface TeamAdminToolCreateTableType {
@@ -38,7 +31,7 @@ export interface TeamAdminToolCreateTableType {
   hourlyRate: number;
   yearlyHours: number;
   workloadRatio: number;
-  role: number;
+  roles: { role: { label: string; value: number | string }; rate: number }[];
   workEndDate: string;
   workStartDate: string;
   excludedFromCapacity: boolean;
@@ -53,10 +46,6 @@ export interface TeamAdminToolCreatePayload {
   workStartDate: string;
   workEndDate: string;
   excludedFromCapacity: boolean;
-  teamIdsToDetails: {
-    [key: string]: {
-      roleId: number;
-      workload: number;
-    };
-  };
+  roles: { roleId?: string | number; rate: number }[];
+  teamId: string | number;
 }

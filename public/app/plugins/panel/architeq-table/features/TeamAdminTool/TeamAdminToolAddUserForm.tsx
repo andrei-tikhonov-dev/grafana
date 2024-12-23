@@ -1,26 +1,51 @@
+import { css } from '@emotion/css';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Button, Field, Input, Select, Switch } from '@grafana/ui';
+import { Button, Field, Input, Switch, useStyles2 } from '@grafana/ui';
 
-import { TeamAdminToolCreateTableType, TeamAdminToolRoleType } from './types';
+import { RolesFieldArray } from '../../components/RolesFieldArray';
+import { RoleType } from '../../types';
+
+import { TeamAdminToolCreateTableType } from './types';
 
 interface Props {
   onClose: () => void;
   onCreate: (data: TeamAdminToolCreateTableType) => void;
-  roles: TeamAdminToolRoleType[];
+  roles: RoleType['availableRoles'];
   maxWorkload: number;
 }
 
-export const TeamAdminToolAddUserForm: React.FC<Props> = ({ onClose, onCreate, roles, maxWorkload }) => {
+const getStyles = () => {
+  return {
+    footer: css`
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    `,
+  };
+};
+
+export const TeamAdminToolAddUserForm: React.FC<Props> = ({
+  onClose,
+  onCreate,
+  roles: availableRoles,
+  maxWorkload,
+}) => {
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<TeamAdminToolCreateTableType>();
-
-  const roleOptions = roles.map((role) => ({ value: role.id, label: role.name }));
+    setError,
+    clearErrors,
+  } = useForm<TeamAdminToolCreateTableType>({
+    defaultValues: {
+      roles: [],
+    },
+  });
+  const styles = useStyles2(getStyles);
 
   const onSubmit = async (data: TeamAdminToolCreateTableType) => {
     await onCreate(data);
@@ -80,40 +105,25 @@ export const TeamAdminToolAddUserForm: React.FC<Props> = ({ onClose, onCreate, r
         />
       </Field>
 
-      <Field label="Role" invalid={!!errors.role} error={errors.role?.message}>
-        <Controller
-          name="role"
+      <Field label="Roles" invalid={!!errors.roles} error={errors.roles?.message}>
+        <RolesFieldArray
           control={control}
-          rules={{ required: 'Role is required' }}
-          render={({ field }) => (
-            <Select
-              options={roleOptions}
-              value={roleOptions.find((option) => option.value === field.value)}
-              onChange={(v) => field.onChange(v.value)}
-              placeholder="Select Role"
-            />
-          )}
+          name="roles"
+          availableRoles={availableRoles}
+          errors={errors}
+          setError={setError}
+          clearErrors={clearErrors}
         />
       </Field>
 
       {/* Start Date Field */}
       <Field label="Start Date" invalid={!!errors.workStartDate} error={errors.workStartDate?.message}>
-        <Input
-          type="date"
-          {...register('workStartDate', {
-            required: 'Start date is required',
-          })}
-        />
+        <Input type="date" {...register('workStartDate')} />
       </Field>
 
       {/* End Date Field */}
       <Field label="End Date" invalid={!!errors.workEndDate} error={errors.workEndDate?.message}>
-        <Input
-          type="date"
-          {...register('workEndDate', {
-            required: 'End date is required',
-          })}
-        />
+        <Input type="date" {...register('workEndDate')} />
       </Field>
 
       {/* Exclude From Capacity Field */}
@@ -131,10 +141,12 @@ export const TeamAdminToolAddUserForm: React.FC<Props> = ({ onClose, onCreate, r
         />
       </Field>
 
-      <Button type="submit">Submit</Button>
-      <Button variant="secondary" onClick={onClose}>
-        Cancel
-      </Button>
+      <div className={styles.footer}>
+        <Button type="submit">Submit</Button>
+        <Button variant="secondary" onClick={onClose}>
+          Cancel
+        </Button>
+      </div>
     </form>
   );
 };

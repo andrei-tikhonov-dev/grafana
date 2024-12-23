@@ -64,7 +64,8 @@ export const plugin = new PanelPlugin<PanelOptions>(TablePanel).setPanelOptions(
       showIf: (config) =>
         config.tableType === TableType.HistoricalData ||
         config.tableType === TableType.SprintPlaning ||
-        config.tableType === TableType.TeamAdminTool,
+        config.tableType === TableType.TeamAdminTool ||
+        config.tableType === TableType.TeamHolidaysTool,
     })
     .addTextInput({
       path: 'createUrl',
@@ -74,7 +75,8 @@ export const plugin = new PanelPlugin<PanelOptions>(TablePanel).setPanelOptions(
       settings: {
         placeholder: 'http://',
       },
-      showIf: (config) => config.tableType === TableType.TeamAdminTool,
+      showIf: (config) =>
+        config.tableType === TableType.TeamAdminTool || config.tableType === TableType.TeamHolidaysTool,
     })
     .addTextInput({
       path: 'deleteUrl',
@@ -84,6 +86,7 @@ export const plugin = new PanelPlugin<PanelOptions>(TablePanel).setPanelOptions(
       settings: {
         placeholder: 'http://',
       },
-      showIf: (config) => config.tableType === TableType.TeamAdminTool,
+      showIf: (config) =>
+        config.tableType === TableType.TeamAdminTool || config.tableType === TableType.TeamHolidaysTool,
     });
 });

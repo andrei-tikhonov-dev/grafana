@@ -3,13 +3,14 @@ import React, { useState } from 'react';
 import { Button, Modal } from '@grafana/ui';
 
 import { FilterInputWrapper } from '../../components/FilterInputWrapper';
+import { RoleType } from '../../types';
 
 import { TeamAdminToolAddUserForm } from './TeamAdminToolAddUserForm';
-import { TeamAdminToolCreateTableType, TeamAdminToolRoleType } from './types';
+import { TeamAdminToolCreateTableType } from './types';
 
 interface Props {
   onHandleCreate: (data: TeamAdminToolCreateTableType) => void;
-  roles: TeamAdminToolRoleType[];
+  roles: RoleType['availableRoles'];
   maxWorkload: number;
 }
 

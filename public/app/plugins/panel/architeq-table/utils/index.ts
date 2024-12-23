@@ -45,6 +45,7 @@ export const getTableTypeOptions = async () => {
     { label: 'Current Sprint', value: TableType.CurrentSprint },
     { label: 'Sprint Planing', value: TableType.SprintPlaning },
     { label: 'Team Admin Tool', value: TableType.TeamAdminTool },
+    { label: 'Team Holidays Tool', value: TableType.TeamHolidaysTool },
   ]);
 };
 
@@ -117,7 +118,10 @@ export function convertDateToUI(dateStr: string): string {
   return `${day}.${month}.${year}`;
 }
 
-export function convertDateToBE(dateStr: string): string {
+export function convertDateToBE(dateStr?: string): string {
+  if (!dateStr) {
+    return '';
+  }
   const date = new Date(dateStr);
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');

@@ -6,17 +6,16 @@ import { CustomCellRendererProps, useStyles2 } from '@grafana/ui';
 import { DataTable } from '../../components/DataTable/DataTable';
 import { RequestMethod } from '../../constants';
 import { useRequest } from '../../hooks/useRequest';
-import { TablePanelProps } from '../../types';
+import { RoleType, TablePanelProps } from '../../types';
 
 import { TeamAdminToolAddUserButton } from './TeamAdminToolAddUserButton';
 import { TeamAdminToolFilters, FILTER_HEIGHT } from './TeamAdminToolFilters';
-import { hiddenFields } from './constants';
+import { hiddenFields, TeamAdminToolFields } from './constants';
 import { useTeamAdminFilters } from './hooks/useTeamAdminFilters';
 import {
   TeamAdminToolCreateTableType,
   TeamAdminToolDeletePayload,
   TeamAdminToolMetaType,
-  TeamAdminToolRoleType,
   TeamAdminToolUpdatePayload,
 } from './types';
 import { configTeamAdminToolData, getPayloadIDs, mapTeamAdminToolCreatePayload } from './utils';
@@ -55,14 +54,16 @@ export const TeamAdminTool: React.FC<Props> = ({ options, data, width, height })
       method: RequestMethod.DELETE,
     },
   });
-  const roles: TeamAdminToolRoleType[] = availableRoles || [];
+  const roles: RoleType['availableRoles'] = availableRoles || [];
+
   const handleUpdate = async (value: number | string, { rowIndex, field }: CustomCellRendererProps) => {
     const { teamId, memberId } = payloadIDs[rowIndex];
+
     const payload: TeamAdminToolUpdatePayload = {
       memberId: Number(memberId),
       teamId: Number(teamId),
       propertyName: field.name,
-      value,
+      value: field.name === TeamAdminToolFields.Role ? { updatedRoles: value } : value,
     };
     return updateRequest(payload);
   };
