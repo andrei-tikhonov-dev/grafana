@@ -72,7 +72,7 @@ export const plugin = new PanelPlugin<SankeyOptions>(Panel)
         defaultValue: 7,
         settings: {
           min: 1,
-          max: 30,
+          max: 250,
           step: 1,
         },
       })

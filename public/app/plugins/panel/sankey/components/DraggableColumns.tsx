@@ -8,7 +8,6 @@ import { ColumnData } from '../types';
 
 import { Column } from './Column';
 
-
 export function DraggableColumns({
   columns,
   moveColumn,
@@ -19,22 +18,20 @@ export function DraggableColumns({
   toggleColumn: (id: string) => void;
 }) {
   return (
-    <div>
-      <DndProvider backend={HTML5Backend}>
-        <ToolbarButtonRow>
-          {columns.map(({ id, name, show }, index) => (
-            <Column
-              key={id}
-              id={id}
-              name={name}
-              index={index}
-              moveColumn={moveColumn}
-              onClick={toggleColumn}
-              show={show}
-            />
-          ))}
-        </ToolbarButtonRow>
-      </DndProvider>
-    </div>
+    <DndProvider backend={HTML5Backend}>
+      <ToolbarButtonRow>
+        {columns.map(({ id, name, show }, index) => (
+          <Column
+            key={id}
+            id={id}
+            name={name}
+            index={index}
+            moveColumn={moveColumn}
+            onClick={toggleColumn}
+            show={show}
+          />
+        ))}
+      </ToolbarButtonRow>
+    </DndProvider>
   );
 }

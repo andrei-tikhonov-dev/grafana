@@ -1,15 +1,16 @@
 import React, { useMemo } from 'react';
 
 import { PanelProps } from '@grafana/data';
-import { Alert, useTheme2, VerticalGroup } from '@grafana/ui';
+import { Alert, HorizontalGroup, useTheme2, VerticalGroup } from '@grafana/ui';
 
 import { DraggableColumns } from './components/DraggableColumns';
 import { Sankey } from './components/Sankey';
 import { DATA_SEPARATOR } from './constants';
 import { useColumns } from './hooks/useColumn';
+import { useZoom } from './hooks/useZoom';
 import { SankeyOptions } from './types';
 import { parseData, ParseDataOptions } from './utils/parseData';
-import { getContainerSize } from './utils/utils';
+import { clampValue, getContainerSize } from './utils/utils';
 
 export const SankeyPanel = ({ options, onOptionsChange, data, width, height, id }: PanelProps<SankeyOptions>) => {
   const theme = useTheme2();
@@ -34,6 +35,7 @@ export const SankeyPanel = ({ options, onOptionsChange, data, width, height, id 
   }, [data, columns, valueField, baseUrl]);
 
   const { pluginData, headerData, rowsNumber } = memoizedParseData();
+  const { component: zoomComponent, applyZoom } = useZoom();
 
   const { containerHeight, containerWidth } = getContainerSize({
     width,
@@ -45,10 +47,14 @@ export const SankeyPanel = ({ options, onOptionsChange, data, width, height, id 
   });
   const visibleColumnsCount = columns.filter((col) => col.show).length;
 
+  console.log(labelSize);
   return (
     <div style={{ overflow: 'auto', height: '100%', width: '100%' }}>
-      <DraggableColumns columns={columns} moveColumn={moveColumn} toggleColumn={toggleColumn} />
-
+      <div>
+        <HorizontalGroup justify="space-between">
+          <DraggableColumns columns={columns} moveColumn={moveColumn} toggleColumn={toggleColumn} /> {zoomComponent}
+        </HorizontalGroup>
+      </div>
       <div style={{ height: containerHeight, width: containerWidth }}>
         {visibleColumnsCount > 1 ? (
           <g>
@@ -56,13 +62,13 @@ export const SankeyPanel = ({ options, onOptionsChange, data, width, height, id 
               data={pluginData}
               headerData={headerData}
               width={containerWidth}
-              height={containerHeight}
+              height={applyZoom(containerHeight)}
               id={id}
               textColor={theme.colors.text.primary}
               nodeColor={nodeColor}
               nodeWidth={nodeWidth}
-              nodePadding={nodePadding}
-              labelSize={labelSize}
+              nodePadding={applyZoom(nodePadding)}
+              labelSize={clampValue(applyZoom(labelSize), 12, 20)}
               iteration={iteration}
             />
           </g>

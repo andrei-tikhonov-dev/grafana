@@ -37,3 +37,7 @@ const d3Link = d3Sankey.sankeyLinkHorizontal();
 export function createD3Link(data: any): string {
   return d3Link(data) as string;
 }
+
+export const clampValue = (num: number, lowerLimit: number, upperLimit: number) => {
+  return Math.max(lowerLimit, Math.min(num, upperLimit));
+};

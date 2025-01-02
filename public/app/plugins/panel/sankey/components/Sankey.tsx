@@ -2,12 +2,11 @@ import * as d3Sankey from 'd3-sankey';
 import { SankeyLink, SankeyNode } from 'd3-sankey';
 import React from 'react';
 
-
 import { MARGIN } from '../constants';
 
 import { Headers } from './Headers';
+import { Link } from './Link';
 import { Node } from './Node';
-import { Path } from './Path';
 import { TooltipProvider } from './TooltipContext';
 import { ValueLabel } from './ValueLabel';
 
@@ -55,7 +54,6 @@ export const Sankey: React.FC<SankeyProps> = ({
   };
 
   const [highlightedPaths, setHighlightedPaths] = React.useState<number[]>([]);
-
   const graphWidth = width - MARGIN.left - MARGIN.right;
   const graphHeight = height - MARGIN.top - MARGIN.bottom;
   const sankey: any = d3Sankey
@@ -84,7 +82,7 @@ export const Sankey: React.FC<SankeyProps> = ({
           <g transform={`translate(${MARGIN.left}, ${MARGIN.top})`} key={links.length}>
             {links.map((data: SankeyLink<any, any>, index: number) => {
               const opacity = calculateTransparency(data.rowId, highlightedPaths);
-              return <Path key={index} data={data} opacity={opacity} onHighlight={setHighlightedPaths} />;
+              return <Link key={index} data={data} opacity={opacity} onHighlight={setHighlightedPaths} />;
             })}
           </g>
           <g transform={`translate(${MARGIN.left}, ${MARGIN.top})`} key={nodes.length}>
