@@ -98,7 +98,7 @@ export const RoleCell = (props: CustomCellRendererProps) => {
     }
 
     const updatedRoles = data.roles.map((r) => ({
-      roleId: r.role.value,
+      roleId: Number(r.role.value || r.role),
       rate: Number(r.rate),
     }));
 

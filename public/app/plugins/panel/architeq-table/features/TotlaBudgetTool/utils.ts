@@ -39,7 +39,10 @@ export function configBudgetData({
     { fields: [BudgetFields.Label], config: getFieldConfig(Cells.Input, { ...options }) },
     { fields: [BudgetFields.Code], config: getFieldConfig(Cells.Input, { ...options }) },
     { fields: [BudgetFields.Description], config: getFieldConfig(Cells.Input, { ...options }) },
-    { fields: [BudgetFields.Budget], config: getFieldConfig(Cells.Input, { ...options }) },
+    {
+      fields: [BudgetFields.Budget],
+      config: getFieldConfig(Cells.Input, { ...options, valueType: 'numberWithDecimal' }),
+    },
     { fields: [BudgetFields.Year], config: getFieldConfig(Cells.Select, { ...yearField }) },
     { fields: [BudgetFields.Type], config: getFieldConfig(Cells.Select, { ...typeField }) },
   ];

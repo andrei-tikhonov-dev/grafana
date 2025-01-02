@@ -115,6 +115,7 @@ export type CellCustomOptionsType = {
   align?: 'left' | 'center' | 'right';
   validation?: { type: FieldValidation; value?: any }[];
   options?: OptionType[];
+  valueType?: 'string' | 'number' | 'numberWithDecimal';
 };
 
 export type RoleType = {

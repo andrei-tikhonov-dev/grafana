@@ -164,7 +164,7 @@ export function configureDataFrame(
 }
 
 export function generateYearOptions(years = 10) {
-  const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear() + 1;
 
   return Array.from({ length: years }, (_, i) => {
     const year = (currentYear - i).toString();
