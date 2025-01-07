@@ -75,7 +75,7 @@ export const SprintPlaning: React.FC<Props> = ({ options, data, width, height })
     const payload: SprintPlaningPayload = {
       sprintId: info.sprintId,
       teamMemberEmail: email,
-      capacity: value as number,
+      capacity: Number(value),
     };
 
     return updateRequest(payload);

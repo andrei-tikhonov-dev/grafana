@@ -182,3 +182,8 @@ export function getFilterOptions(data: DataFrame, requestedFields: string[]): Re
 
   return result;
 }
+
+export function joinUrls(baseUrl: string, path: string): string {
+  const url = new URL(path, baseUrl);
+  return url.toString();
+}

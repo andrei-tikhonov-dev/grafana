@@ -42,6 +42,7 @@ const InputCellEditor = ({
   error,
   isLoading,
   width,
+  align,
 }: {
   value: string | number;
   field: any;
@@ -53,21 +54,20 @@ const InputCellEditor = ({
   error: string;
   isLoading: boolean;
   width: number;
+  align: 'left' | 'right' | 'center';
 }) => {
   const styles = useStyles2(getStyles);
   const inputType = fieldType === 'number' || valueType === 'numberWithDecimal' ? 'number' : 'text';
-  const step = valueType === 'numberWithDecimal' ? '0.01' : undefined;
 
   return (
     <div className={styles.inputCell}>
       <input
         className={styles.input}
-        style={{ width }}
+        style={{ width, textAlign: align }}
         value={value}
         onChange={onChange}
         disabled={isLoading}
         type={inputType}
-        step={step}
       />
       <IconButton name="check" size="xs" onClick={onSave} disabled={!!error || isLoading} tooltip={error || 'Save'} />
       <IconButton name="times" size="xs" tooltip="Close" onClick={onClose} />
@@ -127,6 +127,7 @@ export const InputCell = (props: CustomCellRendererProps) => {
   const fieldType = field.type;
   const customOptions = field.config.custom as CellCustomOptionsType;
   const valueType = customOptions?.valueType;
+  const align = customOptions?.align || 'left';
 
   const initialValue = valueType === 'numberWithDecimal' && typeof value === 'number' ? value.toFixed(2) : value;
 
@@ -148,10 +149,7 @@ export const InputCell = (props: CustomCellRendererProps) => {
     if (error || !updateData) {
       return;
     }
-    const finalValue =
-      valueType === 'numberWithDecimal' && typeof inputValue === 'string'
-        ? parseFloat(parseFloat(inputValue).toFixed(2))
-        : inputValue;
+    const finalValue = valueType === 'numberWithDecimal' ? parseFloat(inputValue) : inputValue;
     const isUpdated = await updateData(finalValue, props);
     if (isUpdated) {
       handleClose();
@@ -175,6 +173,7 @@ export const InputCell = (props: CustomCellRendererProps) => {
       error={error}
       isLoading={loading !== LoadingMode.NONE}
       width={cellWidth}
+      align={align}
     />
   ) : (
     <InputCellDisplay value={inputValue} onEdit={handleEdit} ref={ref} />

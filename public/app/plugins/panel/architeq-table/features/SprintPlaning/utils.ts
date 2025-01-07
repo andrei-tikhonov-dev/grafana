@@ -11,7 +11,7 @@ export function configTeamMembersFrame(dataFrame: DataFrame): DataFrame {
   const fieldConfigs = [
     { field: SprintPlaningColumns.TeamMember, config: getFieldConfig(Cells.User, {}) },
     { field: SprintPlaningColumns.ScheduledPD, config: getFieldConfig(Cells.Simple, { align: 'right' }) },
-    { field: SprintPlaningColumns.SelfReportedPD, config: getFieldConfig(Cells.Editable, { align: 'right' }) },
+    { field: SprintPlaningColumns.SelfReportedPD, config: getFieldConfig(Cells.Input, { align: 'right' }) },
     {
       field: SprintPlaningColumns.AssignedAvailableCapacitySP,
       config: getFieldConfig(Cells.Capacity, { align: 'right' }),

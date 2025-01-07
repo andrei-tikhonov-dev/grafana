@@ -27,7 +27,11 @@ export function configData(dataFrame: DataFrame, editableFields?: string[], hidd
     fields: dataFrame.fields.filter((field) => !hiddenFields?.includes(field.name)),
   };
 
-  const editableDataFrame = updateFieldConfig(visibleDataFrame, editableFields || [], getFieldConfig(Cells.Editable));
+  const editableDataFrame = updateFieldConfig(
+    visibleDataFrame,
+    editableFields || [],
+    getFieldConfig(Cells.Input, { align: 'right' })
+  );
 
   return updateFieldConfig(
     editableDataFrame,

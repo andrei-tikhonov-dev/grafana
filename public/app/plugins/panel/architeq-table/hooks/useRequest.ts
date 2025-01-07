@@ -1,6 +1,7 @@
 import { locationService } from '@grafana/runtime';
 
 import { RequestMethod } from '../constants';
+import { joinUrls } from '../utils';
 
 import { useLoading } from './useLoading';
 import { useNotifications } from './useNotifications';
@@ -78,7 +79,7 @@ export function useRequest({ create, update, delete: deleteAction, preventReload
 
     const actionWithId: ActionOptionsType = {
       ...update,
-      url: id ? `${update.url}/${id}` : update.url,
+      url: id ? joinUrls(String(update.url), id) : update.url,
     };
 
     return performRequest(payload, actionWithId);
@@ -92,7 +93,7 @@ export function useRequest({ create, update, delete: deleteAction, preventReload
 
     const actionWithId: ActionOptionsType = {
       ...deleteAction,
-      url: id ? `${deleteAction.url}/${id}` : deleteAction.url,
+      url: id ? joinUrls(String(deleteAction.url), id) : deleteAction.url,
     };
 
     return performRequest(payload, actionWithId);

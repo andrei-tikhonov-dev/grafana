@@ -29,11 +29,11 @@ export interface BudgetCreatePayload {
 }
 
 export interface BudgetCreateFormType {
-  [BudgetFields.Year]: number;
+  [BudgetFields.Year]: string;
   [BudgetFields.Label]: string;
   [BudgetFields.Type]: string;
   [BudgetFields.Code]: string;
-  [BudgetFields.Budget]: number;
+  [BudgetFields.Budget]: string;
   [BudgetFields.Description]?: string;
 }
 

@@ -77,7 +77,7 @@ export const TotalBudgetTool: React.FC<Props> = ({ options, data, width, height 
       label: data[BudgetFields.Label],
       type: data[BudgetFields.Type],
       code: data[BudgetFields.Code],
-      budget: Number(data[BudgetFields.Budget]),
+      budget: parseFloat(data[BudgetFields.Budget]),
       description: data[BudgetFields.Description] || null,
     };
     return createRequest(payload);

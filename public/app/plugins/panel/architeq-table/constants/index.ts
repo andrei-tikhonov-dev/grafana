@@ -5,7 +5,6 @@ import { CapacityCell } from '../components/cells/CapacityCell';
 import { CheckboxCell } from '../components/cells/CheckboxCell';
 import { DateCell } from '../components/cells/DateCell';
 import { DaysCell } from '../components/cells/DaysCell';
-import { EditableCell } from '../components/cells/EditableCell';
 import { InfoLineCell } from '../components/cells/InfoLineCell';
 import { InputCell } from '../components/cells/InputCell';
 import { IssueTypeCell } from '../components/cells/IssueTypeCell';
@@ -64,7 +63,6 @@ export const Cells = {
   Checkbox: CheckboxCell,
   Date: DateCell,
   Days: DaysCell,
-  Editable: EditableCell,
   InfoLine: InfoLineCell,
   Input: InputCell,
   IssueType: IssueTypeCell,

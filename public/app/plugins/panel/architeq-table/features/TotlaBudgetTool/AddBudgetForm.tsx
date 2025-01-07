@@ -53,6 +53,7 @@ export const AddBudgetForm: React.FC<Props> = ({ onClose, onCreate, typeOptions,
         label="Budget"
         form={form}
         type="number"
+        step="any"
         rules={{ required: 'Budget is required' }}
       />
 

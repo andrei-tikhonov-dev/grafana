@@ -31,7 +31,7 @@ export const HistoricalData: React.FC<Props> = ({ options, data, width, height }
   });
 
   const handleUpdate = async (value: number | string, { rowIndex, field }: CustomCellRendererProps) => {
-    const payload: HistoricalDataUpdatePayload = mapPayload(value as number, rowIdentifiers[rowIndex], field.name);
+    const payload: HistoricalDataUpdatePayload = mapPayload(Number(value), rowIdentifiers[rowIndex], field.name);
     return updateRequest(payload);
   };
 
