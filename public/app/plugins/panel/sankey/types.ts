@@ -11,6 +11,7 @@ export interface SankeyOptions {
   dataDelimiter: string;
   baseUrl: string;
   hiddenFields: Array<string>;
+  filterFields: Array<string>;
   fieldsOrder: Array<string>;
 }
 

@@ -7,6 +7,7 @@ import { DraggableColumns } from './components/DraggableColumns';
 import { Sankey } from './components/Sankey';
 import { DATA_SEPARATOR } from './constants';
 import { useColumns } from './hooks/useColumn';
+import { useFiltersComponent } from './hooks/useFiltersComponent';
 import { useZoom } from './hooks/useZoom';
 import { SankeyOptions } from './types';
 import { parseData, ParseDataOptions } from './utils/parseData';
@@ -15,24 +16,37 @@ import { clampValue, getContainerSize } from './utils/utils';
 export const SankeyPanel = ({ options, onOptionsChange, data, width, height, id }: PanelProps<SankeyOptions>) => {
   const theme = useTheme2();
 
-  const { valueField, baseUrl, nodeWidth, nodePadding, labelSize, iteration, nodeColor } = options;
+  const {
+    valueField,
+    baseUrl,
+    nodeWidth = 30,
+    nodePadding = 30,
+    labelSize = 14,
+    iteration,
+    nodeColor,
+    filterFields = [],
+  } = options;
 
   const handleColumnsStateChange = (optionKey: 'hiddenFields' | 'fieldsOrder', value: string[]) => {
     onOptionsChange({ ...options, [optionKey]: value });
   };
 
+  const series = data?.series[0];
+
   const { columns, moveColumn, toggleColumn } = useColumns({
-    fields: data?.series[0]?.fields,
+    fields: series?.fields,
     initialHidden: options.hiddenFields,
     initialOrder: options.fieldsOrder,
     onChange: handleColumnsStateChange,
     valueField,
   });
 
+  const { dataFrame: filteredDataFrame, filtersComponent } = useFiltersComponent({ dataFrame: series, filterFields });
+
   const memoizedParseData: any = useMemo(() => {
     const dataOptions: ParseDataOptions = { dataDelimiter: DATA_SEPARATOR, valueField, baseUrl };
-    return () => parseData(data, columns, dataOptions);
-  }, [data, columns, valueField, baseUrl]);
+    return () => parseData(filteredDataFrame, columns, dataOptions);
+  }, [columns, valueField, baseUrl, filteredDataFrame]);
 
   const { pluginData, headerData, rowsNumber } = memoizedParseData();
   const { component: zoomComponent, applyZoom } = useZoom();
@@ -47,9 +61,9 @@ export const SankeyPanel = ({ options, onOptionsChange, data, width, height, id 
   });
   const visibleColumnsCount = columns.filter((col) => col.show).length;
 
-  console.log(labelSize);
   return (
     <div style={{ overflow: 'auto', height: '100%', width: '100%' }}>
+      {filtersComponent}
       <div>
         <HorizontalGroup justify="space-between">
           <DraggableColumns columns={columns} moveColumn={moveColumn} toggleColumn={toggleColumn} /> {zoomComponent}

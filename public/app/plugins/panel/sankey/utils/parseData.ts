@@ -1,16 +1,16 @@
-import { DataFrame, DataFrameView, Field, getFieldDisplayName, PanelData } from '@grafana/data';
+import { DataFrame, DataFrameView, Field, getFieldDisplayName } from '@grafana/data';
 
 import { COLOR_ARRAY } from '../constants';
 import { Col0, ColumnData, PluginDataPath, PluginDataNode, Row, SankeyOptions } from '../types';
 
 export type ParseDataOptions = Pick<SankeyOptions, 'valueField' | 'dataDelimiter' | 'baseUrl'>;
 export function parseData(
-  data: PanelData,
+  data: DataFrame,
   columnsControl: ColumnData[],
   { valueField, dataDelimiter, baseUrl }: ParseDataOptions
 ) {
   const columnsOrder = columnsControl.map((column) => column.name);
-  const series = sortDataFrameFields(data.series[0], columnsOrder);
+  const series = sortDataFrameFields(data, columnsOrder);
   const seriesFields = series.fields;
   const numFields = seriesFields.length - 1;
   const hiddenColumns = columnsControl.filter((column) => !column.show).map((column) => column.name);
@@ -76,11 +76,11 @@ function filterDisplayNames(displayNames: string[], hiddenColumns: string[]): st
   return displayNames.filter((name) => !hiddenColumns.includes(name));
 }
 
-function findValueField(data: PanelData, valueFieldOption: any): Field | undefined {
-  let valueField = data.series.map((series) => series.fields.find((field) => field.name === valueFieldOption))[0];
+function findValueField(data: DataFrame, valueFieldOption: any): Field | undefined {
+  let valueField = data.fields.find((field) => field.name === valueFieldOption);
 
   if (!valueField) {
-    valueField = data.series.map((series) => series.fields.find((field) => field.type === 'number'))[0];
+    valueField = data.fields.find((field) => field.type === 'number');
   }
 
   return valueField;
