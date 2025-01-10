@@ -7,7 +7,9 @@ import { useStyles2 } from '@grafana/ui';
 
 import { TableType } from '../constants';
 import { CurrentSprint } from '../features/CurrentSprint';
+import { GenericTable } from '../features/GenericTable';
 import { HistoricalData } from '../features/HistoricalData';
+import { HolidayPrefixesTool } from '../features/HolidayPrefixesTool';
 import { PiAdminTool } from '../features/PiAdminTool';
 import { SprintPlaning } from '../features/SprintPlaning';
 import { TeamAdminTool } from '../features/TeamAdminTool';
@@ -23,6 +25,8 @@ const TablePanels = {
   [TableType.TeamHolidaysTool]: TeamHolidaysTool,
   [TableType.TotalBudgetTool]: TotalBudgetTool,
   [TableType.PiAdminTool]: PiAdminTool,
+  [TableType.GenericTable]: GenericTable,
+  [TableType.HolidayPrefixes]: HolidayPrefixesTool,
 };
 
 export const TablePanel: React.FC<TablePanelProps> = (props) => {

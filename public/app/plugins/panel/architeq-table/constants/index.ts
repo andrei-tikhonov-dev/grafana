@@ -22,6 +22,8 @@ export const enum TableType {
   TeamHolidaysTool = 'TeamHolidaysTool',
   TotalBudgetTool = 'TotalBudgetTool',
   PiAdminTool = 'PiAdminTool',
+  HolidayPrefixes = 'HolidayPrefixes',
+  GenericTable = 'GenericTable',
 }
 
 export const enum RequestMethod {

@@ -1,4 +1,4 @@
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import React from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
@@ -10,7 +10,9 @@ import { InfoIcon } from './InfoIcon';
 import { InfoLink } from './InfoLink';
 
 type Props = InfoLineType & {
-  newTab?: boolean;
+  className?: string;
+  valueClassName?: string;
+  fullLink?: boolean;
 };
 
 const getStyles = (theme: GrafanaTheme2) => ({
@@ -21,14 +23,36 @@ const getStyles = (theme: GrafanaTheme2) => ({
   `,
 });
 
-export const InfoLine: React.FC<Props> = ({ status, value, name, icon, link, button, newTab = false }) => {
+export const InfoLine: React.FC<Props> = ({
+  status,
+  value,
+  valueClassName,
+  name,
+  icon,
+  link,
+  button,
+  newTab = false,
+  className,
+  fullLink,
+}) => {
   const styles = useStyles2(getStyles);
 
   const linkTarget = newTab ? '_blank' : '_self';
   const linkRel = newTab ? 'noopener noreferrer' : undefined;
 
+  const handleClick = () => {
+    if (!link || !fullLink) {
+      return;
+    }
+    if (newTab) {
+      window.open(link, '_blank');
+    } else {
+      window.location.href = link;
+    }
+  };
+
   const renderContent = () => {
-    if (button && value) {
+    if (button && value && !fullLink) {
       return (
         <LinkButton size="sm" variant="primary" fill="outline" href={link} target={linkTarget} rel={linkRel}>
           {value}
@@ -36,7 +60,7 @@ export const InfoLine: React.FC<Props> = ({ status, value, name, icon, link, but
       );
     }
 
-    if (link && value) {
+    if (link && value && !fullLink) {
       return (
         <InfoLink href={link} target={linkTarget} rel={linkRel}>
           {String(value)}
@@ -44,11 +68,11 @@ export const InfoLine: React.FC<Props> = ({ status, value, name, icon, link, but
       );
     }
 
-    return value;
+    return <div className={valueClassName}>{value}</div>;
   };
 
   return (
-    <div className={styles.infoItem}>
+    <div className={cx(styles.infoItem, className)} onClick={handleClick}>
       {icon && <InfoIcon icon={icon} status={status} />}
       <strong>{name}</strong>
       {renderContent()}

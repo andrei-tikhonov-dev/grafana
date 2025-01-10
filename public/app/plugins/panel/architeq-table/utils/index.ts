@@ -50,6 +50,8 @@ export const getTableTypeOptions = async () => {
     { label: 'Team Holidays Tool', value: TableType.TeamHolidaysTool },
     { label: 'Total Budget Tool', value: TableType.TotalBudgetTool },
     { label: 'PI Admin Tool', value: TableType.PiAdminTool },
+    { label: 'Holiday Prefixes', value: TableType.HolidayPrefixes },
+    { label: 'Generic Table', value: TableType.GenericTable },
   ]);
 };
 
