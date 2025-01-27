@@ -186,6 +186,7 @@ export function getFilterOptions(data: DataFrame, requestedFields: string[]): Re
 }
 
 export function joinUrls(baseUrl: string, path: string): string {
-  const url = new URL(path, baseUrl);
-  return url.toString();
+  const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+
+  return new URL(path, normalizedBaseUrl).toString();
 }
