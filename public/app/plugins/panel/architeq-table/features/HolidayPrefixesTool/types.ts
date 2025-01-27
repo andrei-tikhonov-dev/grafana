@@ -20,7 +20,7 @@ export interface HolidayPrefixesCreateTableType {
 export interface HolidayPrefixesCreatePayload {
   teamId: number;
   prefix: string;
-  relevantForCapacity: boolean;
-  showInCalendar: boolean;
+  isRelevantForCapacity: boolean;
+  isShowInCalendar: boolean;
   type: string;
 }

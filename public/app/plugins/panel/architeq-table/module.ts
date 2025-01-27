@@ -12,6 +12,7 @@ const ADMIN_TYPES = [
   TableType.TeamHolidaysTool,
   TableType.TotalBudgetTool,
   TableType.PiAdminTool,
+  TableType.HolidayPrefixes,
 ];
 const UPDATE_URL_TYPES = [TableType.HistoricalData, TableType.SprintPlaning, ...ADMIN_TYPES];
 

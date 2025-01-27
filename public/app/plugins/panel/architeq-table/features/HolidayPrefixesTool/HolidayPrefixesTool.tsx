@@ -49,7 +49,7 @@ export const HolidayPrefixesTool: React.FC<Props> = ({ options, data, width, hei
   const handleUpdate = async (value: string, { rowIndex, field }: CustomCellRendererProps) => {
     const payload: HolidayPrefixesUpdatePayload = {
       propertyName: field.name,
-      value,
+      value: String(value),
     };
     return updateRequest(payload, payloadIDs[rowIndex].id);
   };
@@ -63,8 +63,8 @@ export const HolidayPrefixesTool: React.FC<Props> = ({ options, data, width, hei
     const payload: HolidayPrefixesCreatePayload = {
       teamId,
       type: data.type,
-      relevantForCapacity: data.relevantForCapacity,
-      showInCalendar: data.showInCalendar,
+      isRelevantForCapacity: data.relevantForCapacity,
+      isShowInCalendar: data.showInCalendar,
       prefix: data.prefix,
     };
     return createRequest(payload);
