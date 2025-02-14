@@ -24,7 +24,7 @@ export interface BudgetCreatePayload {
   label: string;
   type: string;
   code: string;
-  budget: number;
+  budget: string;
   description: string | null;
 }
 

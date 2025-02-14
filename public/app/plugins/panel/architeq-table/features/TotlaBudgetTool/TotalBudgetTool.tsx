@@ -54,12 +54,15 @@ export const TotalBudgetTool: React.FC<Props> = ({ options, data, width, height 
   const typeOptions = types.map((type) => ({ label: type, value: type }));
 
   const handleUpdate = async (value: number | string, { rowIndex, field }: CustomCellRendererProps) => {
+    const formattedValue = field.name === BudgetFields.Budget && typeof value === 'number' ? value.toFixed(2) : value;
+
     const payload: BudgetUpdatePayload = {
       id: Number(payloadIDs[rowIndex].id),
       teamId: String(teamId),
       propertyName: field.name,
-      value,
+      value: formattedValue,
     };
+
     return updateRequest(payload);
   };
 
@@ -77,7 +80,7 @@ export const TotalBudgetTool: React.FC<Props> = ({ options, data, width, height 
       label: data[BudgetFields.Label],
       type: data[BudgetFields.Type],
       code: data[BudgetFields.Code],
-      budget: parseFloat(data[BudgetFields.Budget]),
+      budget: parseFloat(data[BudgetFields.Budget]).toFixed(2),
       description: data[BudgetFields.Description] || null,
     };
     return createRequest(payload);
