@@ -1,4 +1,5 @@
 import { css, cx } from '@emotion/css';
+import { StatusLine } from 'architeq-library';
 import React from 'react';
 
 import { dateTime, GrafanaTheme2, PanelProps } from '@grafana/data';
@@ -64,21 +65,13 @@ export const Panel: React.FC<Props> = ({ options, data, width, height, fieldConf
     goals,
     select,
     info,
-    infoFooter,
     breadCrumbs,
-    sprintOnTarget,
     team,
     name,
-    infoStatus,
-    completedIssues,
-    totalIssues,
     infoTimeline,
     range,
+    statuses = [],
   } = panelData;
-  const descriptionIssues =
-    completedIssues !== undefined && totalIssues !== undefined
-      ? `${completedIssues} of ${totalIssues} issues have been completed`
-      : '';
 
   return (
     <div
@@ -118,14 +111,13 @@ export const Panel: React.FC<Props> = ({ options, data, width, height, fieldConf
 
       {progress && <ProgressBar {...progress} />}
 
-      <footer className={styles.footer}>
-        {sprintOnTarget && <InfoBlock status={sprintOnTarget.status} value={sprintOnTarget.message} />}
-        {infoFooter?.map((info) => <InfoBlock {...info} key={info.name} />)}
-        {/* Deprecated */}
-        {descriptionIssues && <InfoBlock value={descriptionIssues} />}
-        {/* Deprecated */}
-        {infoStatus && <InfoBlock value={infoStatus.message} status={infoStatus.status} />}
-      </footer>
+      {statuses.length > 0 && (
+        <footer className={styles.footer}>
+          {statuses.map((status) => (
+            <StatusLine key={status.title} {...status} />
+          ))}
+        </footer>
+      )}
     </div>
   );
 };

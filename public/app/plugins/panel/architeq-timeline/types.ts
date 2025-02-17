@@ -1,3 +1,5 @@
+import { StatusLineProps } from 'architeq-library/dist/cjs/types/components/StatusLine/types';
+
 export interface PanelOptions {
   header: string;
   goalsTitle?: string;
@@ -20,11 +22,6 @@ export interface DayStatus {
 export interface WeekStatus {
   days: DayStatus[];
 }
-
-type DeprecatedInfoStatusType = {
-  message: string;
-  status: `${Status}`;
-};
 
 export type GoalType = {
   id: string | number;
@@ -80,35 +77,15 @@ export interface PanelDataType {
     label: string;
     percentComplete: number;
   };
-  /**
-   * @deprecated use description instead with generated text "completedIssues of totalIssues issues have been completed"
-   */
-  totalIssues?: number;
-  /**
-   * @deprecated use description instead with generated text "completedIssues of totalIssues issues have been completed"
-   */
-  completedIssues?: number;
-  /**
-   * @deprecated use infoFooter instead
-   */
-  sprintOnTarget?: DeprecatedInfoStatusType;
   goals?: GoalType[];
   info?: InfoLineType[];
-  /**
-   * @deprecated use infoFooter instead
-   */
-  infoStatus?: {
-    message: string;
-    status: `${Status}`;
-  };
-  infoFooter?: InfoLineType[];
   infoTimeline?: InfoLineType[];
-
   select?: {
     label: string;
     options: OptionType[];
   };
   range?: RangeType;
+  statuses?: StatusLineProps[];
 }
 
 export type TableType<T = {}> = {
