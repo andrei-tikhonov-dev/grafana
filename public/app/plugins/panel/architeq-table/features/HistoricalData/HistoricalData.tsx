@@ -8,7 +8,7 @@ import { useRequest } from '../../hooks/useRequest';
 import { TablePanelProps } from '../../types';
 import { getRowIdentifiers } from '../../utils';
 
-import { HistoricDataColumns } from './constants';
+import { EditableFields, HistoricDataColumns } from './constants';
 import { HistoricalDataUpdatePayload } from './types';
 import { configData, mapPayload } from './utils';
 
@@ -16,9 +16,7 @@ interface Props extends TablePanelProps {}
 
 export const HistoricalData: React.FC<Props> = ({ options, data, width, height }) => {
   const dataFrame = data.series[0];
-  const editableFields = options?.editableFields?.length
-    ? options?.editableFields
-    : [HistoricDataColumns.Capacity, HistoricDataColumns.Happiness, HistoricDataColumns.StoryPoints];
+  const editableFields = [...new Set([...EditableFields, ...(options?.editableFields || [])])];
   const idField = options.idField || HistoricDataColumns.SprintId;
   const configuredData = configData(dataFrame, editableFields, [idField]);
   const rowIdentifiers = getRowIdentifiers(idField, dataFrame);

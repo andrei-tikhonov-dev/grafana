@@ -45,6 +45,7 @@ export function useRequest({ create, update, delete: deleteAction, preventReload
 
     setLoadingUpdate();
 
+    console.log(update);
     try {
       const response = await fetch(action.url, {
         method: action.method,

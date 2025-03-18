@@ -9,27 +9,21 @@ import { RequestMethod } from '../../constants';
 import { useRequest } from '../../hooks/useRequest';
 import { TablePanelProps } from '../../types';
 
-import { AddPrefix } from './AddPrefix';
-import { hiddenFields } from './constants';
-import {
-  HolidayPrefixesCreateTableType,
-  HolidayPrefixesToolMetaType,
-  HolidayPrefixesUpdatePayload,
-  HolidayPrefixesCreatePayload,
-} from './types';
-import { configTeamHolidaysToolData, getPayloadIDs } from './utils';
+import { AddRoleForm } from './AddRoleForm';
+import { RoleFields, hiddenFields } from './constants';
+import { RoleCreateFormType, RoleCreatePayload, RoleDeletePayload, RoleMetaType, RoleUpdatePayload } from './types';
+import { configRolesData, getPayloadIDs } from './utils';
 
 const HEADER_HEIGHT = 45;
 
 interface Props extends TablePanelProps {}
 
-export const HolidayPrefixesTool: React.FC<Props> = ({ options, data, width, height }) => {
+export const RolesTool: React.FC<Props> = ({ options, data, width, height }) => {
   const dataFrame = data.series[0];
   const payloadIDs = getPayloadIDs(dataFrame);
-
   const {
-    custom: { teamId, types },
-  } = dataFrame.meta as HolidayPrefixesToolMetaType;
+    custom: { teamId },
+  } = dataFrame.meta as RoleMetaType;
   const { createRequest, updateRequest, deleteRequest, loading } = useRequest({
     create: {
       url: options.createUrl,
@@ -45,39 +39,38 @@ export const HolidayPrefixesTool: React.FC<Props> = ({ options, data, width, hei
     },
   });
 
-  const typeOptions = types.map((type) => ({ label: type, value: type }));
-
   const handleUpdate = async (value: string, { rowIndex, field }: CustomCellRendererProps) => {
-    const payload: HolidayPrefixesUpdatePayload = {
+    const payload: RoleUpdatePayload = {
+      id: Number(payloadIDs[rowIndex].id),
+      teamId: String(teamId),
       propertyName: field.name,
-      value: String(value),
+      value: value,
     };
-    return updateRequest(payload, payloadIDs[rowIndex].id);
+
+    return updateRequest(payload);
   };
 
   const handleDelete = (rowIndex: number) => {
-    const id = String(payloadIDs[rowIndex].id);
-    return deleteRequest(null, id);
+    const payload: RoleDeletePayload = {
+      id: String(payloadIDs[rowIndex].id),
+    };
+    return deleteRequest(payload);
   };
 
-  const handleCreate = async (data: HolidayPrefixesCreateTableType) => {
-    const payload: HolidayPrefixesCreatePayload = {
+  const handleCreate = async (data: RoleCreateFormType) => {
+    const payload: RoleCreatePayload = {
       teamId,
-      type: data.type,
-      isRelevantForCapacity: data.relevantForCapacity,
-      isShowInCalendar: data.showInCalendar,
-      prefix: data.prefix,
+      roleName: data[RoleFields.RoleName],
     };
     return createRequest(payload);
   };
-
-  const configuredData = configTeamHolidaysToolData({ dataFrame, hiddenFields, handleDelete, typeOptions });
+  const configuredData = configRolesData({ dataFrame, hiddenFields, handleDelete });
 
   return (
     <>
       <HeaderContainer>
-        <FormModalWrapper title="Add prefix">
-          {({ onClose }) => <AddPrefix onClose={onClose} onCreate={handleCreate} typeOptions={typeOptions} />}
+        <FormModalWrapper title="Add role">
+          {({ onClose }) => <AddRoleForm onClose={onClose} onCreate={handleCreate} />}
         </FormModalWrapper>
       </HeaderContainer>
 

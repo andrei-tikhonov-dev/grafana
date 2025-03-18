@@ -9,6 +9,8 @@ import { useParentWidth } from '../../hooks/useParentWidth';
 import { CellCustomOptionsType, FieldValidation, FieldValidationType } from '../../types';
 import { useDataTableContext } from '../DataTable/DataTableContext';
 
+import { SimpleCell } from './SimpleCell';
+
 const getStyles = (_: GrafanaTheme2) => ({
   cell: css`
     display: flex;
@@ -120,12 +122,14 @@ const useValidation = (validationRules: FieldValidationType[], valueType?: strin
 };
 
 export const InputCell = (props: CustomCellRendererProps) => {
-  const { field, rowIndex, value } = props;
+  const { field, rowIndex, value, frame } = props;
   const { parentWidth, ref } = useParentWidth();
-  const cellWidth = parentWidth - 55;
-
   const fieldType = field.type;
   const customOptions = field.config.custom as CellCustomOptionsType;
+  const isEditable = customOptions?.isEditable === undefined ? true : customOptions.isEditable(rowIndex);
+
+  const cellWidth = parentWidth - 55;
+
   const valueType = customOptions?.valueType;
   const align = customOptions?.align || 'left';
 
@@ -160,6 +164,10 @@ export const InputCell = (props: CustomCellRendererProps) => {
     setInputValue(value);
     setError(validate(value));
   };
+
+  if (!isEditable) {
+    return <SimpleCell field={field} rowIndex={rowIndex} frame={frame} value={value} />;
+  }
 
   return hasItem(seriesIndex, rowIndex) ? (
     <InputCellEditor

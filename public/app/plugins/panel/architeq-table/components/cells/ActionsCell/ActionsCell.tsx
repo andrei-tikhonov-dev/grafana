@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 
 import { IconButton, ConfirmModal, CustomCellRendererProps } from '@grafana/ui';
 
+import { CellCustomOptionsType } from '../../../types';
+
 interface ActionsCellProps extends CustomCellRendererProps {
   handleDelete: (rowIndex: number) => void;
 }
 
-export const ActionsCell: React.FC<ActionsCellProps> = ({ rowIndex, handleDelete }) => {
+export const ActionsCell: React.FC<ActionsCellProps> = (props) => {
+  const { rowIndex, handleDelete, field } = props;
+  const customOptions = field.config.custom as CellCustomOptionsType;
+  const isEditable = customOptions?.isEditable === undefined ? true : customOptions.isEditable(rowIndex);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onDeleteClick = () => {
@@ -21,6 +26,10 @@ export const ActionsCell: React.FC<ActionsCellProps> = ({ rowIndex, handleDelete
   const onCancelDelete = () => {
     setIsModalOpen(false);
   };
+
+  if (!isEditable) {
+    return null;
+  }
 
   return (
     <>

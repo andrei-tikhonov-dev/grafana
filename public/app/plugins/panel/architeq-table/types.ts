@@ -113,20 +113,21 @@ export interface InfoLineType {
 export type CellCustomOptionsType = {
   width?: number;
   align?: 'left' | 'center' | 'right';
-  validation?: { type: FieldValidation; value?: any }[];
+  validation?: Array<{ type: FieldValidation; value?: any }>;
   options?: OptionType[];
   valueType?: 'string' | 'number' | 'numberWithDecimal';
+  isEditable?: (id: any) => boolean;
 };
 
 export type RoleType = {
-  currentRoles: {
+  currentRoles: Array<{
     roleId: number;
     rate: number;
-  }[];
-  availableRoles: {
+  }>;
+  availableRoles: Array<{
     id: number;
     name: string;
-  }[];
+  }>;
 };
 
 export type CellType = (typeof Cells)[keyof typeof Cells];

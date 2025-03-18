@@ -23,6 +23,7 @@ export const enum TableType {
   TotalBudgetTool = 'TotalBudgetTool',
   PiAdminTool = 'PiAdminTool',
   HolidayPrefixes = 'HolidayPrefixes',
+  RolesTool = 'RolesTool',
   GenericTable = 'GenericTable',
 }
 

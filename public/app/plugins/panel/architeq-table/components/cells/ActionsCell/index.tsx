@@ -5,7 +5,11 @@ import { CustomCellRendererProps, TableCellDisplayMode } from '@grafana/ui';
 
 import { ActionsCell } from './ActionsCell';
 
-export function addActionsColumn(data: DataFrame, handleDelete: (rowIndex: number) => void): DataFrame {
+export function addActionsColumn(
+  data: DataFrame,
+  handleDelete: (rowIndex: number) => void,
+  isEditable?: (id: any) => boolean
+): DataFrame {
   const options = {
     type: TableCellDisplayMode.Custom,
     cellComponent: (props: CustomCellRendererProps) => {
@@ -22,6 +26,7 @@ export function addActionsColumn(data: DataFrame, handleDelete: (rowIndex: numbe
         width: 80,
         align: 'center',
         cellOptions: options,
+        isEditable,
       },
     },
     display: () => ({ text: '', numeric: 0 }),

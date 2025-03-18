@@ -50,6 +50,8 @@ export const getTableTypeOptions = async () => {
     { label: 'Team Holidays Tool', value: TableType.TeamHolidaysTool },
     { label: 'Total Budget Tool', value: TableType.TotalBudgetTool },
     { label: 'PI Admin Tool', value: TableType.PiAdminTool },
+    { label: 'Roles Tool', value: TableType.RolesTool },
+    { label: 'Holiday Prefixes', value: TableType.HolidayPrefixes },
     { label: 'Holiday Prefixes', value: TableType.HolidayPrefixes },
     { label: 'Generic Table', value: TableType.GenericTable },
   ]);
@@ -155,10 +157,11 @@ export function configureDataFrame(
   dataFrame: DataFrame,
   hiddenFields: string[] | undefined,
   handleDelete: (rowIndex: number) => void,
-  fieldConfigs: Array<{ fields: string[]; config: ReturnType<typeof getFieldConfig> }>
+  fieldConfigs: Array<{ fields: string[]; config: ReturnType<typeof getFieldConfig> }>,
+  isEditable?: (id: any) => boolean
 ): DataFrame {
   const visibleDataFrame = removeHiddenFields(dataFrame, hiddenFields);
-  const dataFrameWithActions = addActionsColumn(visibleDataFrame, handleDelete);
+  const dataFrameWithActions = addActionsColumn(visibleDataFrame, handleDelete, isEditable);
 
   return fieldConfigs.reduce((configuredData, { fields, config }) => {
     return updateFieldConfig(configuredData, fields, config);
