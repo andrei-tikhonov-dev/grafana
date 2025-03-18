@@ -53,31 +53,23 @@ export function filterData(data: DataFrame, selectedOptions: Record<string, stri
     return data;
   }
 
-  // Построим маску из true/false для каждой строки
   const filterMask = Array.from({ length: data.length }, (_, rowIndex) => {
-    // Начинаем с предположения, что строка нам подходит (true)
     let included = true;
 
-    // Перебираем каждое поле, которое есть в selectedOptions
     for (const [fieldName, allowedValues] of Object.entries(selectedOptions)) {
-      // Если у поля нет выбранных значений, пропустим (фильтра тут нет)
       if (!allowedValues || allowedValues.length === 0) {
         continue;
       }
 
-      // Находим нужное поле в DataFrame
       const field = data.fields.find((f) => f.name === fieldName);
-      // Если поля нет или в data нет значения — строку отфильтруем
       if (!field) {
         included = false;
         break;
       }
 
-      // Берём значение ячейки (string или { name: string })
       const cellValue = field.values.get(rowIndex);
       const cellName = typeof cellValue === 'string' ? cellValue : cellValue?.name;
 
-      // Если cellName отсутствует в списке разрешённых значений — строка не проходит
       if (!cellName || !allowedValues.includes(cellName)) {
         included = false;
         break;
@@ -87,7 +79,6 @@ export function filterData(data: DataFrame, selectedOptions: Record<string, stri
     return included;
   });
 
-  // Применяем filterMask для каждого поля
   const filteredFields = data.fields.map((field) => ({
     ...field,
     values: Array.from(field.values).filter((_, index) => filterMask[index]),
@@ -98,4 +89,40 @@ export function filterData(data: DataFrame, selectedOptions: Record<string, stri
     length: filterMask.filter(Boolean).length,
     fields: filteredFields,
   };
+}
+
+export function getAvailableFilterOptions(filterFields: string[], dataFrame: DataFrame) {
+  return filterFields.reduce<Record<string, string[]>>((optionsMap, fieldName) => {
+    const field = dataFrame.fields.find((f) => f.name === fieldName);
+    optionsMap[fieldName] = field ? getFilterOptions(field) : [];
+    return optionsMap;
+  }, {});
+}
+
+export function getInitialSelectedOptions(
+  availableFilterOptions: Record<string, string[]>,
+  filterFields: string[],
+  initialFilters?: Record<string, string[]>
+) {
+  if (!initialFilters) {
+    return filterFields.reduce(
+      (acc, field) => {
+        acc[field] = [];
+        return acc;
+      },
+      {} as Record<string, string[]>
+    );
+  }
+
+  return filterFields.reduce(
+    (acc, field) => {
+      const availableOptions = availableFilterOptions[field] || [];
+      const initialSelectedOptions = initialFilters[field] || [];
+
+      acc[field] = initialSelectedOptions.filter((option) => availableOptions.includes(option));
+
+      return acc;
+    },
+    {} as Record<string, string[]>
+  );
 }

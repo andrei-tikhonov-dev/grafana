@@ -24,37 +24,6 @@ export const plugin = new PanelPlugin<SankeyOptions>(Panel).setPanelOptions((bui
       name: 'Node color',
       defaultValue: 'grey',
     })
-    // .addSliderInput({
-    //   path: 'nodeWidth',
-    //   name: 'Node width',
-    //   defaultValue: 30,
-    //   settings: {
-    //     min: 5,
-    //     max: 100,
-    //     step: 1,
-    //   },
-    // })
-    // .addSliderInput({
-    //   path: 'nodePadding',
-    //   name: 'Node padding',
-    //   defaultValue: 30,
-    //   settings: {
-    //     min: 1,
-    //     max: 100,
-    //     step: 1,
-    //   },
-    // })
-    // .addSliderInput({
-    //   path: 'labelSize',
-    //   name: 'Label Size',
-    //   description: 'The font size of the labels in px',
-    //   defaultValue: 14,
-    //   settings: {
-    //     min: 6,
-    //     max: 24,
-    //     step: 1,
-    //   },
-    // })
     .addSelect({
       path: 'valueField',
       name: 'Value Field',
@@ -91,13 +60,6 @@ export const plugin = new PanelPlugin<SankeyOptions>(Panel).setPanelOptions((bui
       description: 'Base URL used to create links in the panel',
       defaultValue: '',
     })
-    // .addTextInput({
-    //   path: 'dataDelimiter',
-    //   name: 'Data delimiter',
-    //   description:
-    //     'Enter data in the format data [delimiter] tooltip [delimiter] relative URL (appended to "Base URL")',
-    //   defaultValue: '',
-    // })
     .addStringArray({
       path: 'fieldsOrder',
       name: 'Fields Order',
@@ -115,17 +77,12 @@ export const plugin = new PanelPlugin<SankeyOptions>(Panel).setPanelOptions((bui
         placeholder: 'Enter column names...',
       },
       showIf: () => false,
+    })
+    .addTextInput({
+      path: 'initialFilters',
+      name: 'Initial Filters',
+      description: 'Default filter selections (JSON format)',
+      defaultValue: '{}',
+      showIf: () => false,
     });
 });
-// .useFieldConfig({
-//   disableStandardOptions: [FieldConfigProperty.NoValue, FieldConfigProperty.Max, FieldConfigProperty.Min],
-//   standardOptions: {
-//     [FieldConfigProperty.Color]: {
-//       settings: {
-//         byValueSupport: true,
-//         bySeriesSupport: true,
-//         preferThresholdsMode: true,
-//       },
-//     },
-//   },
-// });

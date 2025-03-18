@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import { PanelProps } from '@grafana/data';
+import { DataFrame, PanelProps } from '@grafana/data';
 import { Alert, HorizontalGroup, useTheme2, VerticalGroup } from '@grafana/ui';
 
 import { DraggableColumns } from './components/DraggableColumns';
@@ -13,8 +13,30 @@ import { SankeyOptions } from './types';
 import { parseData, ParseDataOptions } from './utils/parseData';
 import { clampValue, getContainerSize } from './utils/utils';
 
+function validateOptions(options: SankeyOptions, series: DataFrame) {
+  const availableFields = series.fields.map((f) => f.name);
+
+  return {
+    ...options,
+    fieldsOrder: options.fieldsOrder.filter((f) => availableFields.includes(f)),
+    filterFields: options.filterFields.filter((f) => availableFields.includes(f)),
+    hiddenFields: options.hiddenFields.filter((f) => availableFields.includes(f)),
+  };
+}
+
 export const SankeyPanel = ({ options, onOptionsChange, data, width, height, id }: PanelProps<SankeyOptions>) => {
   const theme = useTheme2();
+  const series = data?.series[0];
+  const validatedOptions = useMemo(() => validateOptions(options, series), [options, series]);
+
+  const initialFilters = useMemo(() => {
+    try {
+      return options.initialFilters ? JSON.parse(options.initialFilters) : {};
+    } catch (e) {
+      console.error('Error parsing initialFilters', e);
+      return {};
+    }
+  }, [options.initialFilters]);
 
   const {
     valueField,
@@ -25,23 +47,33 @@ export const SankeyPanel = ({ options, onOptionsChange, data, width, height, id 
     iteration,
     nodeColor,
     filterFields = [],
-  } = options;
+  } = validatedOptions;
 
   const handleColumnsStateChange = (optionKey: 'hiddenFields' | 'fieldsOrder', value: string[]) => {
-    onOptionsChange({ ...options, [optionKey]: value });
+    onOptionsChange({ ...validatedOptions, [optionKey]: value });
   };
 
-  const series = data?.series[0];
+  const handleFilterChange = (filters: Record<string, string[]>) => {
+    onOptionsChange({
+      ...validatedOptions,
+      initialFilters: JSON.stringify(filters),
+    });
+  };
 
   const { columns, moveColumn, toggleColumn } = useColumns({
     fields: series?.fields,
-    initialHidden: options.hiddenFields,
-    initialOrder: options.fieldsOrder,
+    initialHidden: validatedOptions.hiddenFields,
+    initialOrder: validatedOptions.fieldsOrder,
     onChange: handleColumnsStateChange,
     valueField,
   });
 
-  const { dataFrame: filteredDataFrame, filtersComponent } = useFiltersComponent({ dataFrame: series, filterFields });
+  const { dataFrame: filteredDataFrame, filtersComponent } = useFiltersComponent({
+    dataFrame: series,
+    filterFields,
+    initialFilters,
+    onFilterChange: handleFilterChange,
+  });
 
   const memoizedParseData: any = useMemo(() => {
     const dataOptions: ParseDataOptions = { dataDelimiter: DATA_SEPARATOR, valueField, baseUrl };
