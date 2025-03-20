@@ -18,9 +18,9 @@ function validateOptions(options: SankeyOptions, series: DataFrame) {
 
   return {
     ...options,
-    fieldsOrder: options.fieldsOrder.filter((f) => availableFields.includes(f)),
-    filterFields: options.filterFields.filter((f) => availableFields.includes(f)),
-    hiddenFields: options.hiddenFields.filter((f) => availableFields.includes(f)),
+    fieldsOrder: options.fieldsOrder?.filter((f) => availableFields.includes(f)),
+    filterFields: options.filterFields?.filter((f) => availableFields.includes(f)),
+    hiddenFields: options.hiddenFields?.filter((f) => availableFields.includes(f)),
   };
 }
 
