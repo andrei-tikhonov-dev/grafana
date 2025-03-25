@@ -14,6 +14,7 @@ export function configCurrentSprintData(dataFrame: DataFrame): DataFrame {
     { fields: [CurrentSprintColumns.Type], config: getFieldConfig(Cells.IssueType, { width: 100 }) },
     { fields: [CurrentSprintColumns.TeamMember], config: getFieldConfig(Cells.User, { width: 220 }) },
     { fields: [CurrentSprintColumns.InProgress], config: getFieldConfig(Cells.Days, { width: 100, align: 'left' }) },
+    { fields: [CurrentSprintColumns.Priority], config: getFieldConfig(Cells.Priority, { width: 100, align: 'left' }) },
   ];
 
   const dataWithTeamMembers = wrapTeamMemberField(dataFrame);

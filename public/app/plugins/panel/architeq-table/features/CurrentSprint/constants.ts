@@ -6,4 +6,5 @@ export const enum CurrentSprintColumns {
   SP = 'SP',
   InProgress = 'In progress',
   Status = 'Status',
+  Priority = 'Priority',
 }

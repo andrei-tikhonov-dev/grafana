@@ -13,6 +13,7 @@ import { RoleCell } from '../components/cells/RoleCell';
 import { SelectCell } from '../components/cells/SelectCell';
 import { SimpleCell } from '../components/cells/SimpleCell';
 import { UserCell } from '../components/cells/UserCell';
+import { PriorityCell } from '../components/cells/PriorityCell';
 
 export const enum TableType {
   HistoricalData = 'HistoricalData',
@@ -74,4 +75,5 @@ export const Cells = {
   Select: SelectCell,
   Simple: SimpleCell,
   User: UserCell,
+  Priority: PriorityCell,
 };

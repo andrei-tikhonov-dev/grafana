@@ -11,7 +11,7 @@ import { TablePanelProps } from '../../types';
 
 import { AddRoleForm } from './AddRoleForm';
 import { RoleFields, hiddenFields } from './constants';
-import { RoleCreateFormType, RoleCreatePayload, RoleDeletePayload, RoleMetaType, RoleUpdatePayload } from './types';
+import { RoleCreateFormType, RoleCreatePayload, RoleMetaType, RoleUpdatePayload } from './types';
 import { configRolesData, getPayloadIDs } from './utils';
 
 const HEADER_HEIGHT = 45;
@@ -51,10 +51,8 @@ export const RolesTool: React.FC<Props> = ({ options, data, width, height }) => 
   };
 
   const handleDelete = (rowIndex: number) => {
-    const payload: RoleDeletePayload = {
-      id: String(payloadIDs[rowIndex].id),
-    };
-    return deleteRequest(payload);
+    const id = payloadIDs[rowIndex].id;
+    return deleteRequest(null, id);
   };
 
   const handleCreate = async (data: RoleCreateFormType) => {

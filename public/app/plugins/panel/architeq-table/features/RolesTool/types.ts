@@ -14,10 +14,6 @@ export interface RoleUpdatePayload {
   value: number | string;
 }
 
-export interface RoleDeletePayload {
-  id: string;
-}
-
 export interface RoleCreatePayload {
   teamId: string;
   roleName: string;
