@@ -25,7 +25,7 @@ export const AddRoleForm: React.FC<Props> = ({ onClose, onCreate }) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <HookFormField
         name={RoleFields.RoleName}
-        label="Label"
+        label="Role name"
         form={form}
         rules={{ required: 'Role name is required' }}
       />

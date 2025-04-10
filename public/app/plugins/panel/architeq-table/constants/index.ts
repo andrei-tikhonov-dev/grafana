@@ -1,5 +1,3 @@
-import { SelectableValue } from '@grafana/data';
-
 import { ActionsCell } from '../components/cells/ActionsCell/ActionsCell';
 import { CapacityCell } from '../components/cells/CapacityCell';
 import { CheckboxCell } from '../components/cells/CheckboxCell';
@@ -14,6 +12,7 @@ import { SelectCell } from '../components/cells/SelectCell';
 import { SimpleCell } from '../components/cells/SimpleCell';
 import { UserCell } from '../components/cells/UserCell';
 import { PriorityCell } from '../components/cells/PriorityCell';
+import { TooltipCell } from '../components/cells/TooltipCell';
 
 export const enum TableType {
   HistoricalData = 'HistoricalData',
@@ -23,6 +22,7 @@ export const enum TableType {
   TeamHolidaysTool = 'TeamHolidaysTool',
   TotalBudgetTool = 'TotalBudgetTool',
   PiAdminTool = 'PiAdminTool',
+  PiNamesTool = 'PiNamesTool',
   HolidayPrefixes = 'HolidayPrefixes',
   RolesTool = 'RolesTool',
   GenericTable = 'GenericTable',
@@ -42,25 +42,6 @@ export const enum LoadingMode {
   RESET = 'reset',
 }
 
-export const UPDATE_REQUEST_METHOD_OPTIONS: SelectableValue[] = [
-  {
-    value: RequestMethod.DELETE,
-    label: RequestMethod.DELETE,
-  },
-  {
-    value: RequestMethod.PATCH,
-    label: RequestMethod.PATCH,
-  },
-  {
-    value: RequestMethod.POST,
-    label: RequestMethod.POST,
-  },
-  {
-    value: RequestMethod.PUT,
-    label: RequestMethod.PUT,
-  },
-];
-
 export const Cells = {
   Actions: ActionsCell,
   Capacity: CapacityCell,
@@ -74,6 +55,7 @@ export const Cells = {
   Role: RoleCell,
   Select: SelectCell,
   Simple: SimpleCell,
+  Tooltip: TooltipCell,
   User: UserCell,
   Priority: PriorityCell,
 };

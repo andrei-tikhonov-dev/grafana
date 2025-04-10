@@ -12,7 +12,7 @@ import { convertDateToBE } from '../../utils';
 
 import { AddPiForm } from './AddPiForm';
 import { PiFields, hiddenFields } from './constants';
-import { BudgetCreateFormType, BudgetCreatePayload, BudgetMetaType, BudgetUpdatePayload } from './types';
+import { PiAdminCreateFormType, PiAdminCreatePayload, PiAdminMetaType, PiAdminUpdatePayload } from './types';
 import { configBudgetData, getPayloadIDs } from './utils';
 
 const HEADER_HEIGHT = 45;
@@ -23,8 +23,8 @@ export const PiAdminTool: React.FC<Props> = ({ options, data, width, height }) =
   const dataFrame = data.series[0];
   const payloadIDs = getPayloadIDs(dataFrame);
   const {
-    custom: { artName },
-  } = dataFrame.meta as BudgetMetaType;
+    custom: { dsoId },
+  } = dataFrame.meta as PiAdminMetaType;
   const { createRequest, updateRequest, deleteRequest, loading } = useRequest({
     create: {
       url: options.createUrl,
@@ -40,7 +40,7 @@ export const PiAdminTool: React.FC<Props> = ({ options, data, width, height }) =
     },
   });
   const handleUpdate = async (value: number | string, { rowIndex, field }: CustomCellRendererProps) => {
-    const payload: BudgetUpdatePayload = {
+    const payload: PiAdminUpdatePayload = {
       propertyName: field.name,
       value,
     };
@@ -51,11 +51,11 @@ export const PiAdminTool: React.FC<Props> = ({ options, data, width, height }) =
     return deleteRequest(null, payloadIDs[rowIndex].id);
   };
 
-  const handleCreate = async (data: BudgetCreateFormType) => {
-    const payload: BudgetCreatePayload = {
-      artName,
-      startDate: convertDateToBE(data[PiFields.StartDay]) || '',
-      endDate: convertDateToBE(data[PiFields.endDate]) || '',
+  const handleCreate = async (data: PiAdminCreateFormType) => {
+    const payload: PiAdminCreatePayload = {
+      dsoId,
+      startDate: convertDateToBE(data[PiFields.StartDate]) || '',
+      endDate: convertDateToBE(data[PiFields.EndDate]) || '',
       name: data[PiFields.PiName],
     };
     return createRequest(payload);

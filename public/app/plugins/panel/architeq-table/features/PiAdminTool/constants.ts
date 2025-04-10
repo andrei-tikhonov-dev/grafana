@@ -1,8 +1,11 @@
 export const enum PiFields {
   ID = 'Id',
   PiName = 'PI name',
-  StartDay = 'Start date',
-  endDate = 'End date',
+  PI = 'PI',
+  Name = 'Name',
+  ArtAliases = 'ART Aliases',
+  StartDate = 'Start date',
+  EndDate = 'End date',
 }
 
 export const hiddenFields = [PiFields.ID];

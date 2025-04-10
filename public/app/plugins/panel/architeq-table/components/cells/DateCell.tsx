@@ -7,6 +7,7 @@ import { CustomCellRendererProps, DatePickerWithInput, IconButton, useStyles2 } 
 import { LoadingMode } from '../../constants';
 import { convertDateToBE, convertDateToUI } from '../../utils';
 import { useDataTableContext } from '../DataTable/DataTableContext';
+import { CellCustomOptionsType } from '../../types';
 
 const getStyles = (_: GrafanaTheme2) => {
   return {
@@ -44,6 +45,8 @@ const getStyles = (_: GrafanaTheme2) => {
 
 export const DateCell = (props: CustomCellRendererProps) => {
   const { field, rowIndex, value } = props;
+  const customOptions = field.config.custom as CellCustomOptionsType;
+  const isEditable = customOptions?.isEditable === undefined ? true : customOptions.isEditable(rowIndex);
   const styles = useStyles2(getStyles);
   const seriesIndex = Number(field.state?.seriesIndex);
   const { addItem, removeItem, hasItem, loading, updateData } = useDataTableContext();
@@ -89,7 +92,7 @@ export const DateCell = (props: CustomCellRendererProps) => {
   ) : (
     <div className={styles.cell}>
       <div className={styles.cellInput}>{convertDateToUI(inputValue)}</div>
-      <IconButton aria-label="Edit" size="xs" name="edit" onClick={handleEdit} />
+      {isEditable && <IconButton aria-label="Edit" size="xs" name="edit" onClick={handleEdit} />}
     </div>
   );
 };

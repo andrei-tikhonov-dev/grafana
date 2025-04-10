@@ -1,25 +1,25 @@
 import { PiFields } from './constants';
 
-export type BudgetMetaType = {
+export type PiAdminMetaType = {
   custom: {
-    artName: string;
+    dsoId: number;
   };
 };
 
-export interface BudgetUpdatePayload {
+export interface PiAdminUpdatePayload {
   propertyName: string;
   value: number | string;
 }
 
-export interface BudgetCreatePayload {
-  artName: string;
+export interface PiAdminCreatePayload {
+  dsoId: number;
   name: string;
   startDate: string;
   endDate: string;
 }
 
-export interface BudgetCreateFormType {
+export interface PiAdminCreateFormType {
   [PiFields.PiName]: string;
-  [PiFields.StartDay]: string;
-  [PiFields.endDate]: string;
+  [PiFields.StartDate]: string;
+  [PiFields.EndDate]: string;
 }

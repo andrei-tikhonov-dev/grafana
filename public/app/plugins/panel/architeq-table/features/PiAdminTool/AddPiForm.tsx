@@ -5,18 +5,18 @@ import { HookFormField } from '../../components/FormField';
 import { FormFooter } from '../../components/FormFooter';
 
 import { PiFields } from './constants';
-import { BudgetCreateFormType } from './types';
+import { PiAdminCreateFormType } from './types';
 
 interface Props {
   onClose: () => void;
-  onCreate: (data: BudgetCreateFormType) => void;
+  onCreate: (data: PiAdminCreateFormType) => void;
 }
 
 export const AddPiForm: React.FC<Props> = ({ onClose, onCreate }) => {
-  const form = useForm<BudgetCreateFormType>();
+  const form = useForm<PiAdminCreateFormType>();
   const { handleSubmit } = form;
 
-  const onSubmit = async (data: BudgetCreateFormType) => {
+  const onSubmit = async (data: PiAdminCreateFormType) => {
     await onCreate(data);
     onClose();
   };
@@ -26,7 +26,7 @@ export const AddPiForm: React.FC<Props> = ({ onClose, onCreate }) => {
       <HookFormField name={PiFields.PiName} label="Name" form={form} rules={{ required: 'Name is required' }} />
 
       <HookFormField
-        name={PiFields.StartDay}
+        name={PiFields.StartDate}
         label="Start date"
         form={form}
         type="date"
@@ -34,7 +34,7 @@ export const AddPiForm: React.FC<Props> = ({ onClose, onCreate }) => {
       />
 
       <HookFormField
-        name={PiFields.endDate}
+        name={PiFields.EndDate}
         label="End date"
         form={form}
         type="date"

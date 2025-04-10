@@ -3,8 +3,9 @@ import { DataFrame } from '@grafana/data';
 import { Cells } from '../../constants';
 import { CellCustomOptionsType } from '../../types';
 import { configureDataFrame, getFieldConfig } from '../../utils';
+import { PiFields } from '../PiAdminTool/constants';
 
-import { PiFields } from './constants';
+import { PiNamesFields } from './constants';
 
 interface ConfigTeamAdminToolData {
   dataFrame: DataFrame;
@@ -12,25 +13,24 @@ interface ConfigTeamAdminToolData {
   hiddenFields?: string[];
 }
 
-export function configBudgetData({ dataFrame, hiddenFields, handleDelete }: ConfigTeamAdminToolData): DataFrame {
+export function configRolesData({ dataFrame, hiddenFields, handleDelete }: ConfigTeamAdminToolData): DataFrame {
   const options: CellCustomOptionsType = {
     align: 'left',
   };
 
+  const isEditable = () => false;
+
   const fieldConfigs = [
-    { fields: [PiFields.PiName], config: getFieldConfig(Cells.Input, { ...options }) },
-    { fields: [PiFields.PI], config: getFieldConfig(Cells.Input, { ...options }) },
-    { fields: [PiFields.Name], config: getFieldConfig(Cells.Input, { ...options }) },
-    { fields: [PiFields.ArtAliases], config: getFieldConfig(Cells.Tooltip, { ...options }) },
-    { fields: [PiFields.EndDate], config: getFieldConfig(Cells.Date, { ...options }) },
-    { fields: [PiFields.StartDate], config: getFieldConfig(Cells.Date, { ...options }) },
+    { fields: [PiNamesFields.Name], config: getFieldConfig(Cells.Input, { ...options }) },
+    { fields: [PiFields.EndDate], config: getFieldConfig(Cells.Date, { ...options, isEditable }) },
+    { fields: [PiFields.StartDate], config: getFieldConfig(Cells.Date, { ...options, isEditable }) },
   ];
 
   return configureDataFrame(dataFrame, hiddenFields, handleDelete, fieldConfigs);
 }
 
 export function getPayloadIDs(data: DataFrame): { [index: number]: { id?: string } } {
-  const idField = data.fields.find((field) => field.name === PiFields.ID);
+  const idField = data.fields.find((field) => field.name === PiNamesFields.ID);
 
   const length = data.length;
 

@@ -12,6 +12,7 @@ const ADMIN_TYPES = [
   TableType.TeamHolidaysTool,
   TableType.TotalBudgetTool,
   TableType.PiAdminTool,
+  TableType.PiNamesTool,
   TableType.HolidayPrefixes,
   TableType.RolesTool,
 ];

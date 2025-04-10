@@ -11,6 +11,7 @@ import { GenericTable } from '../features/GenericTable';
 import { HistoricalData } from '../features/HistoricalData';
 import { HolidayPrefixesTool } from '../features/HolidayPrefixesTool';
 import { PiAdminTool } from '../features/PiAdminTool';
+import { PiNamesTool } from '../features/PiNamesTool';
 import { RolesTool } from '../features/RolesTool';
 import { SprintPlaning } from '../features/SprintPlaning';
 import { TeamAdminTool } from '../features/TeamAdminTool';
@@ -29,6 +30,7 @@ const TablePanels = {
   [TableType.GenericTable]: GenericTable,
   [TableType.HolidayPrefixes]: HolidayPrefixesTool,
   [TableType.RolesTool]: RolesTool,
+  [TableType.PiNamesTool]: PiNamesTool,
 };
 
 export const TablePanel: React.FC<TablePanelProps> = (props) => {
