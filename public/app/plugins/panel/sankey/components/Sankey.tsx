@@ -79,13 +79,13 @@ export const Sankey: React.FC<SankeyProps> = ({
           textColor={textColor}
         />
         <TooltipProvider panelId={id}>
-          <g transform={`translate(${MARGIN.left}, ${MARGIN.top})`} key={links.length}>
+          <g transform={`translate(${MARGIN.left}, ${MARGIN.top})`}>
             {links.map((data: SankeyLink<any, any>, index: number) => {
               const opacity = calculateTransparency(data.rowId, highlightedPaths);
               return <Link key={index} data={data} opacity={opacity} onHighlight={setHighlightedPaths} />;
             })}
           </g>
-          <g transform={`translate(${MARGIN.left}, ${MARGIN.top})`} key={nodes.length}>
+          <g transform={`translate(${MARGIN.left}, ${MARGIN.top})`}>
             {nodes.map((data: SankeyNode<any, any>, index: number) => {
               return (
                 <Node
