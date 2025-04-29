@@ -2,19 +2,23 @@ import { css, cx } from '@emotion/css';
 import { StatusLine } from 'architeq-library';
 import React from 'react';
 
-import { dateTime, GrafanaTheme2, PanelProps } from '@grafana/data';
+import { GrafanaTheme2, PanelProps } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
 
+import { RequestMethod } from '../constants';
+import { useRequest } from '../hooks/useRequest';
 import { PanelOptions, PanelDataType } from '../types';
+import { formatDate } from '../utils';
 
 import { BreadCrumbs } from './BreadCrumbs';
 import { Goals } from './Goals';
 import { InfoBlock } from './InfoBlock';
-import { InfoLine } from './InfoLine/InfoLine';
+import { InfoLine } from './InfoLine';
 import { ProgressBar } from './ProgressBar';
 import { Range } from './Range';
 import { Select } from './Select';
 import { TimeLine } from './TimeLine';
+import { UpdateButton } from './UpdateButton';
 
 interface Props extends PanelProps<PanelOptions> {}
 
@@ -60,6 +64,7 @@ export const Panel: React.FC<Props> = ({ options, data, width, height, fieldConf
     title,
     from,
     till,
+    lastUpdated,
     weeks,
     progress,
     goals,
@@ -71,7 +76,21 @@ export const Panel: React.FC<Props> = ({ options, data, width, height, fieldConf
     infoTimeline,
     range,
     statuses = [],
+    externalSprintId,
+    externalBoardId,
   } = panelData;
+
+  const { updateRequest } = useRequest({
+    update: {
+      url: options.updateUrl,
+      method: RequestMethod.POST,
+    },
+  });
+
+  const handleUpdate = async () => {
+    const payload = { externalSprintId, externalBoardId };
+    return updateRequest(payload);
+  };
 
   return (
     <div
@@ -83,17 +102,19 @@ export const Panel: React.FC<Props> = ({ options, data, width, height, fieldConf
         `
       )}
     >
+      {options.updateUrl && (
+        <UpdateButton onUpdate={handleUpdate} updateUrl={options.updateUrl} lastUpdated={lastUpdated} />
+      )}
       {breadCrumbs && <BreadCrumbs items={breadCrumbs} />}
       <h1 className={styles.header}>
         {options.header} {name || title} {select && <Select options={select.options} label={select.label} />}
       </h1>
       {<Range options={range?.options} lastId={range?.lastId} firstId={range?.firstId} />}
-
       <div className={styles.info}>
         {info?.map((infoItem) => <InfoLine key={infoItem.name} {...infoItem} />)}
         {team && <InfoLine value={team} name="Team:" icon="fa6/FaUsersLine" />}
-        {from && <InfoLine value={dateTime(from).format('DD MMM, YYYY')} name="Start:" icon="fa6/FaCalendarDays" />}
-        {till && <InfoLine value={dateTime(till).format('DD MMM, YYYY')} name="End:" icon="fa6/FaCalendarDays" />}
+        {from && <InfoLine value={formatDate(from)} name="Start:" icon="fa6/FaCalendarDays" />}
+        {till && <InfoLine value={formatDate(till)} name="End:" icon="fa6/FaCalendarDays" />}
       </div>
       {goals && <Goals data={goals} title={options.goalsTitle} updateUrl={options.goalsUpdateUrl} />}
 

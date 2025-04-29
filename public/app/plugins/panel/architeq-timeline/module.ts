@@ -21,5 +21,12 @@ export const plugin = new PanelPlugin<PanelOptions>(Panel).setPanelOptions((buil
       settings: {
         placeholder: 'http://',
       },
+    })
+    .addTextInput({
+      path: 'updateUrl',
+      name: 'Update url',
+      settings: {
+        placeholder: 'http://',
+      },
     });
 });

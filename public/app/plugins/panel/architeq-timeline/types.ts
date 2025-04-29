@@ -4,6 +4,7 @@ export interface PanelOptions {
   header: string;
   goalsTitle?: string;
   goalsUpdateUrl?: string;
+  updateUrl?: string;
 }
 
 export const enum Status {
@@ -71,6 +72,9 @@ export interface PanelDataType {
   team?: string;
   from?: string;
   till?: string;
+  lastUpdated?: string;
+  externalBoardId?: number;
+  externalSprintId?: number;
   weeks?: WeekStatus[];
   breadCrumbs?: BreadCrumbType[];
   progress?: {
