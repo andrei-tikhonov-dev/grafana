@@ -21,6 +21,7 @@ export const enum TableType {
   TeamAdminTool = 'TeamAdminTool',
   TeamHolidaysTool = 'TeamHolidaysTool',
   TotalBudgetTool = 'TotalBudgetTool',
+  JiraBoardsTool = 'JiraBoardsTool',
   PiAdminTool = 'PiAdminTool',
   PiNamesTool = 'PiNamesTool',
   HolidayPrefixes = 'HolidayPrefixes',

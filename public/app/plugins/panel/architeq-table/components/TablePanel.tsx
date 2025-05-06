@@ -10,6 +10,7 @@ import { CurrentSprint } from '../features/CurrentSprint';
 import { GenericTable } from '../features/GenericTable';
 import { HistoricalData } from '../features/HistoricalData';
 import { HolidayPrefixesTool } from '../features/HolidayPrefixesTool';
+import { JiraBoardsTool } from '../features/JiraBoardsTool';
 import { PiAdminTool } from '../features/PiAdminTool';
 import { PiNamesTool } from '../features/PiNamesTool';
 import { RolesTool } from '../features/RolesTool';
@@ -24,6 +25,7 @@ const TablePanels = {
   [TableType.CurrentSprint]: CurrentSprint,
   [TableType.SprintPlaning]: SprintPlaning,
   [TableType.TeamAdminTool]: TeamAdminTool,
+  [TableType.JiraBoardsTool]: JiraBoardsTool,
   [TableType.TeamHolidaysTool]: TeamHolidaysTool,
   [TableType.TotalBudgetTool]: TotalBudgetTool,
   [TableType.PiAdminTool]: PiAdminTool,

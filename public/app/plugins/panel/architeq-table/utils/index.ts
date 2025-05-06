@@ -51,6 +51,7 @@ export const getTableTypeOptions = async () => {
     { label: 'Total Budget Tool', value: TableType.TotalBudgetTool },
     { label: 'PI Admin Tool', value: TableType.PiAdminTool },
     { label: 'PI Names Tool', value: TableType.PiNamesTool },
+    { label: 'Jira Boards Tool', value: TableType.JiraBoardsTool },
     { label: 'Roles Tool', value: TableType.RolesTool },
     { label: 'Holiday Prefixes', value: TableType.HolidayPrefixes },
     { label: 'Holiday Prefixes', value: TableType.HolidayPrefixes },

@@ -15,6 +15,7 @@ const ADMIN_TYPES = [
   TableType.PiNamesTool,
   TableType.HolidayPrefixes,
   TableType.RolesTool,
+  TableType.JiraBoardsTool,
 ];
 const UPDATE_URL_TYPES = [TableType.HistoricalData, TableType.SprintPlaning, ...ADMIN_TYPES];
 
