@@ -36,12 +36,7 @@ export const AddBoard: React.FC<Props> = ({ onClose, onCreate, typeOptions }) =>
         placeholder="Select a type"
       />
 
-      <HookFormField
-        name="externalId"
-        label="External ID"
-        form={form}
-        rules={{ required: 'External ID is required' }}
-      />
+      <HookFormField name="boardId" label="Board ID" form={form} rules={{ required: 'Board ID is required' }} />
 
       <FormFooter onClose={onClose} />
     </form>

@@ -13,12 +13,12 @@ export interface JiraBoardsUpdatePayload {
 export interface JiraBoardsCreateFormType {
   name: string;
   type: string;
-  externalId: string;
+  boardId: string;
 }
 
 export interface JiraBoardsCreatePayload {
   teamId: number;
   name: string;
   type: string;
-  externalId: string;
+  boardId: string;
 }

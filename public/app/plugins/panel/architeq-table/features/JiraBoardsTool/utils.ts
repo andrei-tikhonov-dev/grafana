@@ -30,7 +30,7 @@ export function configJiraBoardsToolData({
   const fieldConfigs = [
     { fields: [JiraBoardsFields.Name], config: getFieldConfig(Cells.Input, { ...options }) },
     { fields: [JiraBoardsFields.Type], config: getFieldConfig(Cells.Select, { ...typeFieldOptions }) },
-    { fields: [JiraBoardsFields.ExternalId], config: getFieldConfig(Cells.Input, { ...options }) },
+    { fields: [JiraBoardsFields.BoardId], config: getFieldConfig(Cells.Input, { ...options }) },
   ];
 
   return configureDataFrame(dataFrame, hiddenFields, handleDelete, fieldConfigs);

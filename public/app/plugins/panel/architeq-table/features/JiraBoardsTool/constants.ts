@@ -1,7 +1,7 @@
 export const enum JiraBoardsFields {
   Name = 'Name',
   Type = 'Type',
-  ExternalId = 'External ID',
+  BoardId = 'Board ID',
   Id = 'ID',
 }
 

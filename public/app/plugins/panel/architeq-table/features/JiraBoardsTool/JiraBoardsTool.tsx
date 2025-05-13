@@ -65,7 +65,7 @@ export const JiraBoardsTool: React.FC<Props> = ({ options, data, width, height }
       teamId,
       type: data.type,
       name: data.name,
-      externalId: data.externalId,
+      boardId: data.boardId,
     };
     return createRequest(payload);
   };
