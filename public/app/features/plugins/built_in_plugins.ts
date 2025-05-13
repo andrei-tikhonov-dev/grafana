@@ -46,6 +46,7 @@ import * as logsPanel from 'app/plugins/panel/logs/module';
 import * as newsPanel from 'app/plugins/panel/news/module';
 import * as pieChartPanel from 'app/plugins/panel/piechart/module';
 import * as sankeyPanel from 'app/plugins/panel/sankey/module';
+import * as sprintometer from 'app/plugins/panel/sprintometer/module';
 import * as statPanel from 'app/plugins/panel/stat/module';
 import * as stateTimelinePanel from 'app/plugins/panel/state-timeline/module';
 import * as statusHistoryPanel from 'app/plugins/panel/status-history/module';
@@ -105,6 +106,7 @@ const builtInPlugins: Record<string, System.Module | (() => Promise<System.Modul
   'core:plugin/alertlist': alertListPanel,
   'core:plugin/sankey': sankeyPanel,
   'core:plugin/architeq-table': architeqTable,
+  'core:plugin/sprintometer': sprintometer,
   'core:plugin/architeq-timeline': architeqHeader,
   'core:plugin/architeq-links': architeqLinks,
   'core:plugin/architeq-hints': architeqHints,
