@@ -30,7 +30,7 @@ const styles = {
     width: max-content;
   `,
   arrow: css`
-    fill: ${theme.colors.semantic.text};
+    fill: #fff;
   `,
 };
 

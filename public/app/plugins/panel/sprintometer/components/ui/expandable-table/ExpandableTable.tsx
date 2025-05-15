@@ -22,7 +22,7 @@ const columnSizeToWidth = (size?: ColumnSize): string => {
     case '3xl':
       return '350px';
     default:
-      return '1fr'; // undefined size takes remaining space
+      return 'minmax(0, 1fr)';
   }
 };
 
@@ -38,7 +38,7 @@ const generateGridTemplateColumns = (
 };
 
 export interface ExpandableTableProps<T extends { id: number | string }, U = any> extends Table<T, U> {
-  CellContent: React.ComponentType<{ data: any; type: string }>;
+  CellContent: React.ComponentType<{ data: any; type: string; value: any }>;
   initialExpandedRows?: Record<string | number, boolean>;
   disableExpand?: boolean;
 }
@@ -59,6 +59,13 @@ const styles = {
     align-items: center;
     color: ${theme.colors.semantic.textLite};
   `,
+  outerCellDisabled: css`
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    color: ${theme.colors.semantic.textLite};
+    background-color: ${theme.colors.semantic.background};
+  `,
   outerHeaderCell: css`
     padding: 8px;
     font-weight: bold;
@@ -67,13 +74,14 @@ const styles = {
   innerTableWrapper: css`
     grid-column: 1 / -1;
     padding: 16px;
+    margin-bottom: 16px;
   `,
   innerTableWrapperExpand: css`
-    padding-left: 32px;
+    padding-left: 90px;
     background-color: ${theme.colors.semantic.background};
   `,
   innerTableWrapperNoExpand: css`
-    padding-left: 0;
+    padding-left: 100px;
     background-color: transparent;
   `,
   innerTable: css`
@@ -92,6 +100,13 @@ const styles = {
     align-items: center;
     color: ${theme.colors.semantic.textLite};
     background-color: white;
+  `,
+  innerCellAlternate: css`
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    color: ${theme.colors.semantic.textLite};
+    background-color: ${theme.colors.semantic.background};
   `,
   innerHeaderCell: css`
     padding: 8px;
@@ -120,7 +135,7 @@ const styles = {
 
 export function ExpandableTable<
   T extends { id: number | string } & Record<string, any>,
-  U extends Record<string, any> = Record<string, any>,
+  U extends Record<string, any> = Record<string, any>
 >({
   columns,
   innerColumns,
@@ -186,8 +201,8 @@ export function ExpandableTable<
               </div>
             )}
             {visibleOuterColumns.map((column, i) => (
-              <div key={`cell-${item.id}-${i}`} className={styles.outerCell}>
-                <CellContent data={item[column.key]} type={column.type} />
+              <div key={`cell-${item.id}-${i}`} className={disableExpand ? styles.outerCellDisabled : styles.outerCell}>
+                <CellContent data={item} type={column.type} value={item[column.key]} />
               </div>
             ))}
           </div>
@@ -211,11 +226,22 @@ export function ExpandableTable<
                 </div>
 
                 {/* Inner table rows */}
-                {item.innerData.map((innerItem: U) => (
+                {item.innerData.map((innerItem: U, rowIndex: number) => (
                   <div key={`inner-row-${(innerItem as any).id}`} className={styles.innerRow}>
                     {visibleInnerColumns.map((column, i) => (
-                      <div key={`inner-cell-${(innerItem as any).id}-${i}`} className={styles.innerCell}>
-                        <CellContent data={innerItem[column.key]} type={column.type} />
+                      <div
+                        key={`inner-cell-${(innerItem as any).id}-${i}`}
+                        className={
+                          disableExpand
+                            ? rowIndex % 2 === 0
+                              ? styles.innerCellAlternate
+                              : styles.innerCell
+                            : rowIndex % 2 === 1
+                            ? styles.innerCellAlternate
+                            : styles.innerCell
+                        }
+                      >
+                        <CellContent value={innerItem[column.key]} data={innerItem} type={column.type} />
                       </div>
                     ))}
                   </div>

@@ -5,10 +5,10 @@ import { PanelOptions, PanelType } from './types';
 
 export const getPanelTypeOptions = async () => {
   return Promise.resolve([
-    { label: 'Empty Panel', value: PanelType.EmptyPanel },
-    { label: 'Burndown Chart', value: PanelType.BurndownChart },
-    { label: 'Incoming Dependencies', value: PanelType.IncomingDependencies },
-    { label: 'Similar Tasks', value: PanelType.SimilarTasks },
+    { label: 'Empty panel', value: PanelType.EmptyPanel },
+    { label: 'Burndown chart', value: PanelType.BurndownChart },
+    { label: 'Incoming dependencies', value: PanelType.IncomingDependencies },
+    { label: 'Similar issues', value: PanelType.SimilarTasks },
   ]);
 };
 

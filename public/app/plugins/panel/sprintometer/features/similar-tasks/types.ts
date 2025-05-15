@@ -91,7 +91,7 @@ const tasksColumns: ColumnMeta[] = [
   },
   {
     key: TeamTaskKey.SimilarTasks,
-    title: 'Similar tasks',
+    title: 'Similar issues',
     type: ColumnType.Number,
   },
 ];

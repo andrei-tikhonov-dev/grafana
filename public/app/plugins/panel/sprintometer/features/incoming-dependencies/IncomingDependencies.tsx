@@ -43,10 +43,8 @@ const styles = {
 };
 
 export const IncomingDependencies: React.FC<Props> = ({ width, height, data: panelData }) => {
-  // Initial expanded rows
-  const initialExpandedRows = {};
-
-  const customData = getGrafanaCustomData<IncomingDependenciesCustomData>(panelData);
+  const { total, columns, innerColumns, data } = getGrafanaCustomData<IncomingDependenciesCustomData>(panelData);
+  const initialExpandedRows = data.reduce((acc, row) => ({ ...acc, [row.id]: row.hasChanges }), {});
 
   return (
     <div
@@ -59,13 +57,13 @@ export const IncomingDependencies: React.FC<Props> = ({ width, height, data: pan
       )}
     >
       <PanelTitle>Incoming dependencies</PanelTitle>
-      <Text>Tasks that depend on other teams ({customData.total})</Text>
+      <Text>Issues that depend on other teams ({total})</Text>
 
       <div className={styles.content}>
         <ExpandableTable
-          columns={customData.columns}
-          innerColumns={customData.innerColumns}
-          data={customData.data}
+          columns={columns}
+          innerColumns={innerColumns}
+          data={data}
           CellContent={DependenciesCellContent}
           initialExpandedRows={initialExpandedRows}
         />

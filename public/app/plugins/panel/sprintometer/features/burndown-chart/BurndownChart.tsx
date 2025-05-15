@@ -47,7 +47,7 @@ const styles = {
   `,
 
   select: css`
-    width: 200px;
+    width: 350px;
   `,
 };
 

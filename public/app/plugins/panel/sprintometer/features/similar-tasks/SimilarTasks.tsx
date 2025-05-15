@@ -55,9 +55,9 @@ export const SimilarTasks: React.FC<Props> = ({ width, height, data: panelData }
         `
       )}
     >
-      <PanelTitle>Similar tasks</PanelTitle>
+      <PanelTitle>Similar issues</PanelTitle>
       <Text>
-        AI-powered suggestions of tasks from across the organization that are similar to your team&apos;s work
+        AI-powered suggestions of issues from across the organization that are similar to your team&apos;s work
       </Text>
 
       <div className={styles.content}>
