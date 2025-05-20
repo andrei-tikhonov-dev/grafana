@@ -17,6 +17,7 @@ export type ColumnSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
 
 export interface PanelOptions {
   panelType: PanelType;
+  savedState: string;
 }
 
 export const enum PanelType {

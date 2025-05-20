@@ -13,16 +13,24 @@ export const getPanelTypeOptions = async () => {
 };
 
 export const plugin = new PanelPlugin<PanelOptions>(Panel).setPanelOptions((builder) => {
-  return builder.addSelect({
-    category: ['Sprintometer Configuration'],
-    path: 'panelType',
-    name: 'Panel Type',
-    description: 'Select the type of the panel.',
-    defaultValue: PanelType.EmptyPanel,
-    settings: {
-      allowCustomValue: false,
-      options: [],
-      getOptions: getPanelTypeOptions,
-    },
-  });
+  return builder
+    .addSelect({
+      category: ['Sprintometer Configuration'],
+      path: 'panelType',
+      name: 'Panel type',
+      description: 'Select the type of the panel.',
+      defaultValue: PanelType.EmptyPanel,
+      settings: {
+        allowCustomValue: false,
+        options: [],
+        getOptions: getPanelTypeOptions,
+      },
+    })
+    .addTextInput({
+      path: 'savedState',
+      name: 'State of the plugin',
+      description: 'Saved state (JSON format)',
+      defaultValue: '{}',
+      showIf: () => false,
+    });
 });

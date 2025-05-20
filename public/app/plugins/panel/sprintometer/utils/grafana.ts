@@ -11,9 +11,11 @@ export const setVariables = async (variables: Record<string, string>) => {
   await locationService.partial(updatedVariables);
 };
 
-export function getGrafanaCustomData<T>(data: PanelData): T {
+export function getGrafanaCustomData<T>(data: PanelData, initialData?: T): T {
   if (!data || !data.series || data.series.length === 0) {
-    throw Error('No custom data');
+    console.error('No custom meta data');
+
+    return initialData || ({} as T);
   }
 
   const dataFrame = data.series[0];

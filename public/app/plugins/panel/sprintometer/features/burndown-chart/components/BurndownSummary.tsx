@@ -1,10 +1,10 @@
 import { css } from '@emotion/css';
 import React from 'react';
 
-import { Icon } from '../../components/ui';
-import { theme } from '../../theme';
-
-import { BurndownSummaryType } from './types';
+import { Icon } from '../../../components/ui';
+import { IconName } from '../../../components/ui/icon/types';
+import { theme } from '../../../theme';
+import { BurndownSummaryType } from '../types';
 
 interface Props {
   name: string;
@@ -17,7 +17,7 @@ const styles = {
     flex: 1 1 auto;
     border: 1px solid ${theme.colors.border.weak};
     border-radius: ${theme.shape.radius.default};
-    padding: 16px 24px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -54,8 +54,7 @@ const styles = {
   `,
   statColumn: css`
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: baseline;
   `,
   statLabel: css`
     display: flex;
@@ -63,67 +62,70 @@ const styles = {
     gap: 8px;
     font-size: ${theme.typography.body.fontSize};
     font-weight: ${theme.typography.body.fontWeight};
-  `,
-  statValue: css`
-    font-size: ${theme.typography.h1.fontSize};
-    font-weight: ${theme.typography.h1.fontWeight};
-    padding-left: 22px;
-  `,
-  checkIcon: css`
-    color: ${theme.colors.semantic.success};
-  `,
-  clockIcon: css`
     color: ${theme.colors.semantic.textLite};
   `,
-  targetIcon: css`
-    color: ${theme.colors.semantic.info};
+  statValue: css`
+    font-size: ${theme.typography.h4.fontSize};
+    font-weight: ${theme.typography.h4.fontWeight};
+    padding-left: 8px;
   `,
+  icons: {
+    check: css`
+      color: ${theme.colors.semantic.success};
+    `,
+    clock: css`
+      color: ${theme.colors.semantic.textLite};
+    `,
+    target: css`
+      color: ${theme.colors.semantic.info};
+    `,
+  },
 };
 
 export const BurndownSummary: React.FC<Props> = ({ name, summary, color }) => {
   const { completed, remaining, total, percentage } = summary;
 
+  const stats = [
+    {
+      icon: { name: 'Check', style: styles.icons.check },
+      label: 'Completed',
+      value: completed,
+    },
+    {
+      icon: { name: 'Schedule', style: styles.icons.clock },
+      label: 'Remaining',
+      value: remaining,
+    },
+    {
+      icon: { name: 'IssueTypeObjective', style: styles.icons.target },
+      label: 'Total',
+      value: total,
+    },
+  ];
+
   return (
     <div className={styles.card}>
-      <div className={styles.progressBarContainer}>
-        <div className={styles.progressBar} style={{ width: `${percentage}%`, backgroundColor: `${color}` }} />
-      </div>
-
       <div className={styles.header}>
         <h2 className={styles.title}>{name}</h2>
         <div className={styles.percentage}>{percentage}%</div>
       </div>
 
+      <div className={styles.progressBarContainer}>
+        <div className={styles.progressBar} style={{ width: `${percentage}%`, backgroundColor: color }} />
+      </div>
+
       <div className={styles.statsContainer}>
-        <div className={styles.statColumn}>
-          <div className={styles.statLabel}>
-            <span className={styles.checkIcon}>
-              <Icon name="Check" />
-            </span>{' '}
-            Completed
+        {stats.map(({ icon, label, value }) => (
+          <div key={label} className={styles.statColumn}>
+            <div className={styles.statLabel}>
+              <span className={icon.style}>
+                <Icon name={icon.name as IconName} />
+              </span>
+              {label}:
+            </div>
+            <div className={styles.statValue}>{value}</div>
           </div>
-          <div className={styles.statValue}>{completed}</div>
-        </div>
-
-        <div className={styles.statColumn}>
-          <div className={styles.statLabel}>
-            <span className={styles.clockIcon}>
-              <Icon name="Schedule" />
-            </span>{' '}
-            Remaining
-          </div>
-          <div className={styles.statValue}>{remaining}</div>
-        </div>
-
-        <div className={styles.statColumn}>
-          <div className={styles.statLabel}>
-            <span className={styles.targetIcon}>
-              <Icon name="IssueTypeObjective" />
-            </span>{' '}
-            Total
-          </div>
-          <div className={styles.statValue}>{total}</div>
-        </div>
+        ))}
       </div>
     </div>
   );

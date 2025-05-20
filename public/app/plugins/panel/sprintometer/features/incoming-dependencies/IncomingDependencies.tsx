@@ -42,8 +42,18 @@ const styles = {
   `,
 };
 
+const initialData: IncomingDependenciesCustomData = {
+  total: 0,
+  columns: [],
+  innerColumns: [],
+  data: [],
+};
+
 export const IncomingDependencies: React.FC<Props> = ({ width, height, data: panelData }) => {
-  const { total, columns, innerColumns, data } = getGrafanaCustomData<IncomingDependenciesCustomData>(panelData);
+  const { total, columns, innerColumns, data } = getGrafanaCustomData<IncomingDependenciesCustomData>(
+    panelData,
+    initialData
+  );
   const initialExpandedRows = data.reduce((acc, row) => ({ ...acc, [row.id]: row.hasChanges }), {});
 
   return (

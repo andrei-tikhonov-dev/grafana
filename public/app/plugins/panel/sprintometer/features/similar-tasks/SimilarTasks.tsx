@@ -42,8 +42,14 @@ const styles = {
   `,
 };
 
+const initialData: SimilarTasksCustomData = {
+  columns: [],
+  innerColumns: [],
+  data: [],
+};
+
 export const SimilarTasks: React.FC<Props> = ({ width, height, data: panelData }) => {
-  const customData = getGrafanaCustomData<SimilarTasksCustomData>(panelData);
+  const customData = getGrafanaCustomData<SimilarTasksCustomData>(panelData, initialData);
 
   return (
     <div

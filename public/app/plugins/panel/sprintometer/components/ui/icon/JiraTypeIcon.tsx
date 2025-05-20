@@ -5,11 +5,11 @@ import { JiraType } from '../../../types';
 import { toObjectKey } from '../../../utils/helpers';
 
 import { Icon } from './Icon';
-import { IconNameType, JiraTypeIconProps } from './types';
+import { IconName, JiraTypeIconProps } from './types';
 
 const DEFAULT_COLOR = '#FFFFFF';
 
-export const issueTypeIcons: Record<JiraType, IconNameType> = {
+export const issueTypeIcons: Record<JiraType, IconName> = {
   [JiraType.Story]: 'Bookmark',
   [JiraType.StrategicTheme]: 'Checklist',
   [JiraType.StrategicStep]: 'Extension',

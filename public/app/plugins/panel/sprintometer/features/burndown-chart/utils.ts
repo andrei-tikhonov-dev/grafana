@@ -1,7 +1,9 @@
 import * as echarts from 'echarts';
+import { MarkArea2DDataItemOption } from 'echarts/types/src/component/marker/MarkAreaModel';
 
 import { theme } from '../../theme';
 import { formatDate } from '../../utils/dateTime';
+import { capitalize } from '../../utils/helpers';
 
 import {
   LABEL_ISSUES_AMOUNT,
@@ -14,12 +16,48 @@ import {
   BurndownChartAggregatedData,
   BurndownChartFilteredData,
   BurndownCustomData,
+  BurndownDayData,
   BurndownPreparedData,
   BurndownStructuredData,
+  NonWorkingDays,
+  ScopeChanges,
+  TotalScopeChanges,
   ValueMode,
 } from './types';
 
-const transformStructuredToAggregated = (data: BurndownStructuredData[]): BurndownChartAggregatedData => {
+function groupScopeChangesByDayAndStatus(days: BurndownDayData[]): {
+  scopeChanges: ScopeChanges;
+  totalScopeChanges: TotalScopeChanges;
+} {
+  const scopeChanges: { [key: string]: Record<string, number> } = {};
+  const totalScopeChanges: Record<string, number> = {};
+
+  days.forEach((day) => {
+    const date = formatDate(day.date);
+
+    if (!scopeChanges[date]) {
+      scopeChanges[date] = {};
+    }
+
+    day.scopeChanges.forEach((scopeChange) => {
+      const status = scopeChange.status;
+
+      if (!scopeChanges[date][status]) {
+        scopeChanges[date][status] = 0;
+      }
+      scopeChanges[date][status]++;
+
+      if (!totalScopeChanges[status]) {
+        totalScopeChanges[status] = 0;
+      }
+      totalScopeChanges[status]++;
+    });
+  });
+
+  return { scopeChanges, totalScopeChanges };
+}
+
+const transformStructuredDataToAggregated = (data: BurndownStructuredData[]): BurndownChartAggregatedData => {
   const result: BurndownChartAggregatedData = {
     [ValueMode.StoryPoints]: {},
     [ValueMode.IssuesAmount]: {},
@@ -40,6 +78,29 @@ const transformStructuredToAggregated = (data: BurndownStructuredData[]): Burndo
   return result;
 };
 
+function getNonworkingDays(days: BurndownDayData[]): NonWorkingDays {
+  const nonWorkingDays: NonWorkingDays = [];
+  let nonWorkingSequenceStart: number | null = null;
+
+  for (let i = 0; i < days.length; i++) {
+    const currentDay = days[i];
+
+    if (!currentDay.isWorking && nonWorkingSequenceStart === null) {
+      nonWorkingSequenceStart = i;
+    } else if (currentDay.isWorking && nonWorkingSequenceStart !== null) {
+      nonWorkingDays.push([formatDate(days[nonWorkingSequenceStart].date), formatDate(currentDay.date)]);
+
+      nonWorkingSequenceStart = null;
+    }
+  }
+
+  if (nonWorkingSequenceStart !== null) {
+    nonWorkingDays.push([formatDate(days[nonWorkingSequenceStart].date), formatDate(days[days.length - 1].date)]);
+  }
+
+  return nonWorkingDays;
+}
+
 export function prepareData({ days, issueTypes, summary, currentDate }: BurndownCustomData): BurndownPreparedData {
   const issueOptions = issueTypes.map(({ name }) => ({
     label: name,
@@ -51,74 +112,128 @@ export function prepareData({ days, issueTypes, summary, currentDate }: Burndown
     { label: LABEL_ISSUES_AMOUNT, value: ValueMode.IssuesAmount },
   ];
 
-  const data: BurndownChartAggregatedData = transformStructuredToAggregated(issueTypes);
+  const { scopeChanges, totalScopeChanges } = groupScopeChangesByDayAndStatus(days);
 
   return {
-    days: days.map(({ date }) => formatDate(date)),
     currentDay: formatDate(currentDate),
-    data,
+    data: transformStructuredDataToAggregated(issueTypes),
+    daysData: days,
     summary,
     issueOptions,
     valueOptions,
+    scopeChanges,
+    totalScopeChanges,
   };
 }
 
-export const filterBurndownChartData = (
-  data: BurndownChartAggregatedData,
-  mode: ValueMode,
-  names: string[]
-): BurndownChartFilteredData => {
-  // If names is empty, use all available names in the data
-  const keysToUse = names.length === 0 ? Object.keys(data[mode]) : names.filter((name) => data[mode][name]);
+type FilterBurndownChartDataArgs = {
+  daysData: BurndownDayData[];
+  data: BurndownChartAggregatedData;
+  valueMode: ValueMode;
+  selectedIssues: string[];
+  showNonWorkingDays: boolean;
+};
 
-  // If no valid keys after filtering, return empty arrays
+export const filterBurndownChartData = ({
+  data,
+  valueMode,
+  selectedIssues,
+  daysData,
+  showNonWorkingDays,
+}: FilterBurndownChartDataArgs): BurndownChartFilteredData => {
+  const keysToUse =
+    selectedIssues.length === 0 ? Object.keys(data[valueMode]) : selectedIssues.filter((name) => data[valueMode][name]);
+
   if (keysToUse.length === 0) {
-    return { actual: [], ideal: [] };
+    const days = showNonWorkingDays
+      ? daysData.map(({ date }) => formatDate(date))
+      : daysData.filter((day) => day.isWorking).map(({ date }) => formatDate(date));
+
+    const nonWorkingDays = showNonWorkingDays ? getNonworkingDays(daysData) : [];
+
+    return { actual: [], ideal: [], days, nonWorkingDays };
   }
 
-  // If only one key, return its data directly
+  const daysIndexMap = daysData
+    .map((day, index) => ({ date: formatDate(day.date), isWorking: day.isWorking, index }))
+    .filter((day) => showNonWorkingDays || day.isWorking);
+
+  const days = daysIndexMap.map((day) => day.date);
+  const nonWorkingDays = showNonWorkingDays ? getNonworkingDays(daysData) : [];
+
+  let rawActual: number[] = [];
+  let rawIdeal: number[] = [];
+
   if (keysToUse.length === 1) {
     const name = keysToUse[0];
-    return {
-      actual: [...data[mode][name].actual],
-      ideal: [...data[mode][name].ideal],
-    };
+    rawActual = data[valueMode][name].actual;
+    rawIdeal = data[valueMode][name].ideal;
+  } else {
+    rawActual = aggregateValues(keysToUse.map((name) => data[valueMode][name].actual));
+    rawIdeal = aggregateValues(keysToUse.map((name) => data[valueMode][name].ideal));
   }
 
-  // For multiple keys, aggregate the data
-  const filteredData = keysToUse.map((name) => data[mode][name]);
+  const actual = daysIndexMap
+    .map((day) => (day.index < rawActual.length ? rawActual[day.index] : undefined))
+    .filter((value): value is number => value !== undefined);
 
-  // Find the maximum length of each array type separately
-  const maxActualLength = Math.max(...filteredData.map((item) => item.actual.length));
-  const maxIdealLength = Math.max(...filteredData.map((item) => item.ideal.length));
+  const ideal = daysIndexMap
+    .map((day) => (day.index < rawIdeal.length ? rawIdeal[day.index] : undefined))
+    .filter((value): value is number => value !== undefined);
 
-  // Initialize result arrays with their respective maximum lengths
-  const actual = Array(maxActualLength).fill(0);
-  const ideal = Array(maxIdealLength).fill(0);
+  return { actual, ideal, days, nonWorkingDays };
+};
 
-  // Sum values across all filtered items
-  filteredData.forEach((item) => {
-    // Sum actual values only up to the length of each item's actual array
-    for (let i = 0; i < item.actual.length; i++) {
-      actual[i] += item.actual[i];
-    }
+function aggregateValues(arrays: number[][]): number[] {
+  if (arrays.length === 0) {
+    return [];
+  }
 
-    // Sum ideal values only up to the length of each item's ideal array
-    for (let i = 0; i < item.ideal.length; i++) {
-      ideal[i] += item.ideal[i];
+  const maxLength = Math.max(...arrays.map((arr) => arr.length));
+  const result = Array(maxLength).fill(0);
+
+  arrays.forEach((array) => {
+    array.forEach((value, index) => {
+      result[index] += value;
+    });
+  });
+
+  return result;
+}
+
+function formatTooltip(
+  params: Array<{ axisValue: string; axisValueLabel: string }>,
+  scopeChanges: ScopeChanges
+): string {
+  const { axisValueLabel, axisValue } = params[0];
+  const changes = Object.entries(scopeChanges[axisValue]);
+
+  let result = `<div style="font-weight: 600; margin-bottom: 8px">${axisValueLabel}</div>`;
+
+  params.forEach((param: any) => {
+    if (param.seriesName && param.seriesName !== LEGEND_NON_WORKING_DAYS) {
+      result += `<div><span style="color: ${param.color};">${param.seriesName}:</span> ${param.value}</div>`;
     }
   });
 
-  return { actual, ideal };
-};
+  if (changes.length > 0) {
+    result += `
+        <div style="padding-top: 8px;">
+            ${changes.map(([label, value]) => `<div><span>${capitalize(label)}</span>: ${value} </div>`).join('')}
+        </div>`;
+  }
+
+  return result;
+}
 
 interface ChartOptions {
   actual: number[];
   ideal: number[];
   days: string[];
   currentDay: string;
-  nonWorkingDays: [];
+  nonWorkingDays: NonWorkingDays;
   color: string;
+  scopeChanges: ScopeChanges;
 }
 
 export const getChartOptions = ({
@@ -128,7 +243,13 @@ export const getChartOptions = ({
   currentDay,
   nonWorkingDays,
   color,
+  scopeChanges,
 }: ChartOptions): echarts.EChartsOption => {
+  const nonWorkingDaysFormated: MarkArea2DDataItemOption[] = nonWorkingDays.map(([start, end]) => [
+    { xAxis: start },
+    { xAxis: end },
+  ]);
+
   return {
     backgroundColor: 'transparent',
     tooltip: {
@@ -137,17 +258,7 @@ export const getChartOptions = ({
         type: 'line',
       },
       formatter: function (params: any) {
-        let result = `<strong style="font-weight: bold;">${params[0].axisValueLabel}</strong><br/>`;
-
-        params.forEach((param: any) => {
-          if (param.seriesName && param.seriesName !== LEGEND_NON_WORKING_DAYS) {
-            result += `<div style="display: flex; align-items: center;">
-                <span style="color: ${param.color};">${param.seriesName}: </span>&nbsp;${param.value}
-              </div>`;
-          }
-        });
-
-        return result;
+        return formatTooltip(params, scopeChanges);
       },
     },
     legend: {
@@ -177,6 +288,19 @@ export const getChartOptions = ({
     yAxis: {
       type: 'value',
       name: '',
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: theme.colors.semantic.text,
+          type: 'solid',
+        },
+      },
+      axisLabel: {
+        color: theme.colors.semantic.text,
+        formatter: function (value: number) {
+          return value === 0 ? '' : value.toString();
+        },
+      },
     },
     series: [
       {
@@ -193,9 +317,9 @@ export const getChartOptions = ({
         markArea: {
           silent: true,
           itemStyle: {
-            color: 'rgba(246, 241, 240, 0.5)',
+            color: 'rgba(246, 241, 240, 0.7)',
           },
-          data: nonWorkingDays,
+          data: nonWorkingDaysFormated,
         },
       },
       {
