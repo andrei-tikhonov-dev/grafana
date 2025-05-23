@@ -1,7 +1,7 @@
 import { css, cx } from '@emotion/css';
 import React, { useState, useEffect } from 'react';
 
-import { Ellipsis, Icon } from '../';
+import { Ellipsis, Icon, renderCellContent } from '../';
 import { theme } from '../../../theme';
 import { Table, ColumnSize } from '../../../types';
 
@@ -22,11 +22,10 @@ const columnSizeToWidth = (size?: ColumnSize): string => {
     case '3xl':
       return '350px';
     default:
-      return 'minmax(0, 1fr)';
+      return 'minmax(100px, 1fr)';
   }
 };
 
-// Generate grid template columns based on column sizes
 const generateGridTemplateColumns = (
   columns: Array<{ size?: ColumnSize; hidden?: boolean }>,
   includeExpandToggle = false
@@ -38,7 +37,7 @@ const generateGridTemplateColumns = (
 };
 
 export interface ExpandableTableProps<T extends { id: number | string }, U = any> extends Table<T, U> {
-  CellContent: React.ComponentType<{ data: any; type: string; value: any }>;
+  renderCell?: (props: { data: any; type: string; value: any }) => React.ReactNode;
   initialExpandedRows?: Record<string | number, boolean>;
   disableExpand?: boolean;
 }
@@ -140,7 +139,7 @@ export function ExpandableTable<
   columns,
   innerColumns,
   data,
-  CellContent,
+  renderCell = renderCellContent,
   initialExpandedRows = {},
   disableExpand = false,
 }: ExpandableTableProps<T, U>) {
@@ -202,7 +201,7 @@ export function ExpandableTable<
             )}
             {visibleOuterColumns.map((column, i) => (
               <div key={`cell-${item.id}-${i}`} className={disableExpand ? styles.outerCellDisabled : styles.outerCell}>
-                <CellContent data={item} type={column.type} value={item[column.key]} />
+                {renderCell({ data: item, type: column.type, value: item[column.key] })}
               </div>
             ))}
           </div>
@@ -241,7 +240,7 @@ export function ExpandableTable<
                             : styles.innerCell
                         }
                       >
-                        <CellContent value={innerItem[column.key]} data={innerItem} type={column.type} />
+                        {renderCell({ value: innerItem[column.key], data: innerItem, type: column.type })}
                       </div>
                     ))}
                   </div>

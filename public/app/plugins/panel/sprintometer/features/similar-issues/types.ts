@@ -5,12 +5,12 @@ import {
   Table,
   ColumnType,
   Link,
-  StatusChanges,
-  SprintChanges,
+  JiraChangesHistory,
   User,
+  JiraIssueType,
 } from '../../types';
 
-enum TeamTaskKey {
+enum TeamIssueKey {
   Id = 'id',
   IssueKey = 'issueKey',
   Summary = 'summary',
@@ -22,7 +22,7 @@ enum TeamTaskKey {
   InnerData = 'innerData',
 }
 
-enum SimilarTaskKey {
+enum SimilarIssueKey {
   Id = 'id',
   IssueKey = 'issueKey',
   Summary = 'summary',
@@ -34,113 +34,113 @@ enum SimilarTaskKey {
   Sprint = 'sprint',
 }
 
-export interface TeamTask {
-  [TeamTaskKey.Id]: number;
-  [TeamTaskKey.IssueKey]: Link;
-  [TeamTaskKey.IssueType]: JiraType;
-  [TeamTaskKey.Summary]: string;
-  [TeamTaskKey.Status]: StatusChanges;
-  [TeamTaskKey.Assignee]: User;
-  [TeamTaskKey.Priority]: JiraPriority;
-  [TeamTaskKey.SimilarTasks]: number;
-  [TeamTaskKey.InnerData]: SimilarTask[];
+export interface TeamIssue {
+  [TeamIssueKey.Id]: number;
+  [TeamIssueKey.IssueKey]: Link;
+  [TeamIssueKey.IssueType]: JiraType | JiraIssueType;
+  [TeamIssueKey.Summary]: string;
+  [TeamIssueKey.Status]: JiraChangesHistory;
+  [TeamIssueKey.Assignee]: User;
+  [TeamIssueKey.Priority]: JiraPriority;
+  [TeamIssueKey.SimilarTasks]: number;
+  [TeamIssueKey.InnerData]: SimilarIssue[];
 }
-export interface SimilarTask {
-  [SimilarTaskKey.Id]: number;
-  [SimilarTaskKey.IssueKey]: Link;
-  [SimilarTaskKey.IssueType]: JiraType;
-  [SimilarTaskKey.Summary]: string;
-  [SimilarTaskKey.OwnerTeam]: string;
-  [SimilarTaskKey.Status]: StatusChanges;
-  [SimilarTaskKey.LastUpdate]: string;
-  [SimilarTaskKey.Priority]: string;
-  [SimilarTaskKey.Sprint]: SprintChanges;
+export interface SimilarIssue {
+  [SimilarIssueKey.Id]: number;
+  [SimilarIssueKey.IssueKey]: Link;
+  [SimilarIssueKey.IssueType]: JiraType | JiraIssueType;
+  [SimilarIssueKey.Summary]: string;
+  [SimilarIssueKey.OwnerTeam]: string;
+  [SimilarIssueKey.Status]: JiraChangesHistory;
+  [SimilarIssueKey.LastUpdate]: string;
+  [SimilarIssueKey.Priority]: string;
+  [SimilarIssueKey.Sprint]: JiraChangesHistory;
 }
 
-export interface SimilarTasksCustomData extends Table<TeamTask, SimilarTask> {}
+export interface SimilarIssuesCustomData extends Table<TeamIssue, SimilarIssue> {}
 
-const tasksColumns: ColumnMeta[] = [
+const issuesColumns: ColumnMeta[] = [
   {
-    key: TeamTaskKey.IssueKey,
+    key: TeamIssueKey.IssueKey,
     title: 'Issue key',
     type: ColumnType.Link,
   },
   {
-    key: TeamTaskKey.IssueType,
+    key: TeamIssueKey.IssueType,
     type: ColumnType.IssueTypeIcon,
   },
   {
-    key: TeamTaskKey.Summary,
+    key: TeamIssueKey.Summary,
     title: 'Summary',
     type: ColumnType.Text,
   },
   {
-    key: TeamTaskKey.Priority,
+    key: TeamIssueKey.Priority,
     title: 'Priority',
     type: ColumnType.Priority,
   },
   {
-    key: TeamTaskKey.Assignee,
+    key: TeamIssueKey.Assignee,
     title: 'Assignee',
     type: ColumnType.User,
   },
   {
-    key: TeamTaskKey.Status,
+    key: TeamIssueKey.Status,
     title: 'Status',
     type: ColumnType.IssueStatus,
   },
   {
-    key: TeamTaskKey.SimilarTasks,
+    key: TeamIssueKey.SimilarTasks,
     title: 'Similar issues',
     type: ColumnType.Number,
   },
 ];
 
-const similarTasksColumns: ColumnMeta[] = [
+const similarIssuesColumns: ColumnMeta[] = [
   {
-    key: SimilarTaskKey.IssueKey,
+    key: SimilarIssueKey.IssueKey,
     title: 'Issue key',
     type: ColumnType.Link,
   },
   {
-    key: SimilarTaskKey.IssueType,
+    key: SimilarIssueKey.IssueType,
     type: ColumnType.IssueTypeIcon,
   },
   {
-    key: SimilarTaskKey.Summary,
+    key: SimilarIssueKey.Summary,
     title: 'Summary',
     type: ColumnType.Text,
   },
   {
-    key: SimilarTaskKey.OwnerTeam,
+    key: SimilarIssueKey.OwnerTeam,
     title: 'Owner team',
     type: ColumnType.Team,
   },
   {
-    key: SimilarTaskKey.Priority,
+    key: SimilarIssueKey.Priority,
     title: 'Priority',
     type: ColumnType.Priority,
   },
   {
-    key: SimilarTaskKey.Status,
+    key: SimilarIssueKey.Status,
     title: 'Status',
     type: ColumnType.IssueStatus,
   },
   {
-    key: SimilarTaskKey.Sprint,
+    key: SimilarIssueKey.Sprint,
     title: 'Planned sprint',
     type: ColumnType.Sprint,
   },
   {
-    key: SimilarTaskKey.LastUpdate,
+    key: SimilarIssueKey.LastUpdate,
     title: 'Last update',
     type: ColumnType.Date,
   },
 ];
 
-export const tempData: SimilarTasksCustomData = {
-  columns: tasksColumns,
-  innerColumns: similarTasksColumns,
+export const tempData: SimilarIssuesCustomData = {
+  columns: issuesColumns,
+  innerColumns: similarIssuesColumns,
   data: [
     {
       id: 1001,

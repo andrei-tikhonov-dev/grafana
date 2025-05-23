@@ -1,0 +1,1 @@
+export { SimilarIssues } from './SimilarIssues';

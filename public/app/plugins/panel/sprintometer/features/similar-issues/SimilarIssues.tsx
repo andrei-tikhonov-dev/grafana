@@ -3,13 +3,12 @@ import React from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { PanelTitle, Text, ExpandableTable } from '../../components/ui';
+import { PanelTitle, Text, ExpandableTable, renderCellContent } from '../../components/ui';
 import { theme } from '../../theme';
 import { PanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
-import { SimilarTasksCellContent } from './components/SimilarTasksCellContent';
-import { SimilarTasksCustomData } from './types';
+import { SimilarIssuesCustomData } from './types';
 
 interface Props extends PanelProps<PanelOptions> {}
 
@@ -42,14 +41,14 @@ const styles = {
   `,
 };
 
-const initialData: SimilarTasksCustomData = {
+const initialData: SimilarIssuesCustomData = {
   columns: [],
   innerColumns: [],
   data: [],
 };
 
-export const SimilarTasks: React.FC<Props> = ({ width, height, data: panelData }) => {
-  const customData = getGrafanaCustomData<SimilarTasksCustomData>(panelData, initialData);
+export const SimilarIssues: React.FC<Props> = ({ width, height, data }) => {
+  const customData = getGrafanaCustomData<SimilarIssuesCustomData>(data, initialData);
 
   return (
     <div
@@ -71,7 +70,7 @@ export const SimilarTasks: React.FC<Props> = ({ width, height, data: panelData }
           columns={customData.columns}
           innerColumns={customData.innerColumns}
           data={customData.data}
-          CellContent={SimilarTasksCellContent}
+          renderCell={renderCellContent}
           disableExpand
         />
       </div>

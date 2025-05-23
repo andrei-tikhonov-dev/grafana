@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Tooltip } from '../tooltip/Tooltip';
 
 export interface EllipsisProps {
-  children: string;
+  children: React.ReactNode;
   lines?: number;
   showTooltip?: boolean;
   tooltipContent?: React.ReactNode;

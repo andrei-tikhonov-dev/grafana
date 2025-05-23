@@ -8,10 +8,9 @@ import { theme } from '../../theme';
 import { PanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
-import { DependenciesCellContent } from './components/DependenciesCellContent';
 import { IncomingDependenciesCustomData } from './types';
 
-interface Props extends PanelProps<PanelOptions> {}
+interface IncomingDependenciesProps extends PanelProps<PanelOptions> {}
 
 const styles = {
   wrapper: css`
@@ -49,7 +48,7 @@ const initialData: IncomingDependenciesCustomData = {
   data: [],
 };
 
-export const IncomingDependencies: React.FC<Props> = ({ width, height, data: panelData }) => {
+export const IncomingDependencies: React.FC<IncomingDependenciesProps> = ({ width, height, data: panelData }) => {
   const { total, columns, innerColumns, data } = getGrafanaCustomData<IncomingDependenciesCustomData>(
     panelData,
     initialData
@@ -74,7 +73,6 @@ export const IncomingDependencies: React.FC<Props> = ({ width, height, data: pan
           columns={columns}
           innerColumns={innerColumns}
           data={data}
-          CellContent={DependenciesCellContent}
           initialExpandedRows={initialExpandedRows}
         />
       </div>

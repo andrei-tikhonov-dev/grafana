@@ -6,8 +6,8 @@ import {
   ColumnType,
   User,
   Link,
-  StatusChanges,
-  SprintChanges,
+  JiraChangesHistory,
+  JiraIssueType,
 } from '../../types';
 
 enum DependantIssueKey {
@@ -40,9 +40,9 @@ export interface DependantIssue {
   [DependantIssueKey.Id]: number;
   [DependantIssueKey.HasChanges]: boolean;
   [DependantIssueKey.IssueKey]: Link;
-  [DependantIssueKey.IssueType]: JiraType;
+  [DependantIssueKey.IssueType]: JiraType | JiraIssueType;
   [DependantIssueKey.Summary]: string;
-  [DependantIssueKey.Status]: StatusChanges;
+  [DependantIssueKey.Status]: JiraChangesHistory;
   [DependantIssueKey.Assignee]: User;
   [DependantIssueKey.Priority]: JiraPriority;
   [DependantIssueKey.ActiveDependencies]: number;
@@ -52,13 +52,13 @@ export interface DependencyIssue {
   [DependencyIssueKey.Id]: number;
   [DependencyIssueKey.HasChanges]: boolean;
   [DependencyIssueKey.IssueKey]: Link;
-  [DependencyIssueKey.IssueType]: JiraType;
+  [DependencyIssueKey.IssueType]: JiraType | JiraIssueType;
   [DependencyIssueKey.Summary]: string;
   [DependencyIssueKey.OwnerTeam]: string;
-  [DependencyIssueKey.Status]: StatusChanges;
+  [DependencyIssueKey.Status]: JiraChangesHistory;
   [DependencyIssueKey.LastUpdate]: string;
   [DependencyIssueKey.Priority]: string;
-  [DependencyIssueKey.Sprint]: SprintChanges;
+  [DependencyIssueKey.Sprint]: JiraChangesHistory;
 }
 
 export interface IncomingDependenciesCustomData extends Table<DependantIssue, DependencyIssue> {

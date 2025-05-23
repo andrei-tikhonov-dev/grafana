@@ -11,6 +11,7 @@ export enum ColumnType {
   Number = 'number',
   Boolean = 'boolean',
   Sprint = 'sprint',
+  Default = 'default',
 }
 
 export type ColumnSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
@@ -71,17 +72,17 @@ export enum JiraType {
   Incident = 'incident',
 }
 
+export interface JiraIssueType {
+  type: JiraType;
+  name: string;
+}
+
 export interface Link {
   url: string;
   text: string;
 }
 
-export interface StatusChanges {
-  current: string;
-  previous?: string | null;
-}
-
-export interface SprintChanges {
+export interface JiraChangesHistory {
   current: string;
   previous?: string | null;
 }

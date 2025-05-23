@@ -43,7 +43,7 @@ const styles = {
   ),
 };
 
-export const JiraStatusCell: React.FC<CellProps> = ({ value }) => {
+export const JiraChangesHostoryCell: React.FC<CellProps> = ({ value }) => {
   if (value.previous === undefined || value.previous === null) {
     return value.current;
   }
