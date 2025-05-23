@@ -101,3 +101,8 @@ export type TableType<T = {}> = {
     custom: T;
   };
 };
+
+export type UpdateButtonPayload = {
+  externalSprintId: number;
+  externalBoardId: number;
+};

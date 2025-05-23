@@ -7,7 +7,7 @@ import { useStyles2 } from '@grafana/ui';
 
 import { RequestMethod } from '../constants';
 import { useRequest } from '../hooks/useRequest';
-import { PanelOptions, PanelDataType } from '../types';
+import { PanelOptions, PanelDataType, UpdateButtonPayload } from '../types';
 import { formatDate } from '../utils';
 
 import { BreadCrumbs } from './BreadCrumbs';
@@ -87,8 +87,13 @@ export const Panel: React.FC<Props> = ({ options, data, width, height, fieldConf
     },
   });
 
+  const canUpdate = externalSprintId && externalBoardId;
+
   const handleUpdate = async () => {
-    const payload = { externalSprintId, externalBoardId };
+    if (!canUpdate) {
+      return;
+    }
+    const payload: UpdateButtonPayload = { externalSprintId, externalBoardId };
     return updateRequest(payload);
   };
 
@@ -103,7 +108,7 @@ export const Panel: React.FC<Props> = ({ options, data, width, height, fieldConf
       )}
     >
       {options.updateUrl && (
-        <UpdateButton onUpdate={handleUpdate} updateUrl={options.updateUrl} lastUpdated={lastUpdated} />
+        <UpdateButton onUpdate={handleUpdate} canUpdate={Boolean(canUpdate)} lastUpdated={lastUpdated} />
       )}
       {breadCrumbs && <BreadCrumbs items={breadCrumbs} />}
       <h1 className={styles.header}>
@@ -111,7 +116,9 @@ export const Panel: React.FC<Props> = ({ options, data, width, height, fieldConf
       </h1>
       {<Range options={range?.options} lastId={range?.lastId} firstId={range?.firstId} />}
       <div className={styles.info}>
-        {info?.map((infoItem) => <InfoLine key={infoItem.name} {...infoItem} />)}
+        {info?.map((infoItem) => (
+          <InfoLine key={infoItem.name} {...infoItem} />
+        ))}
         {team && <InfoLine value={team} name="Team:" icon="fa6/FaUsersLine" />}
         {from && <InfoLine value={formatDate(from)} name="Start:" icon="fa6/FaCalendarDays" />}
         {till && <InfoLine value={formatDate(till)} name="End:" icon="fa6/FaCalendarDays" />}

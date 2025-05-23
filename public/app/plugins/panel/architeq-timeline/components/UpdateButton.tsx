@@ -7,7 +7,7 @@ import { Button, useStyles2 } from '@grafana/ui';
 import { formatRelativeDate } from '../utils';
 
 interface UpdateButtonProps {
-  updateUrl: string;
+  canUpdate: boolean;
   lastUpdated?: string;
   onUpdate?: () => void;
 }
@@ -28,15 +28,17 @@ const getStyles = (theme: GrafanaTheme2) => {
   };
 };
 
-export const UpdateButton: React.FC<UpdateButtonProps> = ({ updateUrl, lastUpdated, onUpdate }) => {
+export const UpdateButton: React.FC<UpdateButtonProps> = ({ canUpdate, lastUpdated, onUpdate }) => {
   const styles = useStyles2(getStyles);
 
   return (
     <div className={styles.buttonContainer}>
       {lastUpdated && <span className={styles.lastUpdatedText}>Last update: {formatRelativeDate(lastUpdated)}</span>}
-      <Button variant="primary" size="sm" onClick={onUpdate}>
-        Update
-      </Button>
+      {canUpdate && (
+        <Button variant="primary" size="sm" onClick={onUpdate}>
+          Update
+        </Button>
+      )}
     </div>
   );
 };
