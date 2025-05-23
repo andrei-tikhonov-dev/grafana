@@ -1,6 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
+import { HookFormDate } from '../../components/FormDate';
 import { HookFormField } from '../../components/FormField';
 import { FormFooter } from '../../components/FormFooter';
 import { HookFormSelect } from '../../components/FormSelect';
@@ -41,13 +42,7 @@ export const AddHoliday: React.FC<Props> = ({ onClose, onCreate, typeOptions }) 
         placeholder="Select a type"
       />
 
-      <HookFormField
-        name="date"
-        label="Holiday date"
-        form={form}
-        type="date"
-        rules={{ required: 'Holiday date is required' }}
-      />
+      <HookFormDate name="date" label="Holiday date" form={form} rules={{ required: 'Holiday date is required' }} />
 
       <FormFooter onClose={onClose} />
     </form>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
+import { HookFormDate } from '../../components/FormDate';
 import { HookFormField } from '../../components/FormField';
 import { FormFooter } from '../../components/FormFooter';
 
@@ -25,21 +26,14 @@ export const AddPiForm: React.FC<Props> = ({ onClose, onCreate }) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <HookFormField name={PiFields.PiName} label="Name" form={form} rules={{ required: 'Name is required' }} />
 
-      <HookFormField
+      <HookFormDate
         name={PiFields.StartDate}
         label="Start date"
         form={form}
-        type="date"
         rules={{ required: 'Start date is required' }}
       />
 
-      <HookFormField
-        name={PiFields.EndDate}
-        label="End date"
-        form={form}
-        type="date"
-        rules={{ required: 'End date is required' }}
-      />
+      <HookFormDate name={PiFields.EndDate} label="End date" form={form} rules={{ required: 'End date is required' }} />
 
       <FormFooter onClose={onClose} />
     </form>

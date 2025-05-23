@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import React, { useState, ChangeEvent } from 'react';
+import React, { ChangeEvent, useCallback, useMemo } from 'react';
 
 import { SelectableValue } from '@grafana/data';
 import { Input, MultiSelect, useStyles2 } from '@grafana/ui';
@@ -8,87 +8,103 @@ import { HeaderItem } from '../../components/HeaderItem';
 import { SprintPlaningColumns } from '../SprintPlaning/constants';
 
 import { CurrentSprintColumns } from './constants';
-import { Filters } from './types';
+import { CurrentSprintFiltersType } from './types';
 
 export const FILTER_HEIGHT = 45;
 
-const getStyles = () => {
-  return {
-    container: css`
-      display: flex;
-      gap: 2px;
-      margin-bottom: 20px;
-      max-width: 800px;
-    `,
-    input: css`
-      flex: 1;
-    `,
-  };
-};
+const getStyles = () => ({
+  container: css`
+    display: flex;
+    gap: 2px;
+    margin-bottom: 20px;
+    max-width: 1024px;
+  `,
+  input: css`
+    flex: 1;
+  `,
+});
 
 type Props = {
   assignees: string[];
   statuses: string[];
-  onChange: (filter: Filters) => void;
+  types: string[];
+  onChange: (filter: CurrentSprintFiltersType) => void;
+  filters: CurrentSprintFiltersType;
 };
 
-export const CurrentSprintFilters: React.FC<Props> = ({ assignees, statuses, onChange }) => {
-  const [filter, setFilter] = useState<Filters>({
-    teamMembers: [],
-    status: [],
-    search: '',
-  });
+type MultiSelectConfig = {
+  key: keyof Pick<CurrentSprintFiltersType, 'teamMembers' | 'status' | 'types'>;
+  options: string[];
+  placeholder: string;
+  filterValue: string[];
+};
+
+const createSelectOptions = (items: string[]): Array<SelectableValue<string>> =>
+  items.map((item) => ({ label: item, value: item }));
+
+export const CurrentSprintFilters: React.FC<Props> = ({ assignees, statuses, types, onChange, filters }) => {
   const styles = useStyles2(getStyles);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newFilter = { ...filter, search: e.target.value };
-    setFilter(newFilter);
-    onChange(newFilter);
-  };
+  const multiSelectConfigs: MultiSelectConfig[] = useMemo(
+    () => [
+      {
+        key: 'teamMembers',
+        options: assignees,
+        placeholder: SprintPlaningColumns.TeamMember,
+        filterValue: filters.teamMembers,
+      },
+      {
+        key: 'status',
+        options: statuses,
+        placeholder: CurrentSprintColumns.Status,
+        filterValue: filters.status,
+      },
+      {
+        key: 'types',
+        options: types,
+        placeholder: CurrentSprintColumns.Type,
+        filterValue: filters.types,
+      },
+    ],
+    [assignees, statuses, types, filters.teamMembers, filters.status, filters.types]
+  );
 
-  const handleAssigneesChange = (selected: Array<SelectableValue<string>>) => {
-    const selectedValues = selected.map((item) => item.value || '');
-    const newFilter = { ...filter, teamMembers: selectedValues };
-    setFilter(newFilter);
-    onChange(newFilter);
-  };
+  const handleMultiSelectChange = useCallback(
+    (key: MultiSelectConfig['key']) => (selected: Array<SelectableValue<string>>) => {
+      const selectedValues = selected.map((item) => item.value || '');
+      onChange({ ...filters, [key]: selectedValues });
+    },
+    [filters, onChange]
+  );
 
-  const handleStatusChange = (selected: Array<SelectableValue<string>>) => {
-    const selectedValues = selected.map((item) => item.value || '');
-    const newFilter = { ...filter, status: selectedValues };
-    setFilter(newFilter);
-    onChange(newFilter);
-  };
+  const handleInputChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      onChange({ ...filters, search: e.target.value });
+    },
+    [filters, onChange]
+  );
 
   return (
     <div className={styles.container}>
       <div className={styles.input}>
         <HeaderItem>
-          <Input value={filter.search} onChange={handleInputChange} placeholder="Search" />
+          <Input value={filters.search} onChange={handleInputChange} placeholder="Search" />
         </HeaderItem>
       </div>
-      <div className={styles.input}>
-        <HeaderItem>
-          <MultiSelect
-            options={assignees.map((teamMember) => ({ label: teamMember, value: teamMember }))}
-            value={filter.teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}
-            onChange={handleAssigneesChange}
-            placeholder={SprintPlaningColumns.TeamMember}
-            isClearable
-          />
-        </HeaderItem>
-      </div>
-      <div className={styles.input}>
-        <HeaderItem>
-          <MultiSelect
-            options={statuses.map((status) => ({ label: status, value: status }))}
-            value={filter.status.map((status) => ({ label: status, value: status }))}
-            onChange={handleStatusChange}
-            placeholder={CurrentSprintColumns.Status}
-            isClearable
-          />
-        </HeaderItem>
-      </div>
+
+      {multiSelectConfigs.map(({ key, options, placeholder, filterValue }) => (
+        <div key={key} className={styles.input}>
+          <HeaderItem>
+            <MultiSelect
+              options={createSelectOptions(options)}
+              value={createSelectOptions(filterValue)}
+              onChange={handleMultiSelectChange(key)}
+              placeholder={placeholder}
+              isClearable
+            />
+          </HeaderItem>
+        </div>
+      ))}
     </div>
   );
 };

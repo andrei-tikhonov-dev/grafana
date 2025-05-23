@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 
 import { Field } from '@grafana/ui';
 
+import { HookFormDate } from '../../components/FormDate';
 import { HookFormField } from '../../components/FormField';
 import { FormFooter } from '../../components/FormFooter';
 import { HookFormSwitch } from '../../components/FormSwitch';
@@ -107,9 +108,9 @@ export const AddUserForm: React.FC<Props> = ({ onClose, onCreate, roles: availab
         />
       </Field>
 
-      <HookFormField name="workStartDate" label="Start Date" form={form} type="date" />
+      <HookFormDate name="workStartDate" label="Start Date" form={form} />
 
-      <HookFormField name="workEndDate" label="End Date" form={form} type="date" />
+      <HookFormDate name="workEndDate" label="End Date" form={form} />
 
       <HookFormSwitch
         name="excludedFromCapacity"
