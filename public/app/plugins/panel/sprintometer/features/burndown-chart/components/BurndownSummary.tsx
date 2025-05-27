@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import React from 'react';
 
-import { Icon } from '../../../components/ui';
+import { UiIcon } from '../../../components/ui';
 import { IconName } from '../../../components/ui/icon/types';
 import { theme } from '../../../theme';
 import { BurndownSummaryType } from '../types';
@@ -119,7 +119,7 @@ export const BurndownSummary: React.FC<Props> = ({ name, summary, color }) => {
           <div key={label} className={styles.statColumn}>
             <div className={styles.statLabel}>
               <span className={icon.style}>
-                <Icon name={icon.name as IconName} />
+                <UiIcon name={icon.name as IconName} />
               </span>
               {label}:
             </div>

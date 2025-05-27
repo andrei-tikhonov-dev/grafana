@@ -14,6 +14,6 @@ const styles = {
   `,
 };
 
-export const Text: React.FC<TextProps> = ({ children }) => {
+export const UiText: React.FC<TextProps> = ({ children }) => {
   return <div className={styles.title}>{children}</div>;
 };

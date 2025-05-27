@@ -4,7 +4,7 @@ import React from 'react';
 import { JiraType } from '../../../types';
 import { toObjectKey } from '../../../utils/helpers';
 
-import { Icon } from './Icon';
+import { UiIcon } from './UiIcon';
 import { IconName, JiraTypeIconProps } from './types';
 
 const DEFAULT_COLOR = '#FFFFFF';
@@ -63,13 +63,13 @@ const getStyles = (name: JiraType) => {
   };
 };
 
-export const JiraTypeIcon: React.FC<JiraTypeIconProps> = ({ name, size = 'sm', ...props }) => {
+export const UiJiraTypeIcon: React.FC<JiraTypeIconProps> = ({ name, size = 'sm', ...props }) => {
   const iconName = toObjectKey<JiraType>(name);
   const styles = getStyles(iconName);
 
   return (
     <div className={styles.container}>
-      <Icon name={issueTypeIcons[iconName]} size={size} {...props} />
+      <UiIcon name={issueTypeIcons[iconName]} size={size} {...props} />
     </div>
   );
 };

@@ -21,3 +21,7 @@ export function capitalize(str: string): string {
   }
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
+
+export function isNullish(value: unknown): value is null | undefined {
+  return value == null;
+}

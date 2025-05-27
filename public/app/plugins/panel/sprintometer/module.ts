@@ -8,6 +8,7 @@ export const getPanelTypeOptions = async () => {
     { label: 'Empty panel', value: PanelType.EmptyPanel },
     { label: 'Burndown chart', value: PanelType.BurndownChart },
     { label: 'Incoming dependencies', value: PanelType.IncomingDependencies },
+    { label: 'Outgoing dependencies', value: PanelType.OutgoingDependencies },
     { label: 'Similar issues', value: PanelType.SimilarTasks },
   ]);
 };

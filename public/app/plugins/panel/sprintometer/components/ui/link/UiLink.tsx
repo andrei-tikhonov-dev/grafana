@@ -11,10 +11,11 @@ export interface TextProps {
 const styles = {
   link: css`
     color: ${theme.colors.semantic.link};
+    overflow: hidden;
   `,
 };
 
-export const Link: React.FC<TextProps> = ({ url, children }) => {
+export const UiLink: React.FC<TextProps> = ({ url, children }) => {
   return (
     <a className={styles.link} href={url} target="_blank" rel="noopener noreferrer">
       {children}

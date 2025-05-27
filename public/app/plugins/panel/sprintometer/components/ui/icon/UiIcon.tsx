@@ -467,7 +467,7 @@ export const icons = {
   Warning,
 };
 
-export const Icon: React.FC<IconProps> = ({ name, size, width, height, ...props }) => {
+export const UiIcon: React.FC<IconProps> = ({ name, size, width, height, ...props }) => {
   const IconComponent = icons[name] || icons['FiberManualRecord'];
 
   const sizeMap: Record<NonNullable<IconProps['size']>, string> = {

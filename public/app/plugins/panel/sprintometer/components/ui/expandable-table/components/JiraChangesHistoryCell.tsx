@@ -2,9 +2,10 @@ import { css, cx } from '@emotion/css';
 import React from 'react';
 
 import { theme } from '../../../../theme';
-import { Icon } from '../../icon/Icon';
-import { Tooltip } from '../../tooltip/Tooltip';
+import { UiIcon } from '../../icon/UiIcon';
+import { UiTooltip } from '../../tooltip/UiTooltip';
 
+import { DefaultCell } from './DefaultCell';
 import { CellProps } from './types';
 
 const baseStatusStyle = css`
@@ -43,13 +44,13 @@ const styles = {
   ),
 };
 
-export const JiraChangesHostoryCell: React.FC<CellProps> = ({ value }) => {
+export const JiraChangesHistoryCell: React.FC<CellProps> = ({ value }) => {
   if (value.previous === undefined || value.previous === null) {
-    return value.current;
+    return <DefaultCell value={value.current} />;
   }
 
   return (
-    <Tooltip
+    <UiTooltip
       content={
         <>
           <div>Now: {value.current}</div>
@@ -59,9 +60,9 @@ export const JiraChangesHostoryCell: React.FC<CellProps> = ({ value }) => {
     >
       <div className={styles.container}>
         <span className={styles.previous}>{value.previous}</span>
-        <Icon name="ArrowForward" />
+        <UiIcon name="ArrowForward" />
         <span className={styles.current}>{value.current}</span>
       </div>
-    </Tooltip>
+    </UiTooltip>
   );
 };

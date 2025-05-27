@@ -15,6 +15,7 @@ export const theme = {
       mint: '#6CCF8E',
     },
     semantic: {
+      tooltip: '#FFFFFF',
       link: '#0277B9',
       primary: '#EE522E',
       secondary: '#6634FA',

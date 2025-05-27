@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { icons } from './Icon';
+import { icons } from './UiIcon';
 
 type IconSize = 'sm' | 'md' | 'lg';
 

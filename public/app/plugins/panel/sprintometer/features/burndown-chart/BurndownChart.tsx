@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { PanelProps, SelectableValue } from '@grafana/data';
 import { MultiSelect, Select, Switch } from '@grafana/ui';
 
-import { Ellipsis } from '../../components/ui';
+import { UiEllipsis } from '../../components/ui';
 import { usePluginState } from '../../hooks/usePluginState';
 import { theme } from '../../theme';
 import { PanelOptions } from '../../types';
@@ -188,7 +188,7 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
             <ScopeChangesViewer daysData={daysData} />
           </div>
           <div className={styles.switchContainer}>
-            <Ellipsis>Show non-working days</Ellipsis>
+            <UiEllipsis>Show non-working days</UiEllipsis>
             <Switch value={showNonWorkingDays} onChange={handleShowNonWorkingDaysChange} />
           </div>
         </div>

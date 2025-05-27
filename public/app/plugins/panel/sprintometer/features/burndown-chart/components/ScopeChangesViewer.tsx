@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 
 import { Button, Drawer } from '@grafana/ui';
 
-import { Icon } from '../../../components/ui';
-import { Link } from '../../../components/ui/link/Link';
+import { UiIcon, UiLink } from '../../../components/ui';
 import { theme } from '../../../theme';
 import { formatDate } from '../../../utils/dateTime';
 import { toObjectKey } from '../../../utils/helpers';
@@ -74,19 +73,19 @@ const StatusIcon = ({ status }: { status: string }) => {
     case 'added':
       return (
         <span className={`${styles.status} ${styles.statusAdded}`}>
-          <Icon name="Add2" />
+          <UiIcon name="Add2" />
         </span>
       );
     case 'removed':
       return (
         <span className={`${styles.status} ${styles.statusRemoved}`}>
-          <Icon name="FolderClose" />
+          <UiIcon name="FolderClose" />
         </span>
       );
     default:
       return (
         <span className={`${styles.status} ${styles.statusOther}`}>
-          <Icon name="CheckCircle" />
+          <UiIcon name="CheckCircle" />
         </span>
       );
   }
@@ -123,7 +122,7 @@ export const ScopeChangesViewer: React.FC<Props> = ({ daysData }) => {
                   {day.scopeChanges.map((change, index) => (
                     <div key={`${change.issueKey}-${index}`} className={styles.changeItem}>
                       <StatusIcon status={toObjectKey(change.status)} />
-                      <Link url={change.url}>{change.issueKey}</Link>
+                      <UiLink url={change.url}>{change.issueKey}</UiLink>
                       <span className={styles.separator}>-</span>
                       <span className={styles.summary}>{change.summary}</span>
                     </div>

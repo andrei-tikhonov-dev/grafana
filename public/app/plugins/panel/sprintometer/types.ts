@@ -7,10 +7,12 @@ export enum ColumnType {
   User = 'user',
   Priority = 'priority',
   Team = 'team',
+  ART = 'art',
   Date = 'date',
   Number = 'number',
   Boolean = 'boolean',
   Sprint = 'sprint',
+  Changes = 'changes',
   Default = 'default',
 }
 
@@ -24,6 +26,7 @@ export interface PanelOptions {
 export const enum PanelType {
   BurndownChart = 'BurndownChart',
   IncomingDependencies = 'IncomingDependencies',
+  OutgoingDependencies = 'OutgoingDependencies',
   SimilarTasks = 'SimilarTasks',
   EmptyPanel = 'EmptyPanel',
 }

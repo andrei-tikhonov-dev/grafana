@@ -14,6 +14,6 @@ const styles = {
   `,
 };
 
-export const PanelTitle: React.FC<PanelTitleProps> = ({ children }) => {
+export const UiPanelTitle: React.FC<PanelTitleProps> = ({ children }) => {
   return <div className={styles.title}>{children}</div>;
 };

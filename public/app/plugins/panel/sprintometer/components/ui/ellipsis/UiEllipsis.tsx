@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import React, { useState, useRef, useEffect } from 'react';
 
-import { Tooltip } from '../tooltip/Tooltip';
+import { UiTooltip } from '../tooltip/UiTooltip';
 
 export interface EllipsisProps {
   children: React.ReactNode;
@@ -11,10 +11,6 @@ export interface EllipsisProps {
   className?: string;
   style?: React.CSSProperties;
   as?: keyof React.JSX.IntrinsicElements;
-  tooltipSide?: 'top' | 'right' | 'bottom' | 'left';
-  tooltipAlign?: 'start' | 'center' | 'end';
-  tooltipOffset?: number;
-  tooltipDelay?: number;
   allowSelection?: boolean;
 }
 
@@ -40,7 +36,7 @@ const getStyles = (lines = 1, allowSelection: boolean) => {
   };
 };
 
-export const Ellipsis: React.FC<EllipsisProps> = ({
+export const UiEllipsis: React.FC<EllipsisProps> = ({
   children,
   lines = 1,
   showTooltip = true,
@@ -48,10 +44,6 @@ export const Ellipsis: React.FC<EllipsisProps> = ({
   className,
   style,
   as = 'div',
-  tooltipSide = 'bottom',
-  tooltipAlign = 'center',
-  tooltipOffset = 5,
-  tooltipDelay = 300,
   allowSelection = true,
 }) => {
   const [isTruncated, setIsTruncated] = useState(false);
@@ -97,17 +89,10 @@ export const Ellipsis: React.FC<EllipsisProps> = ({
   }
 
   return (
-    <Tooltip
-      content={content}
-      side={tooltipSide}
-      align={tooltipAlign}
-      sideOffset={tooltipOffset}
-      delayDuration={tooltipDelay}
-      disabled={!isTruncated}
-    >
+    <UiTooltip content={content} disabled={!isTruncated}>
       <Component ref={textRef} className={css([styles.container, className])} style={style}>
         {children}
       </Component>
-    </Tooltip>
+    </UiTooltip>
   );
 };

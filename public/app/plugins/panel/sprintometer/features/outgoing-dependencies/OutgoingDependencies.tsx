@@ -3,14 +3,14 @@ import React from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { UiPanelTitle, UiText, UiExpandableTable } from '../../components/ui';
+import { UiPanelTitle, UiText, UiExpandableTable, renderCellContent } from '../../components/ui';
 import { theme } from '../../theme';
 import { PanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
-import { IncomingDependenciesCustomData } from './types';
+import { OutgoingArtDependenciesCustomData } from './types';
 
-interface IncomingDependenciesProps extends PanelProps<PanelOptions> {}
+interface Props extends PanelProps<PanelOptions> {}
 
 const styles = {
   wrapper: css`
@@ -41,19 +41,15 @@ const styles = {
   `,
 };
 
-const initialData: IncomingDependenciesCustomData = {
-  total: 0,
+const initialData: OutgoingArtDependenciesCustomData = {
   columns: [],
   innerColumns: [],
   data: [],
+  total: 0,
 };
 
-export const IncomingDependencies: React.FC<IncomingDependenciesProps> = ({ width, height, data: panelData }) => {
-  const { total, columns, innerColumns, data } = getGrafanaCustomData<IncomingDependenciesCustomData>(
-    panelData,
-    initialData
-  );
-  const initialExpandedRows = data.reduce((acc, row) => ({ ...acc, [row.id]: row.hasChanges }), {});
+export const OutgoingDependencies: React.FC<Props> = ({ width, height, data }) => {
+  const customData = getGrafanaCustomData<OutgoingArtDependenciesCustomData>(data, initialData);
 
   return (
     <div
@@ -65,15 +61,16 @@ export const IncomingDependencies: React.FC<IncomingDependenciesProps> = ({ widt
         `
       )}
     >
-      <UiPanelTitle>Incoming dependencies</UiPanelTitle>
-      <UiText>Issues that depend on other teams ({total})</UiText>
+      <UiPanelTitle>Outgoing dependencies</UiPanelTitle>
+      <UiText>Issues other teams depend on ({customData.total})</UiText>
 
       <div className={styles.content}>
         <UiExpandableTable
-          columns={columns}
-          innerColumns={innerColumns}
-          data={data}
-          initialExpandedRows={initialExpandedRows}
+          columns={customData.columns}
+          innerColumns={customData.innerColumns}
+          data={customData.data}
+          renderCell={renderCellContent}
+          disableExpand
         />
       </div>
     </div>

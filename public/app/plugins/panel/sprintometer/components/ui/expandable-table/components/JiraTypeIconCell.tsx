@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { JiraIssueType } from '../../../../types';
-import { JiraTypeIcon } from '../../icon/JiraTypeIcon';
-import { Tooltip } from '../../tooltip/Tooltip';
+import { UiJiraTypeIcon } from '../../icon/UiJiraTypeIcon';
+import { UiTooltip } from '../../tooltip/UiTooltip';
 
 import { CellProps } from './types';
 
@@ -15,10 +15,10 @@ export const JiraTypeIconCell: React.FC<JiraTypeIconCellProps> = ({ value }) => 
   const name = typeof value === 'string' ? value : value.type;
 
   return (
-    <Tooltip content={content}>
+    <UiTooltip content={content}>
       <span>
-        <JiraTypeIcon name={name} />
+        <UiJiraTypeIcon name={name} />
       </span>
-    </Tooltip>
+    </UiTooltip>
   );
 };

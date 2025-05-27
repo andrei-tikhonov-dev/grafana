@@ -1,13 +1,10 @@
-export { PanelTitle } from './panel-title/PanelTitle';
-export { Text } from './text/Text';
-export { Icon } from './icon/Icon';
-export { JiraTypeIcon } from './icon/JiraTypeIcon';
-export { Tooltip } from './tooltip/Tooltip';
-export { Ellipsis } from './ellipsis/Ellipsis';
+export { UiPanelTitle } from './panel-title/UiPanelTitle';
+export { UiText } from './text/UiText';
+export { UiIcon } from './icon/UiIcon';
+export { UiJiraTypeIcon } from './icon/UiJiraTypeIcon';
+export { UiTooltip } from './tooltip/UiTooltip';
+export { UiEllipsis } from './ellipsis/UiEllipsis';
+export { UiLink } from './link/UiLink';
 
-export { ExpandableTable } from './expandable-table/ExpandableTable';
-export { LinkCell } from './expandable-table/components/LinkCell';
-export { JiraChangesHostoryCell } from './expandable-table/components/JiraChangesHostoryCell';
-export { HasChangesCell } from './expandable-table/components/HasChangesCell';
-export { JiraTypeIconCell } from './expandable-table/components/JiraTypeIconCell';
+export { UiExpandableTable } from './expandable-table/UiExpandableTable';
 export { renderCellContent } from './expandable-table/renderCellContent';

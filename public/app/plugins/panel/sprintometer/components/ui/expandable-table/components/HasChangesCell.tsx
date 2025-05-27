@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { theme } from '../../../../theme';
-import { Icon } from '../../icon/Icon';
+import { UiIcon } from '../../icon/UiIcon';
 
 import { CellProps } from './types';
 
@@ -12,7 +12,7 @@ export const HasChangesCell: React.FC<CellProps> = ({ value }) => {
 
   return (
     <span style={{ color: theme.colors.semantic.warning }}>
-      <Icon name="Warning" size="md" />
+      <UiIcon name="Warning" size="md" />
     </span>
   );
 };
