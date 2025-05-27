@@ -13,12 +13,12 @@ export const CurrentSprint: React.FC<Props> = ({ options, data, width, height })
   const [filters, setFilters] = useState<CurrentSprintFiltersType>({ teamMembers: [], status: [], types: [] });
   const dataFrame = data.series[0];
   const configuredData = configCurrentSprintData(dataFrame);
+  const { assignees, statuses, types } = getFilterOptions(configuredData);
+  const filteredData = filterData(configuredData, filters);
+
   const handleOnChange = (filters: CurrentSprintFiltersType) => {
     setFilters(filters);
   };
-
-  const { assignees, statuses, types } = getFilterOptions(configuredData);
-  const filteredData = filterData(configuredData, filters);
 
   return (
     <>

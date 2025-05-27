@@ -27,6 +27,7 @@ export const enum TableType {
   HolidayPrefixes = 'HolidayPrefixes',
   RolesTool = 'RolesTool',
   GenericTable = 'GenericTable',
+  JiraStatusMapperTool = 'JiraStatusMapperTool',
 }
 
 export const enum RequestMethod {

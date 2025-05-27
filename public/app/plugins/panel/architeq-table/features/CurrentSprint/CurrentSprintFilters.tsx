@@ -5,6 +5,7 @@ import { SelectableValue } from '@grafana/data';
 import { Input, MultiSelect, useStyles2 } from '@grafana/ui';
 
 import { HeaderItem } from '../../components/HeaderItem';
+import { createSelectOptions } from '../../utils';
 import { SprintPlaningColumns } from '../SprintPlaning/constants';
 
 import { CurrentSprintColumns } from './constants';
@@ -38,9 +39,6 @@ type MultiSelectConfig = {
   placeholder: string;
   filterValue: string[];
 };
-
-const createSelectOptions = (items: string[]): Array<SelectableValue<string>> =>
-  items.map((item) => ({ label: item, value: item }));
 
 export const CurrentSprintFilters: React.FC<Props> = ({ assignees, statuses, types, onChange, filters }) => {
   const styles = useStyles2(getStyles);

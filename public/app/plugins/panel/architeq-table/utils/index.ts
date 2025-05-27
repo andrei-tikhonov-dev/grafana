@@ -1,4 +1,4 @@
-import { DataFrame, FieldConfig, FieldOverrideContext, getFieldDisplayName } from '@grafana/data';
+import { DataFrame, FieldConfig, FieldOverrideContext, getFieldDisplayName, SelectableValue } from '@grafana/data';
 import { TableCellDisplayMode } from '@grafana/ui';
 
 import { addActionsColumn } from '../components/cells';
@@ -52,6 +52,7 @@ export const getTableTypeOptions = async () => {
     { label: 'PI Admin Tool', value: TableType.PiAdminTool },
     { label: 'PI Names Tool', value: TableType.PiNamesTool },
     { label: 'Jira Boards Tool', value: TableType.JiraBoardsTool },
+    { label: 'Jira Status Mapper Tool', value: TableType.JiraStatusMapperTool },
     { label: 'Roles Tool', value: TableType.RolesTool },
     { label: 'Holiday Prefixes', value: TableType.HolidayPrefixes },
     { label: 'Holiday Prefixes', value: TableType.HolidayPrefixes },
@@ -158,12 +159,14 @@ export const getFieldConfig = (cellComponent: CellType, customOptions: CellCusto
 export function configureDataFrame(
   dataFrame: DataFrame,
   hiddenFields: string[] | undefined,
-  handleDelete: (rowIndex: number) => void,
+  handleDelete: ((rowIndex: number) => void) | null,
   fieldConfigs: Array<{ fields: string[]; config: ReturnType<typeof getFieldConfig> }>,
   isEditable?: (id: any) => boolean
 ): DataFrame {
   const visibleDataFrame = removeHiddenFields(dataFrame, hiddenFields);
-  const dataFrameWithActions = addActionsColumn(visibleDataFrame, handleDelete, isEditable);
+  const dataFrameWithActions = handleDelete
+    ? addActionsColumn(visibleDataFrame, handleDelete, isEditable)
+    : visibleDataFrame;
 
   return fieldConfigs.reduce((configuredData, { fields, config }) => {
     return updateFieldConfig(configuredData, fields, config);
@@ -194,4 +197,23 @@ export function joinUrls(baseUrl: string, path: string): string {
   const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
 
   return new URL(path, normalizedBaseUrl).toString();
+}
+
+export function getPayloadIDs(data: DataFrame, fieldName: string): { [index: number]: { id?: string } } {
+  const idField = data.fields.find((field) => field.name === fieldName);
+
+  const length = data.length;
+
+  return Object.fromEntries(
+    Array.from({ length }, (_, index) => [
+      index,
+      {
+        id: idField ? String(idField.values.get(index)) : undefined,
+      },
+    ])
+  );
+}
+
+export function createSelectOptions(items: string[]): SelectableValue<string>[] {
+  return items.map((item) => ({ label: item, value: item }));
 }

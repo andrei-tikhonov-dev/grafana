@@ -17,7 +17,12 @@ const ADMIN_TYPES = [
   TableType.RolesTool,
   TableType.JiraBoardsTool,
 ];
-const UPDATE_URL_TYPES = [TableType.HistoricalData, TableType.SprintPlaning, ...ADMIN_TYPES];
+const UPDATE_URL_TYPES = [
+  TableType.HistoricalData,
+  TableType.SprintPlaning,
+  TableType.JiraStatusMapperTool,
+  ...ADMIN_TYPES,
+];
 
 export const plugin = new PanelPlugin<PanelOptions>(TablePanel).setPanelOptions((builder) => {
   return builder
