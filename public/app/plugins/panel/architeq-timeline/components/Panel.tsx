@@ -80,7 +80,7 @@ export const Panel: React.FC<Props> = ({ options, data, width, height, fieldConf
     externalBoardId,
   } = panelData;
 
-  const { updateRequest } = useRequest({
+  const { updateRequest, loading } = useRequest({
     update: {
       url: options.updateUrl,
       method: RequestMethod.POST,
@@ -108,7 +108,12 @@ export const Panel: React.FC<Props> = ({ options, data, width, height, fieldConf
       )}
     >
       {options.updateUrl && (
-        <UpdateButton onUpdate={handleUpdate} canUpdate={Boolean(canUpdate)} lastUpdated={lastUpdated} />
+        <UpdateButton
+          onUpdate={handleUpdate}
+          canUpdate={Boolean(canUpdate)}
+          lastUpdated={lastUpdated}
+          loading={loading}
+        />
       )}
       {breadCrumbs && <BreadCrumbs items={breadCrumbs} />}
       <h1 className={styles.header}>

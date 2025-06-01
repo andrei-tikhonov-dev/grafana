@@ -51,3 +51,7 @@ export const formatRelativeDate = (dateString: string): string => {
 export const refreshAllPanels = (): void => {
   getAppEvents().publish(new RefreshEvent());
 };
+
+export function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
