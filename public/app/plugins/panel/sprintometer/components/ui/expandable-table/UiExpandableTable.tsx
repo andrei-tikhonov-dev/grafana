@@ -88,7 +88,6 @@ const tableStyles = {
     display: flex;
     align-items: center;
     color: ${theme.colors.semantic.textLite};
-    overflow: hidden;
   `,
   cellDisabled: css`
     padding: 8px;
@@ -120,6 +119,7 @@ const innerTableStyles = {
     grid-column: 1 / -1;
     padding: 16px;
     margin-bottom: 16px;
+    margin-right: 16px;
   `,
   wrapperExpand: css`
     padding-left: 90px;
@@ -133,7 +133,7 @@ const innerTableStyles = {
     display: grid;
     width: 100%;
     border: 1px solid ${theme.colors.border.weak};
-    overflow: hidden;
+    overflow: auto;
   `,
   row: css`
     background-color: white;

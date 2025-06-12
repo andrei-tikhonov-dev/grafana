@@ -1,13 +1,13 @@
 import {
-  JiraType,
-  JiraPriority,
+  JiraTypeEnum,
+  JiraPriorityEnum,
   ColumnMeta,
   Table,
-  ColumnType,
+  ColumnTypeEnum,
   Link,
   JiraChangesHistory,
-  User,
-  JiraIssueType,
+  UserInterface,
+  JiraIssueTypeData,
 } from '../../types';
 
 enum TeamIssueKey {
@@ -37,18 +37,18 @@ enum SimilarIssueKey {
 export interface TeamIssue {
   [TeamIssueKey.Id]: number;
   [TeamIssueKey.IssueKey]: Link;
-  [TeamIssueKey.IssueType]: JiraType | JiraIssueType;
+  [TeamIssueKey.IssueType]: JiraTypeEnum | JiraIssueTypeData;
   [TeamIssueKey.Summary]: string;
   [TeamIssueKey.Status]: JiraChangesHistory;
-  [TeamIssueKey.Assignee]: User;
-  [TeamIssueKey.Priority]: JiraPriority;
+  [TeamIssueKey.Assignee]: UserInterface;
+  [TeamIssueKey.Priority]: JiraPriorityEnum;
   [TeamIssueKey.SimilarTasks]: number;
   [TeamIssueKey.InnerData]: SimilarIssue[];
 }
 export interface SimilarIssue {
   [SimilarIssueKey.Id]: number;
   [SimilarIssueKey.IssueKey]: Link;
-  [SimilarIssueKey.IssueType]: JiraType | JiraIssueType;
+  [SimilarIssueKey.IssueType]: JiraTypeEnum | JiraIssueTypeData;
   [SimilarIssueKey.Summary]: string;
   [SimilarIssueKey.OwnerTeam]: string;
   [SimilarIssueKey.Status]: JiraChangesHistory;
@@ -63,36 +63,36 @@ const issuesColumns: ColumnMeta[] = [
   {
     key: TeamIssueKey.IssueKey,
     title: 'Issue key',
-    type: ColumnType.Link,
+    type: ColumnTypeEnum.Link,
   },
   {
     key: TeamIssueKey.IssueType,
-    type: ColumnType.IssueTypeIcon,
+    type: ColumnTypeEnum.IssueTypeIcon,
   },
   {
     key: TeamIssueKey.Summary,
     title: 'Summary',
-    type: ColumnType.Text,
+    type: ColumnTypeEnum.Text,
   },
   {
     key: TeamIssueKey.Priority,
     title: 'Priority',
-    type: ColumnType.Priority,
+    type: ColumnTypeEnum.Priority,
   },
   {
     key: TeamIssueKey.Assignee,
     title: 'Assignee',
-    type: ColumnType.User,
+    type: ColumnTypeEnum.User,
   },
   {
     key: TeamIssueKey.Status,
     title: 'Status',
-    type: ColumnType.IssueStatus,
+    type: ColumnTypeEnum.IssueStatus,
   },
   {
     key: TeamIssueKey.SimilarTasks,
     title: 'Similar issues',
-    type: ColumnType.Number,
+    type: ColumnTypeEnum.Number,
   },
 ];
 
@@ -100,41 +100,41 @@ const similarIssuesColumns: ColumnMeta[] = [
   {
     key: SimilarIssueKey.IssueKey,
     title: 'Issue key',
-    type: ColumnType.Link,
+    type: ColumnTypeEnum.Link,
   },
   {
     key: SimilarIssueKey.IssueType,
-    type: ColumnType.IssueTypeIcon,
+    type: ColumnTypeEnum.IssueTypeIcon,
   },
   {
     key: SimilarIssueKey.Summary,
     title: 'Summary',
-    type: ColumnType.Text,
+    type: ColumnTypeEnum.Text,
   },
   {
     key: SimilarIssueKey.OwnerTeam,
     title: 'Owner team',
-    type: ColumnType.Team,
+    type: ColumnTypeEnum.Team,
   },
   {
     key: SimilarIssueKey.Priority,
     title: 'Priority',
-    type: ColumnType.Priority,
+    type: ColumnTypeEnum.Priority,
   },
   {
     key: SimilarIssueKey.Status,
     title: 'Status',
-    type: ColumnType.IssueStatus,
+    type: ColumnTypeEnum.IssueStatus,
   },
   {
     key: SimilarIssueKey.Sprint,
     title: 'Planned sprint',
-    type: ColumnType.Sprint,
+    type: ColumnTypeEnum.Sprint,
   },
   {
     key: SimilarIssueKey.LastUpdate,
     title: 'Last update',
-    type: ColumnType.Date,
+    type: ColumnTypeEnum.Date,
   },
 ];
 
@@ -148,7 +148,7 @@ export const tempData: SimilarIssuesCustomData = {
         url: 'https://jira.company.com/browse/PROJ-123',
         text: 'PROJ-123',
       },
-      issueType: JiraType.Story,
+      issueType: JiraTypeEnum.Story,
       summary: 'Implement user authentication flow',
       status: {
         current: 'In Progress',
@@ -158,7 +158,7 @@ export const tempData: SimilarIssuesCustomData = {
         name: 'John Smith',
         avatar: 'https://avatars.company.com/john-smith.jpg',
       },
-      priority: JiraPriority.High,
+      priority: JiraPriorityEnum.High,
       similarTasks: 3,
       innerData: [
         {
@@ -167,7 +167,7 @@ export const tempData: SimilarIssuesCustomData = {
             url: 'https://jira.company.com/browse/PROJ-124',
             text: 'PROJ-124',
           },
-          issueType: JiraType.Story,
+          issueType: JiraTypeEnum.Story,
           summary: 'Design authentication API endpoints',
           ownerTeam: 'Backend Team',
           status: {
@@ -175,7 +175,7 @@ export const tempData: SimilarIssuesCustomData = {
             previous: null,
           },
           lastUpdate: '2025-05-01T10:30:45Z',
-          priority: JiraPriority.High,
+          priority: JiraPriorityEnum.High,
           sprint: {
             current: 'Sprint 24',
             previous: null,
@@ -187,7 +187,7 @@ export const tempData: SimilarIssuesCustomData = {
             url: 'https://jira.company.com/browse/PROJ-125',
             text: 'PROJ-125',
           },
-          issueType: JiraType.Story,
+          issueType: JiraTypeEnum.Story,
           summary: 'Create UI components for login form',
           ownerTeam: 'Frontend Team',
           status: {
@@ -195,7 +195,7 @@ export const tempData: SimilarIssuesCustomData = {
             previous: null,
           },
           lastUpdate: '2025-05-03T14:20:15Z',
-          priority: JiraPriority.Medium,
+          priority: JiraPriorityEnum.Medium,
           sprint: {
             current: 'Sprint 24',
             previous: null,
@@ -207,7 +207,7 @@ export const tempData: SimilarIssuesCustomData = {
             url: 'https://jira.company.com/browse/PROJ-126',
             text: 'PROJ-126',
           },
-          issueType: JiraType.Story,
+          issueType: JiraTypeEnum.Story,
           summary: 'Set up authentication service',
           ownerTeam: 'DevOps Team',
           status: {
@@ -215,7 +215,7 @@ export const tempData: SimilarIssuesCustomData = {
             previous: null,
           },
           lastUpdate: '2025-05-02T09:15:30Z',
-          priority: JiraPriority.High,
+          priority: JiraPriorityEnum.High,
           sprint: {
             current: 'Sprint 25',
             previous: null,
@@ -229,7 +229,7 @@ export const tempData: SimilarIssuesCustomData = {
         url: 'https://jira.company.com/browse/PROJ-456',
         text: 'PROJ-456',
       },
-      issueType: JiraType.Epic,
+      issueType: JiraTypeEnum.Epic,
       summary: 'Payment gateway integration',
       status: {
         current: 'To Do',
@@ -239,7 +239,7 @@ export const tempData: SimilarIssuesCustomData = {
         name: 'Emma Johnson',
         avatar: 'https://avatars.company.com/emma-johnson.jpg',
       },
-      priority: JiraPriority.Critical,
+      priority: JiraPriorityEnum.Critical,
       similarTasks: 3,
       innerData: [
         {
@@ -248,7 +248,7 @@ export const tempData: SimilarIssuesCustomData = {
             url: 'https://jira.company.com/browse/PROJ-457',
             text: 'PROJ-457',
           },
-          issueType: JiraType.Story,
+          issueType: JiraTypeEnum.Story,
           summary: 'Research payment gateway options',
           ownerTeam: 'Research Team',
           status: {
@@ -256,7 +256,7 @@ export const tempData: SimilarIssuesCustomData = {
             previous: null,
           },
           lastUpdate: '2025-04-28T16:45:22Z',
-          priority: JiraPriority.Highest,
+          priority: JiraPriorityEnum.Highest,
           sprint: {
             current: 'Sprint 23',
             previous: null,
@@ -268,7 +268,7 @@ export const tempData: SimilarIssuesCustomData = {
             url: 'https://jira.company.com/browse/PROJ-458',
             text: 'PROJ-458',
           },
-          issueType: JiraType.Story,
+          issueType: JiraTypeEnum.Story,
           summary: 'Implement payment gateway API connector',
           ownerTeam: 'Backend Team',
           status: {
@@ -276,7 +276,7 @@ export const tempData: SimilarIssuesCustomData = {
             previous: null,
           },
           lastUpdate: '2025-05-05T11:12:40Z',
-          priority: JiraPriority.Critical,
+          priority: JiraPriorityEnum.Critical,
           sprint: {
             current: 'Sprint 24',
             previous: null,
@@ -288,7 +288,7 @@ export const tempData: SimilarIssuesCustomData = {
             url: 'https://jira.company.com/browse/PROJ-459',
             text: 'PROJ-459',
           },
-          issueType: JiraType.Story,
+          issueType: JiraTypeEnum.Story,
           summary: 'Design payment confirmation UI',
           ownerTeam: 'UX Team',
           status: {
@@ -296,7 +296,7 @@ export const tempData: SimilarIssuesCustomData = {
             previous: null,
           },
           lastUpdate: '2025-05-06T13:25:10Z',
-          priority: JiraPriority.High,
+          priority: JiraPriorityEnum.High,
           sprint: {
             current: 'Sprint 25',
             previous: null,

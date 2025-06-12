@@ -1,3 +1,5 @@
+import { DateType } from '../types';
+
 export const formatFullDate = (date?: string): string => {
   if (!date) {
     return '';
@@ -21,6 +23,20 @@ export const formatDate = (date?: string): string => {
   const month = dateObj.toLocaleString('en-US', { month: 'short' });
 
   return `${day} ${month}`;
+};
+
+export const formatDayOfWeek = (date: DateType): string => {
+  return new Date(date).toLocaleDateString('en-US', { weekday: 'short' });
+};
+
+export const formatDay = (date?: string): string => {
+  if (!date) {
+    return '';
+  }
+
+  const dateObj = new Date(date);
+
+  return `${dateObj.getDate()}`;
 };
 
 export const formatRelativeDate = (dateString: string): string => {

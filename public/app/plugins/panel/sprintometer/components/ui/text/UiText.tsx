@@ -1,11 +1,9 @@
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import React from 'react';
 
 import { theme } from '../../../theme';
 
-export interface TextProps {
-  children?: React.ReactNode;
-}
+export interface TextProps extends React.ComponentProps<'div'> {}
 
 const styles = {
   title: css`
@@ -14,6 +12,6 @@ const styles = {
   `,
 };
 
-export const UiText: React.FC<TextProps> = ({ children }) => {
-  return <div className={styles.title}>{children}</div>;
+export const UiText: React.FC<TextProps> = ({ children, className }) => {
+  return <div className={cx(styles.title, className)}>{children}</div>;
 };

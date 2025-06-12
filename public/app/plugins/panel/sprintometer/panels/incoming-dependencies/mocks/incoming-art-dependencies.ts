@@ -1,34 +1,34 @@
-import { ColumnMeta, ColumnType, JiraType } from '../../../types';
+import { ColumnMeta, ColumnTypeEnum, JiraTypeEnum } from '../../../types';
 import { IncomingArtDependenciesCustomData, InnerArtIssueKey, OuterArtIssueKey } from '../types';
 
 const columns: ColumnMeta[] = [
   {
     key: OuterArtIssueKey.IssueKey,
     title: 'Feature key',
-    type: ColumnType.Link,
+    type: ColumnTypeEnum.Link,
   },
   {
     key: OuterArtIssueKey.IssueType,
-    type: ColumnType.IssueTypeIcon,
+    type: ColumnTypeEnum.IssueTypeIcon,
   },
   {
     key: OuterArtIssueKey.Summary,
     title: 'Summary',
-    type: ColumnType.Text,
+    type: ColumnTypeEnum.Text,
   },
   {
     key: OuterArtIssueKey.HasChanges,
-    type: ColumnType.HasChanges,
+    type: ColumnTypeEnum.HasChanges,
   },
   {
     key: OuterArtIssueKey.Status,
     title: 'Status',
-    type: ColumnType.IssueStatus,
+    type: ColumnTypeEnum.IssueStatus,
   },
   {
     key: OuterArtIssueKey.ActiveDependencies,
     title: 'Active dependencies',
-    type: ColumnType.Number,
+    type: ColumnTypeEnum.Number,
   },
 ];
 
@@ -36,51 +36,51 @@ const innerColumns: ColumnMeta[] = [
   {
     key: InnerArtIssueKey.IssueKey,
     title: 'Issue key',
-    type: ColumnType.Link,
+    type: ColumnTypeEnum.Link,
   },
   {
     key: InnerArtIssueKey.IssueType,
-    type: ColumnType.IssueTypeIcon,
+    type: ColumnTypeEnum.IssueTypeIcon,
   },
   {
     key: InnerArtIssueKey.Summary,
     title: 'Summary',
-    type: ColumnType.Text,
+    type: ColumnTypeEnum.Text,
   },
   {
     key: InnerArtIssueKey.HasChanges,
-    type: ColumnType.HasChanges,
+    type: ColumnTypeEnum.HasChanges,
   },
   {
     key: InnerArtIssueKey.OwnerArt,
     title: 'Owner ART',
-    type: ColumnType.Team,
+    type: ColumnTypeEnum.Team,
   },
   {
     key: InnerArtIssueKey.OwnerTeam,
     title: 'Owner team',
-    type: ColumnType.Team,
+    type: ColumnTypeEnum.Team,
   },
   {
     key: InnerArtIssueKey.Status,
     title: 'Status',
-    type: ColumnType.IssueStatus,
+    type: ColumnTypeEnum.IssueStatus,
   },
   {
     key: InnerArtIssueKey.FixedVersion,
     title: 'Fixed version',
-    type: ColumnType.Changes,
+    type: ColumnTypeEnum.Changes,
   },
   {
     key: InnerArtIssueKey.PlannedVersion,
     title: 'Planned version',
-    type: ColumnType.Changes,
+    type: ColumnTypeEnum.Changes,
     size: 'sm',
   },
   {
     key: InnerArtIssueKey.LastUpdate,
     title: 'Last update',
-    type: ColumnType.Date,
+    type: ColumnTypeEnum.Date,
     size: 'sm',
   },
 ];
@@ -96,7 +96,7 @@ export const data: IncomingArtDependenciesCustomData = {
         url: 'https://jira.company.com/browse/FEAT-789',
         text: 'FEAT-789',
       },
-      issueType: JiraType.Epic,
+      issueType: JiraTypeEnum.Epic,
       summary: 'Mobile app performance optimization',
       status: {
         current: 'In Progress',
@@ -111,7 +111,7 @@ export const data: IncomingArtDependenciesCustomData = {
             url: 'https://jira.company.com/browse/TECH-101',
             text: 'TECH-101',
           },
-          issueType: JiraType.Story,
+          issueType: JiraTypeEnum.Story,
           summary: 'Optimize database queries for mobile API',
           ownerTeam: 'Platform Team',
           ownerArt: 'Platform ART',
@@ -136,7 +136,7 @@ export const data: IncomingArtDependenciesCustomData = {
             url: 'https://jira.company.com/browse/TECH-102',
             text: 'TECH-102',
           },
-          issueType: JiraType.Story,
+          issueType: JiraTypeEnum.Story,
           summary: 'Implement image compression middleware',
           ownerTeam: 'Infrastructure Team',
           ownerArt: 'Platform ART',
@@ -163,7 +163,7 @@ export const data: IncomingArtDependenciesCustomData = {
         url: 'https://jira.company.com/browse/FEAT-890',
         text: 'FEAT-890',
       },
-      issueType: JiraType.Story,
+      issueType: JiraTypeEnum.Story,
       summary: 'Real-time notifications system',
       status: {
         current: 'Ready for Testing',
@@ -178,7 +178,7 @@ export const data: IncomingArtDependenciesCustomData = {
             url: 'https://jira.company.com/browse/INFRA-201',
             text: 'INFRA-201',
           },
-          issueType: JiraType.Story,
+          issueType: JiraTypeEnum.Story,
           summary: 'Setup WebSocket infrastructure',
           ownerTeam: 'DevOps Team',
           ownerArt: 'Infrastructure ART',
@@ -203,7 +203,7 @@ export const data: IncomingArtDependenciesCustomData = {
             url: 'https://jira.company.com/browse/INFRA-202',
             text: 'INFRA-202',
           },
-          issueType: JiraType.Task,
+          issueType: JiraTypeEnum.Task,
           summary: 'Configure push notification service',
           ownerTeam: 'Backend Team',
           ownerArt: 'Platform ART',
@@ -228,7 +228,7 @@ export const data: IncomingArtDependenciesCustomData = {
             url: 'https://jira.company.com/browse/INFRA-203',
             text: 'INFRA-203',
           },
-          issueType: JiraType.Story,
+          issueType: JiraTypeEnum.Story,
           summary: 'Implement notification preferences API',
           ownerTeam: 'API Team',
           ownerArt: 'Product ART',
@@ -255,7 +255,7 @@ export const data: IncomingArtDependenciesCustomData = {
         url: 'https://jira.company.com/browse/FEAT-991',
         text: 'FEAT-991',
       },
-      issueType: JiraType.Epic,
+      issueType: JiraTypeEnum.Epic,
       summary: 'Multi-language support implementation',
       status: {
         current: 'Planning',
@@ -270,7 +270,7 @@ export const data: IncomingArtDependenciesCustomData = {
             url: 'https://jira.company.com/browse/I18N-301',
             text: 'I18N-301',
           },
-          issueType: JiraType.Story,
+          issueType: JiraTypeEnum.Story,
           summary: 'Setup internationalization framework',
           ownerTeam: 'Frontend Team',
           ownerArt: 'UI/UX ART',

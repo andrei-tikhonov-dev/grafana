@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { JiraIssueType } from '../../../../types';
+import { JiraIssueTypeData } from '../../../../types';
 import { UiJiraTypeIcon } from '../../icon/UiJiraTypeIcon';
 import { UiTooltip } from '../../tooltip/UiTooltip';
 
 import { CellProps } from './types';
 
 export interface JiraTypeIconCellProps extends CellProps {
-  value: JiraIssueType['type'] | JiraIssueType;
+  value: JiraIssueTypeData['type'] | JiraIssueTypeData;
 }
 
 export const JiraTypeIconCell: React.FC<JiraTypeIconCellProps> = ({ value }) => {

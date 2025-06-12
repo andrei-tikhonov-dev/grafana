@@ -1,13 +1,17 @@
 import * as echarts from 'echarts';
 import { useEffect, useRef } from 'react';
 
-interface EChartsOptions {
+export const useEcharts = ({
+  width,
+  height,
+  option,
+  onLegendSelectChanged,
+}: {
   width?: number;
   height?: number;
   option: echarts.EChartsOption;
-}
-
-export const useEcharts = ({ width, height, option }: EChartsOptions) => {
+  onLegendSelectChanged?: (params: any) => void;
+}) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<echarts.ECharts | null>(null);
 
@@ -23,13 +27,20 @@ export const useEcharts = ({ width, height, option }: EChartsOptions) => {
     chartInstance.current.setOption(option);
     chartInstance.current.resize();
 
+    if (onLegendSelectChanged) {
+      chartInstance.current.on('legendselectchanged', onLegendSelectChanged);
+    }
+
     return () => {
       if (chartInstance.current) {
+        if (onLegendSelectChanged) {
+          chartInstance.current.off('legendselectchanged', onLegendSelectChanged);
+        }
         chartInstance.current.dispose();
         chartInstance.current = null;
       }
     };
-  }, [width, height, option]);
+  }, [width, height, option, onLegendSelectChanged]);
 
   useEffect(() => {
     if (chartInstance.current) {

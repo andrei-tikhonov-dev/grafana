@@ -1,4 +1,12 @@
-import { JiraType, JiraPriority, Table, User, Link, JiraChangesHistory, JiraIssueType } from '../../types';
+import {
+  JiraTypeEnum,
+  JiraPriorityEnum,
+  Table,
+  UserInterface,
+  Link,
+  JiraChangesHistory,
+  JiraIssueTypeData,
+} from '../../types';
 
 // ART types
 
@@ -31,7 +39,7 @@ export interface OuterArtIssue {
   [OuterArtIssueKey.Id]: number;
   [OuterArtIssueKey.HasChanges]: boolean;
   [OuterArtIssueKey.IssueKey]: Link;
-  [OuterArtIssueKey.IssueType]: JiraType | JiraIssueType;
+  [OuterArtIssueKey.IssueType]: JiraTypeEnum | JiraIssueTypeData;
   [OuterArtIssueKey.Summary]: string;
   [OuterArtIssueKey.Status]: JiraChangesHistory;
   [OuterArtIssueKey.ActiveDependencies]: number;
@@ -41,7 +49,7 @@ export interface InnerArtIssue {
   [InnerArtIssueKey.Id]: number;
   [InnerArtIssueKey.HasChanges]: boolean;
   [InnerArtIssueKey.IssueKey]: Link;
-  [InnerArtIssueKey.IssueType]: JiraType | JiraIssueType;
+  [InnerArtIssueKey.IssueType]: JiraTypeEnum | JiraIssueTypeData;
   [InnerArtIssueKey.Summary]: string;
   [InnerArtIssueKey.OwnerTeam]: string;
   [InnerArtIssueKey.OwnerArt]: string;
@@ -86,11 +94,11 @@ export interface OuterIssue {
   [OuterIssueKey.Id]: number;
   [OuterIssueKey.HasChanges]: boolean;
   [OuterIssueKey.IssueKey]: Link;
-  [OuterIssueKey.IssueType]: JiraType | JiraIssueType;
+  [OuterIssueKey.IssueType]: JiraTypeEnum | JiraIssueTypeData;
   [OuterIssueKey.Summary]: string;
   [OuterIssueKey.Status]: JiraChangesHistory;
-  [OuterIssueKey.Assignee]: User;
-  [OuterIssueKey.Priority]: JiraPriority;
+  [OuterIssueKey.Assignee]: UserInterface;
+  [OuterIssueKey.Priority]: JiraPriorityEnum;
   [OuterIssueKey.ActiveDependencies]: number;
   [OuterIssueKey.InnerData]: InnerIssue[];
 }
@@ -98,7 +106,7 @@ export interface InnerIssue {
   [InnerIssueKey.Id]: number;
   [InnerIssueKey.HasChanges]: boolean;
   [InnerIssueKey.IssueKey]: Link;
-  [InnerIssueKey.IssueType]: JiraType | JiraIssueType;
+  [InnerIssueKey.IssueType]: JiraTypeEnum | JiraIssueTypeData;
   [InnerIssueKey.Summary]: string;
   [InnerIssueKey.OwnerTeam]: string;
   [InnerIssueKey.Status]: JiraChangesHistory;

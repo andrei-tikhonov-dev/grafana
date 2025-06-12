@@ -1,4 +1,4 @@
-export enum ColumnType {
+export enum ColumnTypeEnum {
   Link = 'link',
   HasChanges = 'hasChanges',
   IssueTypeIcon = 'issueTypeIcon',
@@ -19,16 +19,18 @@ export enum ColumnType {
 export type ColumnSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
 
 export interface PanelOptions {
-  panelType: PanelType;
+  panelType: PanelTypeEnum;
   savedState: string;
 }
 
-export const enum PanelType {
+export const enum PanelTypeEnum {
   BurndownChart = 'BurndownChart',
+  CumulativeFlowDiagram = 'CumulativeFlowDiagram',
   IncomingDependencies = 'IncomingDependencies',
   OutgoingDependencies = 'OutgoingDependencies',
   SimilarTasks = 'SimilarTasks',
   EmptyPanel = 'EmptyPanel',
+  Header = 'Header',
 }
 
 export interface Table<Data, InnerData = unknown> {
@@ -39,7 +41,7 @@ export interface Table<Data, InnerData = unknown> {
 
 export interface ColumnMeta {
   key: string;
-  type: ColumnType;
+  type: ColumnTypeEnum;
 
   title?: string;
   hidden?: boolean;
@@ -50,7 +52,7 @@ export interface ColumnMeta {
   size?: ColumnSize;
 }
 
-export enum JiraPriority {
+export enum JiraPriorityEnum {
   Blocker = 'blocker',
   Critical = 'critical',
   Highest = 'highest',
@@ -61,7 +63,7 @@ export enum JiraPriority {
   Low = 'low',
 }
 
-export enum JiraType {
+export enum JiraTypeEnum {
   Story = 'story',
   Task = 'task',
   Bug = 'bug',
@@ -75,13 +77,34 @@ export enum JiraType {
   Incident = 'incident',
 }
 
-export interface JiraIssueType {
-  type: JiraType;
+export enum PanelStatusEnum {
+  Complete = 'Complete',
+  Good = 'Good',
+  OnTrack = 'OnTrack',
+  Warning = 'Warning',
+  Blocked = 'Blocked',
+  Critical = 'Critical',
+  ReadyForReview = 'ReadyForReview',
+  UnderControl = 'UnderControl',
+  MonitorClosely = 'MonitorClosely',
+  ExceededResources = 'ExceededResources',
+  PlentyResources = 'PlentyResources',
+}
+
+export interface JiraIssueTypeData {
+  type: JiraTypeEnum;
   name: string;
 }
 
+export type PanelStatusType = keyof typeof PanelStatusEnum;
+
+export type UrlType = string;
+
+// example: 2025-05-20T15:30:00Z
+export type DateType = string;
+
 export interface Link {
-  url: string;
+  url: UrlType;
   text: string;
 }
 
@@ -90,7 +113,16 @@ export interface JiraChangesHistory {
   previous?: string | null;
 }
 
-export interface User {
+export interface UserInterface {
   name: string;
-  avatar: string;
+  avatar?: string;
+  url?: UrlType;
 }
+
+export interface Period {
+  startDate: DateType;
+  endDate: DateType;
+  currentDate?: DateType;
+}
+
+export interface RequestInfo extends Record<string, any> {}

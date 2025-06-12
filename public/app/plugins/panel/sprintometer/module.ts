@@ -1,15 +1,17 @@
 import { PanelPlugin } from '@grafana/data';
 
 import { Panel } from './Panel';
-import { PanelOptions, PanelType } from './types';
+import { PanelOptions, PanelTypeEnum } from './types';
 
 export const getPanelTypeOptions = async () => {
   return Promise.resolve([
-    { label: 'Empty panel', value: PanelType.EmptyPanel },
-    { label: 'Burndown chart', value: PanelType.BurndownChart },
-    { label: 'Incoming dependencies', value: PanelType.IncomingDependencies },
-    { label: 'Outgoing dependencies', value: PanelType.OutgoingDependencies },
-    { label: 'Similar issues', value: PanelType.SimilarTasks },
+    { label: 'Empty panel', value: PanelTypeEnum.EmptyPanel },
+    { label: 'Header', value: PanelTypeEnum.Header },
+    { label: 'Burndown chart', value: PanelTypeEnum.BurndownChart },
+    { label: 'Cumulative flow diagram', value: PanelTypeEnum.CumulativeFlowDiagram },
+    { label: 'Incoming dependencies', value: PanelTypeEnum.IncomingDependencies },
+    { label: 'Outgoing dependencies', value: PanelTypeEnum.OutgoingDependencies },
+    { label: 'Similar issues', value: PanelTypeEnum.SimilarTasks },
   ]);
 };
 
@@ -20,7 +22,7 @@ export const plugin = new PanelPlugin<PanelOptions>(Panel).setPanelOptions((buil
       path: 'panelType',
       name: 'Panel type',
       description: 'Select the type of the panel.',
-      defaultValue: PanelType.EmptyPanel,
+      defaultValue: PanelTypeEnum.EmptyPanel,
       settings: {
         allowCustomValue: false,
         options: [],

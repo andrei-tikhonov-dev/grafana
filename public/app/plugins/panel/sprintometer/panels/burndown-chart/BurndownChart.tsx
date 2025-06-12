@@ -5,6 +5,7 @@ import { PanelProps, SelectableValue } from '@grafana/data';
 import { MultiSelect, Select, Switch } from '@grafana/ui';
 
 import { UiEllipsis } from '../../components/ui';
+import { useEcharts } from '../../hooks/useEcharts';
 import { usePluginState } from '../../hooks/usePluginState';
 import { theme } from '../../theme';
 import { PanelOptions } from '../../types';
@@ -20,7 +21,6 @@ import {
   PLACEHOLDER_SELECT_VALUE,
   STORY_POINTS_COLOR,
 } from './constants';
-import { useEcharts } from './hooks/useEcharts';
 import { BurndownCustomData, ValueMode } from './types';
 import { filterBurndownChartData, getChartOptions, prepareData } from './utils';
 

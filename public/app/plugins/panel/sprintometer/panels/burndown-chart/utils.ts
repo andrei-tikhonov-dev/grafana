@@ -24,6 +24,7 @@ import {
   TotalScopeChanges,
   ValueMode,
 } from './types';
+import { getCurrentDaySeries } from '../../utils/echarts';
 
 function groupScopeChangesByDayAndStatus(days: BurndownDayData[]): {
   scopeChanges: ScopeChanges;
@@ -348,30 +349,7 @@ export const getChartOptions = ({
           color,
         },
       },
-
-      {
-        name: 'Today',
-        type: 'line',
-        data: [],
-        markLine: {
-          symbol: 'none',
-          label: {
-            formatter: 'Today',
-            position: 'end',
-            color: theme.colors.semantic.text,
-          },
-          lineStyle: {
-            color: theme.colors.semantic.text,
-            width: 1,
-            type: 'dotted',
-          },
-          data: [
-            {
-              xAxis: currentDay,
-            },
-          ],
-        },
-      },
+      getCurrentDaySeries(currentDay),
     ],
   };
 };

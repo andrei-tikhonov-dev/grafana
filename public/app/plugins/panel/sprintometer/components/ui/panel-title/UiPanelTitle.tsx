@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import React from 'react';
 
-import { theme } from '../../../theme';
+import { theme2 } from '../../../theme/theme';
 
 export interface PanelTitleProps {
   children?: React.ReactNode;
@@ -9,8 +9,8 @@ export interface PanelTitleProps {
 
 const styles = {
   title: css`
-    font-size: ${theme.typography.h3.fontSize};
-    font-weight: ${theme.typography.h3.fontWeight};
+    font-size: ${theme2.typography.fontSize['3xl']};
+    font-weight: ${theme2.typography.fontWeight.medium};
   `,
 };
 
