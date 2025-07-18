@@ -1,16 +1,14 @@
 import { css } from '@emotion/css';
-import { cloneDeep } from 'lodash';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { GrafanaTheme2, locationUtil, textUtil } from '@grafana/data';
-import { Dropdown, ToolbarButton, useStyles2 } from '@grafana/ui';
+import { Dropdown, Icon, ToolbarButton, useStyles2 } from '@grafana/ui';
 import { config } from 'app/core/config';
 import { contextSrv } from 'app/core/core';
 import { useSelector } from 'app/types';
 
 import { Branding } from '../../Branding/Branding';
-import { enrichHelpItem } from '../MegaMenu/utils';
 import { NewsContainer } from '../News/NewsContainer';
 import { OrganizationSwitcher } from '../OrganizationSwitcher/OrganizationSwitcher';
 import { QuickAdd } from '../QuickAdd/QuickAdd';
@@ -24,9 +22,6 @@ export const TopSearchBar = React.memo(function TopSearchBar() {
   const styles = useStyles2(getStyles);
   const navIndex = useSelector((state) => state.navIndex);
   const location = useLocation();
-
-  const helpNode = cloneDeep(navIndex['help']);
-  const enrichedHelpNode = helpNode ? enrichHelpItem(helpNode) : undefined;
   const profileNode = navIndex['profile'];
 
   let homeUrl = config.appSubUrl || '/';
@@ -49,11 +44,9 @@ export const TopSearchBar = React.memo(function TopSearchBar() {
 
       <TopSearchBarSection align="right">
         <QuickAdd />
-        {enrichedHelpNode && (
-          <Dropdown overlay={() => <TopNavBarMenu node={enrichedHelpNode} />} placement="bottom-end">
-            <ToolbarButton iconOnly icon="question-circle" aria-label="Help" />
-          </Dropdown>
-        )}
+        <a href="https://www.sprintometer.ch/" target="_blank" rel="noopener noreferrer" title="About Sprintometer">
+          <Icon name="question-circle" size="lg" aria-label="About" />
+        </a>
         {config.newsFeedEnabled && <NewsContainer />}
         {!contextSrv.user.isSignedIn && <SignInLink />}
         {profileNode && (

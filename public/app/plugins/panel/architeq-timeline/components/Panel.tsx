@@ -7,7 +7,7 @@ import { useStyles2 } from '@grafana/ui';
 
 import { RequestMethod } from '../constants';
 import { useRequest } from '../hooks/useRequest';
-import { PanelOptions, PanelDataType, UpdateButtonPayload } from '../types';
+import { PanelOptions, PanelDataType } from '../types';
 import { formatDate } from '../utils';
 
 import { BreadCrumbs } from './BreadCrumbs';
@@ -76,25 +76,24 @@ export const Panel: React.FC<Props> = ({ options, data, width, height, fieldConf
     infoTimeline,
     range,
     statuses = [],
-    externalSprintId,
-    externalBoardId,
+    importUpdateLink,
+    buttonText,
   } = panelData;
 
   const { updateRequest, loading } = useRequest({
     update: {
-      url: options.updateUrl,
-      method: RequestMethod.POST,
+      url: importUpdateLink,
+      method: RequestMethod.GET,
     },
   });
 
-  const canUpdate = externalSprintId && externalBoardId;
+  const canUpdate = Boolean(importUpdateLink);
 
   const handleUpdate = async () => {
     if (!canUpdate) {
       return;
     }
-    const payload: UpdateButtonPayload = { externalSprintId, externalBoardId };
-    return updateRequest(payload);
+    return updateRequest(null);
   };
 
   return (
@@ -112,6 +111,7 @@ export const Panel: React.FC<Props> = ({ options, data, width, height, fieldConf
           onUpdate={handleUpdate}
           canUpdate={Boolean(canUpdate)}
           lastUpdated={lastUpdated}
+          buttonText={buttonText}
           loading={loading}
         />
       )}

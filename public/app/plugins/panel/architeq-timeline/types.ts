@@ -72,9 +72,9 @@ export interface PanelDataType {
   team?: string;
   from?: string;
   till?: string;
+  importUpdateLink?: string;
+  buttonText?: string;
   lastUpdated?: string;
-  externalBoardId?: number;
-  externalSprintId?: number;
   weeks?: WeekStatus[];
   breadCrumbs?: BreadCrumbType[];
   progress?: {
@@ -100,9 +100,4 @@ export type TableType<T = {}> = {
   meta: {
     custom: T;
   };
-};
-
-export type UpdateButtonPayload = {
-  externalSprintId: number;
-  externalBoardId: number;
 };

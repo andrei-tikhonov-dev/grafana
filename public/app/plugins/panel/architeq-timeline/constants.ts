@@ -5,6 +5,7 @@ export const enum RequestMethod {
   PATCH = 'PATCH',
   POST = 'POST',
   PUT = 'PUT',
+  GET = 'GET',
 }
 
 export const enum LoadingMode {

@@ -36,7 +36,7 @@ export function useRequest({ create, update, delete: deleteAction, preventReload
   const { notifyError, notifySuccess } = useNotifications();
   const { loading, setLoadingNone, setLoadingUpdate } = useLoading();
 
-  const performRequest = async (payload: any, action?: ActionOptionsType): Promise<boolean> => {
+  const performRequest = async (payload?: any, action?: ActionOptionsType): Promise<boolean> => {
     if (!action?.url || !action?.method) {
       notifyError(['Invalid request configuration.']);
       return false;
@@ -48,7 +48,7 @@ export function useRequest({ create, update, delete: deleteAction, preventReload
       const response = await fetch(action.url, {
         method: action.method,
         headers: generateHeaders(),
-        body: JSON.stringify(payload),
+        ...(payload ? { body: JSON.stringify(payload) } : {}),
       });
 
       if (!response.ok) {

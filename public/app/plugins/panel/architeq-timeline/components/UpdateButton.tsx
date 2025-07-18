@@ -10,6 +10,7 @@ import { LoadingMode } from '../constants';
 interface UpdateButtonProps {
   canUpdate: boolean;
   lastUpdated?: string;
+  buttonText?: string;
   loading: LoadingMode;
   onUpdate?: () => void;
 }
@@ -29,7 +30,13 @@ const getStyles = (theme: GrafanaTheme2) => ({
   `,
 });
 
-export const UpdateButton: React.FC<UpdateButtonProps> = ({ canUpdate, lastUpdated, onUpdate, loading }) => {
+export const UpdateButton: React.FC<UpdateButtonProps> = ({
+  canUpdate,
+  buttonText,
+  lastUpdated,
+  onUpdate,
+  loading,
+}) => {
   const styles = useStyles2(getStyles);
   const isLoading = loading !== LoadingMode.NONE;
 
@@ -52,7 +59,7 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({ canUpdate, lastUpdat
           onClick={onUpdate}
           disabled={isLoading}
         >
-          Update
+          {buttonText || 'Update'}
         </Button>
       )}
     </div>
