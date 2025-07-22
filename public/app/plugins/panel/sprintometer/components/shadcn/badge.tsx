@@ -2,109 +2,120 @@ import { css, cx } from '@emotion/css';
 import { Slot } from '@radix-ui/react-slot';
 import * as React from 'react';
 
-import { theme } from '../../theme';
+import { theme2 } from '../../theme/theme';
 
-// Base badge styles
-const badgeBaseStyles = css`
+const baseBadgeStyles = css`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.375rem;
+  border-radius: ${theme2.radii.md};
   border: 1px solid;
-  padding: 0.125rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-size: ${theme2.typography.fontSize.xs};
+  font-weight: ${theme2.typography.fontWeight.medium};
   width: fit-content;
   white-space: nowrap;
   flex-shrink: 0;
-  gap: 0.25rem;
-  transition: color, box-shadow;
+  gap: 4px;
   overflow: hidden;
-  outline: none;
+  transition:
+    color ${theme2.transitions.duration.normal},
+    box-shadow ${theme2.transitions.duration.normal};
 
   & > svg {
-    width: 0.75rem;
-    height: 0.75rem;
+    width: 12px;
+    height: 12px;
     pointer-events: none;
   }
 
   &:focus-visible {
-    border-color: ${theme.colors.semantic.ring};
-    box-shadow: 0 0 0 3px ${theme.colors.semantic.ring};
+    outline: none;
+    border-color: ${theme2.colors.brand.primary};
+    box-shadow: 0 0 0 3px rgba(238, 82, 46, 0.5);
   }
 
   &[aria-invalid='true'] {
-    border-color: ${theme.colors.semantic.destructive};
+    border-color: ${theme2.colors.semantic.error};
     box-shadow: 0 0 0 3px rgba(177, 38, 80, 0.2);
   }
 `;
 
-// Variant styles
-const badgeVariantStyles = {
-  default: css`
-    border-color: transparent;
-    background-color: ${theme.colors.semantic.primary};
-    color: ${theme.colors.semantic.texContrast};
+const defaultVariantStyles = css`
+  border-color: transparent;
+  background-color: ${theme2.colors.brand.primary};
+  color: ${theme2.colors.text.inverted};
 
-    a& {
-      &:hover {
-        background-color: ${theme.colors.semantic.primary}
-    }
-  `,
-  secondary: css`
-    border-color: transparent;
-    background-color: ${theme.colors.semantic.secondary};
-    color: ${theme.colors.semantic.texContrast};
+  a&:hover {
+    background-color: rgba(238, 82, 46, 0.9);
+  }
+`;
 
-    a& {
-      &:hover {
-        background-color: ${theme.colors.semantic.secondary};
-      }
-    }
-  `,
-  destructive: css`
-    border-color: transparent;
-    background-color: ${theme.colors.semantic.destructive};
-    color: #ffffff;
+const secondaryVariantStyles = css`
+  border-color: transparent;
+  background-color: ${theme2.colors.background.muted};
+  color: ${theme2.colors.text.primary};
 
-    a& {
-      &:hover {
-        background-color: ${theme.colors.semantic.destructive}
-    }
+  a&:hover {
+    background-color: rgba(243, 244, 246, 0.9);
+  }
+`;
 
-    &:focus-visible {
-      box-shadow: 0 0 0 3px rgba(177, 38, 80, 0.2);
-    }
-  `,
-  outline: css`
-    border-color: ${theme.colors.semantic.border || '#e5e7eb'};
-    background-color: transparent;
-    color: ${theme.colors.semantic.text || '#212226'};
+const destructiveVariantStyles = css`
+  border-color: transparent;
+  background-color: ${theme2.colors.semantic.error};
+  color: ${theme2.colors.text.inverted};
 
-    a& {
-      &:hover {
-        background-color: ${theme.colors.action?.hover || 'rgba(36, 41, 46, 0.12)'};
-        color: ${theme.colors.text?.primary || 'rgba(36, 41, 46, 1)'};
-      }
-    }
-  `,
+  a&:hover {
+    background-color: rgba(177, 38, 80, 0.9);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px rgba(177, 38, 80, 0.2);
+  }
+`;
+
+const outlineVariantStyles = css`
+  color: ${theme2.colors.text.primary};
+  border-color: ${theme2.colors.border.default};
+
+  a&:hover {
+    background-color: ${theme2.colors.background.muted};
+    color: ${theme2.colors.text.primary};
+  }
+`;
+
+const getBadgeVariantStyles = (variant: string) => {
+  switch (variant) {
+    case 'secondary':
+      return secondaryVariantStyles;
+    case 'destructive':
+      return destructiveVariantStyles;
+    case 'outline':
+      return outlineVariantStyles;
+    default:
+      return defaultVariantStyles;
+  }
 };
 
-// Type definitions for variants
-type BadgeVariant = keyof typeof badgeVariantStyles;
+type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline';
 
-interface BadgeProps extends React.ComponentProps<'span'> {
+function Badge({
+  className,
+  variant = 'default',
+  asChild = false,
+  ...props
+}: React.ComponentProps<'span'> & {
   variant?: BadgeVariant;
   asChild?: boolean;
-}
-
-function Badge({ className, variant = 'default', asChild = false, ...props }: BadgeProps) {
+}) {
   const Comp = asChild ? Slot : 'span';
 
-  const combinedStyles = cx(badgeBaseStyles, badgeVariantStyles[variant], className);
-
-  return <Comp data-slot="badge" className={combinedStyles} {...props} />;
+  return (
+    <Comp data-slot="badge" className={cx(baseBadgeStyles, getBadgeVariantStyles(variant), className)} {...props} />
+  );
 }
 
 export { Badge };
-export type { BadgeProps, BadgeVariant };

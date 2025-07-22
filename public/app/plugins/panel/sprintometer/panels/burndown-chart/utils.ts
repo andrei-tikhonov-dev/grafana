@@ -3,6 +3,7 @@ import { MarkArea2DDataItemOption } from 'echarts/types/src/component/marker/Mar
 
 import { theme } from '../../theme';
 import { formatDate } from '../../utils/dateTime';
+import { getCurrentPeriodSeries } from '../../utils/echarts';
 import { capitalize } from '../../utils/helpers';
 
 import {
@@ -24,7 +25,6 @@ import {
   TotalScopeChanges,
   ValueMode,
 } from './types';
-import { getCurrentDaySeries } from '../../utils/echarts';
 
 function groupScopeChangesByDayAndStatus(days: BurndownDayData[]): {
   scopeChanges: ScopeChanges;
@@ -349,7 +349,7 @@ export const getChartOptions = ({
           color,
         },
       },
-      getCurrentDaySeries(currentDay),
+      getCurrentPeriodSeries(currentDay),
     ],
   };
 };

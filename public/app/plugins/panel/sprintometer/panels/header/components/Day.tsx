@@ -1,9 +1,10 @@
 import { css, cx } from '@emotion/css';
 import * as React from 'react';
 
+import { Popover, PopoverContent, PopoverTrigger } from '../../../components/shadcn/popover';
 import { theme2 } from '../../../theme/theme';
 import { DateType } from '../../../types';
-import { formatDay, formatDayOfWeek } from '../../../utils/dateTime';
+import { formatDay, formatDayOfWeek, formatFullDate } from '../../../utils/dateTime';
 import { EventInterface, EventTypeEnum } from '../types';
 
 const CIRCLE_OVERLAP_OFFSET = -3;
@@ -165,13 +166,22 @@ function Day({ className, variant = 'default', date, events = [], ...props }: Da
   const visibleCircles = getVisibleCircles(uniqueEventTypes);
 
   return (
-    <div className={dayWrapperStyles}>
-      <div className={dayOfWeekStyles}>{dayOfWeek}</div>
-      <div className={combinedStyles} {...props}>
-        {formatDay(date)}
-        <CircleGroup visibleCircles={visibleCircles} />
-      </div>
-    </div>
+    <Popover>
+      <PopoverTrigger asChild>
+        <div className={dayWrapperStyles}>
+          <div className={dayOfWeekStyles}>{dayOfWeek}</div>
+          <div className={combinedStyles} {...props}>
+            {formatDay(date)}
+            <CircleGroup visibleCircles={visibleCircles} />
+          </div>
+        </div>
+      </PopoverTrigger>
+      <PopoverContent>
+        <div>
+          <strong>{formatFullDate(date)}</strong>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
 

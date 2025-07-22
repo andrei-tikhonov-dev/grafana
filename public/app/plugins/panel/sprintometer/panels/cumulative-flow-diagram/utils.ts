@@ -4,15 +4,16 @@ import { SelectableValue } from '@grafana/data';
 
 import { theme } from '../../theme';
 import { formatDate } from '../../utils/dateTime';
-import { getCurrentDaySeries } from '../../utils/echarts';
+import { getCurrentPeriodSeries } from '../../utils/echarts';
 
 import {
   CumulativeFlowDiagramAggregatedData,
   CumulativeFlowDiagramFilteredData,
   CumulativeFlowDiagramData,
-  CumulativeFlowDiagramDayData,
+  CumulativeFlowDiagramPeriodData,
   CumulativeFlowDiagramPreparedData,
   CumulativeFlowDiagramStructuredData,
+  PeriodType,
 } from './types';
 
 const transformStructuredDataToAggregated = (
@@ -30,9 +31,10 @@ const transformStructuredDataToAggregated = (
 };
 
 export function prepareData({
-  days,
+  periods,
   issueTypes,
-  currentDate,
+  currentPeriod,
+  periodType,
 }: CumulativeFlowDiagramData): CumulativeFlowDiagramPreparedData {
   const issueOptions = issueTypes.map(({ name }) => ({
     label: name,
@@ -42,34 +44,37 @@ export function prepareData({
   const valueOptions: Array<SelectableValue<string>> = [];
 
   return {
-    currentDay: formatDate(currentDate),
+    currentPeriod: periodType === 'date' ? formatDate(currentPeriod) : currentPeriod,
     data: transformStructuredDataToAggregated(issueTypes),
-    daysData: days,
+    periodType,
+    periodsData: periods,
     issueOptions,
     statusOptions: valueOptions,
   };
 }
 
 type FilterDataArgs = {
-  daysData: CumulativeFlowDiagramDayData[];
+  periodsData: CumulativeFlowDiagramPeriodData[];
   data: CumulativeFlowDiagramAggregatedData;
   selectedIssues: string[];
+  periodType: PeriodType;
 };
 
 export const filterCumulativeFlowDiagramData = ({
   data,
   selectedIssues,
-  daysData,
+  periodsData,
+  periodType,
 }: FilterDataArgs): CumulativeFlowDiagramFilteredData => {
   const keysToUse =
     selectedIssues.length === 0
       ? Object.keys(data.issuesAmount)
       : selectedIssues.filter((name) => data.issuesAmount[name]);
 
-  const days = daysData.map(({ date }) => formatDate(date));
+  const periods = periodsData.map(({ value }) => (periodType === 'date' ? formatDate(value) : value));
 
   if (keysToUse.length === 0) {
-    return { filteredData: [], days };
+    return { filteredData: [], periods: periods };
   }
 
   const firstIssueKey = keysToUse[0];
@@ -86,7 +91,7 @@ export const filterCumulativeFlowDiagramData = ({
     };
   });
 
-  return { filteredData, days };
+  return { filteredData, periods: periods };
 };
 
 function aggregateValues(arrays: number[][]): number[] {
@@ -123,15 +128,15 @@ const formatSeries = (data: number[], name: string): any => {
 
 interface DiagramOptions {
   data: Array<{ data: number[]; name: string }>;
-  days: string[];
-  currentDay: string;
+  periods: string[];
+  currentPeriod: string;
   selected: Record<string, boolean>;
 }
 
 export const getCumulativeFlowDiagramOptions = ({
   data,
-  days,
-  currentDay,
+  periods,
+  currentPeriod,
   selected,
 }: DiagramOptions): echarts.EChartsOption => {
   return {
@@ -163,7 +168,7 @@ export const getCumulativeFlowDiagramOptions = ({
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: days,
+      data: periods,
       axisLabel: {
         color: theme.colors.semantic.text,
       },
@@ -185,6 +190,9 @@ export const getCumulativeFlowDiagramOptions = ({
         },
       },
     },
-    series: [...data.map(({ data: values, name }) => formatSeries(values, name)), getCurrentDaySeries(currentDay)],
+    series: [
+      ...data.map(({ data: values, name }) => formatSeries(values, name)),
+      getCurrentPeriodSeries(currentPeriod),
+    ],
   };
 };

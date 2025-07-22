@@ -1,7 +1,7 @@
 import { theme } from '../theme';
 
-export function getCurrentDaySeries(currentDay?: string, name = 'Today'): any {
-  if (!currentDay) {
+export function getCurrentPeriodSeries(currentPeriod?: string, name = 'Now'): any {
+  if (!currentPeriod) {
     return null;
   }
   return {
@@ -22,7 +22,7 @@ export function getCurrentDaySeries(currentDay?: string, name = 'Today'): any {
       },
       data: [
         {
-          xAxis: currentDay,
+          xAxis: currentPeriod,
         },
       ],
     },

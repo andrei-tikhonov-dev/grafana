@@ -1,7 +1,9 @@
 import { SelectableValue } from '@grafana/data';
 
-export type CumulativeFlowDiagramDayData = {
-  date: string;
+export type PeriodType = 'date' | 'string';
+
+export type CumulativeFlowDiagramPeriodData = {
+  value: string;
 };
 
 export type CumulativeFlowDiagramStructuredData = {
@@ -10,8 +12,9 @@ export type CumulativeFlowDiagramStructuredData = {
 };
 
 export interface CumulativeFlowDiagramData {
-  currentDate: string;
-  days: CumulativeFlowDiagramDayData[];
+  periodType: PeriodType;
+  currentPeriod: string;
+  periods: CumulativeFlowDiagramPeriodData[];
   issueTypes: CumulativeFlowDiagramStructuredData[];
 }
 
@@ -20,14 +23,15 @@ export type CumulativeFlowDiagramAggregatedData = {
 };
 
 export interface CumulativeFlowDiagramPreparedData {
-  daysData: CumulativeFlowDiagramDayData[];
-  currentDay: string;
+  periodsData: CumulativeFlowDiagramPeriodData[];
+  currentPeriod: string;
   issueOptions: Array<SelectableValue<string>>;
   statusOptions: Array<SelectableValue<string>>;
+  periodType: PeriodType;
   data: CumulativeFlowDiagramAggregatedData;
 }
 
 export type CumulativeFlowDiagramFilteredData = {
   filteredData: Array<{ data: number[]; name: string }>;
-  days: string[];
+  periods: string[];
 };

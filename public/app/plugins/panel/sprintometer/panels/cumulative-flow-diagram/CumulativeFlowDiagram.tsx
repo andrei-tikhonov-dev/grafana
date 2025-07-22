@@ -49,8 +49,9 @@ const styles = {
 };
 
 const initialData: CumulativeFlowDiagramData = {
-  currentDate: '',
-  days: [],
+  periodType: 'string',
+  currentPeriod: '',
+  periods: [],
   issueTypes: [],
 };
 
@@ -76,25 +77,26 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
 
   const customData = getGrafanaCustomData<CumulativeFlowDiagramData>(panelData, initialData);
 
-  const { daysData, currentDay, issueOptions, data } = useMemo(() => {
+  const { periodsData, currentPeriod, issueOptions, data, periodType } = useMemo(() => {
     return prepareData(customData);
   }, [customData]);
 
-  const { filteredData, days } = filterCumulativeFlowDiagramData({
+  const { filteredData, periods } = filterCumulativeFlowDiagramData({
     data,
     selectedIssues,
-    daysData,
+    periodsData,
+    periodType,
   });
 
   const option = useMemo(
     () =>
       getCumulativeFlowDiagramOptions({
         data: filteredData,
-        days,
-        currentDay,
+        periods,
+        currentPeriod,
         selected: selectedStatuses,
       }),
-    [filteredData, currentDay, days, selectedStatuses]
+    [filteredData, currentPeriod, periods, selectedStatuses]
   );
 
   const handleStatusesChange = ({ selected }: { selected: Record<string, boolean> }) => {

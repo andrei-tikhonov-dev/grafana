@@ -31,6 +31,7 @@ export const enum PanelTypeEnum {
   SimilarTasks = 'SimilarTasks',
   EmptyPanel = 'EmptyPanel',
   Header = 'Header',
+  ComponentsLibrary = 'ComponentsLibrary',
 }
 
 export interface Table<Data, InnerData = unknown> {
@@ -126,3 +127,9 @@ export interface Period {
 }
 
 export interface RequestInfo extends Record<string, any> {}
+
+export interface ZeroStateInterface {
+  title: string;
+  description: string;
+  link: Link;
+}

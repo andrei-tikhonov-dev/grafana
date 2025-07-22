@@ -11,3 +11,6 @@ export { UiCard } from './card/UiCard';
 
 export { UiExpandableTable } from './expandable-table/UiExpandableTable';
 export { renderCellContent } from './expandable-table/renderCellContent';
+
+export { UiSelect } from './select/UiSelect';
+export { UiMultiSelect } from './select/UiMultiSelect';

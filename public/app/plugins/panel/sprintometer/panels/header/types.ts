@@ -1,8 +1,9 @@
-import { DateType, PanelStatusType, UserInterface } from '../../types';
+import { DateType, PanelStatusType, UserInterface, ZeroStateInterface } from '../../types';
 
 export interface HeaderCustomDataInterface extends Record<string, any> {
   timeline?: TimelineInterface;
   requestInfo?: { externalBoardId?: number; externalSprintId?: number };
+  zeroState?: ZeroStateInterface;
 }
 
 export enum EventTypeEnum {

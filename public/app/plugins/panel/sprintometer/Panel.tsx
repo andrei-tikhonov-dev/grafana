@@ -3,11 +3,15 @@ import React from 'react';
 import { PanelProps } from '@grafana/data';
 
 import { BurndownChart } from './panels/burndown-chart';
+import { ComponentsLibrary } from './panels/components-library';
+import { CumulativeFlowDiagram } from './panels/cumulative-flow-diagram';
+import { Header } from './panels/header';
 import { IncomingDependencies } from './panels/incoming-dependencies';
+import { OutgoingDependencies } from './panels/outgoing-dependencies';
 import { SimilarIssues } from './panels/similar-issues';
 import { PanelOptions, PanelTypeEnum } from './types';
-import { OutgoingDependencies } from './panels/outgoing-dependencies';
-import { CumulativeFlowDiagram } from './panels/cumulative-flow-diagram';
+
+import './theme/default.css';
 
 interface Props extends PanelProps<PanelOptions> {}
 
@@ -18,7 +22,8 @@ const Panels = {
   [PanelTypeEnum.IncomingDependencies]: IncomingDependencies,
   [PanelTypeEnum.OutgoingDependencies]: OutgoingDependencies,
   [PanelTypeEnum.SimilarTasks]: SimilarIssues,
-  [PanelTypeEnum.Header]: () => <div>In development...</div>,
+  [PanelTypeEnum.Header]: Header,
+  [PanelTypeEnum.ComponentsLibrary]: ComponentsLibrary,
 };
 
 export const Panel: React.FC<Props> = (props) => {

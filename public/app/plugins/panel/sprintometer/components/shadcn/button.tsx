@@ -2,36 +2,27 @@ import { css, cx } from '@emotion/css';
 import { Slot } from '@radix-ui/react-slot';
 import * as React from 'react';
 
-import { theme } from '../../theme';
+import { theme2 } from '../../theme/theme';
 
-// Base button styles
-const buttonBaseStyles = css`
-  border: none;
+const baseButtonStyles = css`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 8px;
   white-space: nowrap;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
-  outline: none;
+  border-radius: ${theme2.radii.md};
+  font-size: ${theme2.typography.fontSize.sm};
+  font-weight: ${theme2.typography.fontWeight.medium};
+  transition: all ${theme2.transitions.duration.normal};
   flex-shrink: 0;
+  outline: none;
+  border: 1px solid transparent;
+  cursor: pointer;
 
   &:disabled {
     pointer-events: none;
     opacity: 0.5;
-  }
-
-  &:focus-visible {
-    border-color: ${theme.colors.semantic.ring};
-    box-shadow: 0 0 0 3px ${theme.colors.semantic.ring};
-  }
-
-  &[aria-invalid='true'] {
-    border-color: ${theme.colors.semantic.destructive};
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+    cursor: not-allowed;
   }
 
   & svg {
@@ -40,126 +31,144 @@ const buttonBaseStyles = css`
   }
 
   & svg:not([class*='size-']) {
-    width: 1rem;
-    height: 1rem;
+    width: 16px;
+    height: 16px;
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: ${theme2.colors.brand.primary};
+    box-shadow: 0 0 0 3px rgba(238, 82, 46, 0.5);
+  }
+
+  &[aria-invalid='true'] {
+    border-color: ${theme2.colors.semantic.error};
+    box-shadow: 0 0 0 3px rgba(177, 38, 80, 0.2);
   }
 `;
 
-// Variant styles
-const buttonVariantStyles = {
+const createHoverStyles = (backgroundColor: string) => css`
+  &:hover:not(:disabled) {
+    background-color: ${backgroundColor};
+  }
+`;
+
+const variantStyles = {
   default: css`
-    background-color: ${theme.colors.semantic.primary};
-    color: ${theme.colors.semantic.texContrast};
-    box-shadow: ${theme.shadows.z1};
-
-    &:hover:not(:disabled) {
-      background-color: ${theme.colors.semantic.primary};
-    }
+    background-color: ${theme2.colors.brand.primary};
+    color: ${theme2.colors.text.inverted};
+    box-shadow: ${theme2.shadows.xs};
+    ${createHoverStyles('rgba(238, 82, 46, 0.9)')}
   `,
-  destructive: css`
-    background-color: ${theme.colors.semantic.destructive};
-    color: ${theme.colors.semantic.texContrast};
-    box-shadow: ${theme.shadows.z1};
 
-    &:hover:not(:disabled) {
-      background-color: ${theme.colors.semantic.destructive};
-    }
+  destructive: css`
+    background-color: ${theme2.colors.semantic.error};
+    color: ${theme2.colors.text.inverted};
+    box-shadow: ${theme2.shadows.xs};
+    ${createHoverStyles('rgba(177, 38, 80, 0.9)')}
 
     &:focus-visible {
-      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+      box-shadow: 0 0 0 3px rgba(177, 38, 80, 0.2);
     }
   `,
+
   outline: css`
-    border: 1px solid ${theme.colors.semantic.border};
-    background-color: ${theme.colors.semantic.background};
-    box-shadow: ${theme.shadows.z1};
+    border: 1px solid ${theme2.colors.border.default};
+    background-color: ${theme2.colors.background.surface};
+    box-shadow: ${theme2.shadows.xs};
 
     &:hover:not(:disabled) {
-      background-color: ${theme.colors.semantic.background};
-      color: ${theme.colors.semantic.textLite};
+      background-color: ${theme2.colors.background.muted};
+      color: ${theme2.colors.text.primary};
     }
   `,
+
   secondary: css`
-    background-color: ${theme.colors.semantic.secondary};
-    color: ${theme.colors.semantic.texContrast};
-    box-shadow: ${theme.shadows.z1};
+    background-color: ${theme2.colors.brand.secondary};
+    color: ${theme2.colors.text.inverted};
+    box-shadow: ${theme2.shadows.xs};
+    ${createHoverStyles(theme2.colors.brand.accent)}
+  `,
+
+  ghost: css`
+    background-color: transparent;
 
     &:hover:not(:disabled) {
-      background-color: ${theme.colors.semantic.secondary};
+      background-color: ${theme2.colors.background.muted};
+      color: ${theme2.colors.text.primary};
     }
   `,
-  ghost: css`
-    &:hover:not(:disabled) {
-      background-color: ${theme.colors.semantic.background};
-      color: ${theme.colors.semantic.textLite};
-    }
-  `,
+
   link: css`
-    color: ${theme.colors.semantic.primary};
-    text-decoration: underline;
+    color: ${theme2.colors.brand.primary};
+    text-decoration-line: underline;
     text-underline-offset: 4px;
+    background-color: transparent;
 
     &:hover:not(:disabled) {
       text-decoration: underline;
     }
   `,
-};
+} as const;
 
-// Size styles
-const buttonSizeStyles = {
+const sizeStyles = {
   default: css`
-    height: 2.25rem;
-    padding: 0.5rem 1rem;
+    height: 36px;
+    padding: 8px 16px;
 
     &:has(> svg) {
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
+      padding: 8px 12px;
     }
   `,
+
   sm: css`
-    height: 2rem;
-    border-radius: 0.375rem;
-    gap: 0.375rem;
-    padding: 0 0.75rem;
+    height: 32px;
+    border-radius: ${theme2.radii.md};
+    gap: 6px;
+    padding: 0 12px;
 
     &:has(> svg) {
-      padding-left: 0.625rem;
-      padding-right: 0.625rem;
+      padding: 0 10px;
     }
   `,
+
   lg: css`
-    height: 2.5rem;
-    border-radius: 0.375rem;
-    padding: 0 1.5rem;
+    height: 40px;
+    border-radius: ${theme2.radii.md};
+    padding: 0 24px;
 
     &:has(> svg) {
-      padding-left: 1rem;
-      padding-right: 1rem;
+      padding: 0 16px;
     }
   `,
+
   icon: css`
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 36px;
+    height: 36px;
+    padding: 0;
   `,
-};
+} as const;
 
-// Type definitions for variants
-type ButtonVariant = keyof typeof buttonVariantStyles;
-type ButtonSize = keyof typeof buttonSizeStyles;
+type ButtonVariant = keyof typeof variantStyles;
+type ButtonSize = keyof typeof sizeStyles;
 
-interface ButtonProps extends React.ComponentProps<'button'> {
+interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   asChild?: boolean;
 }
 
-function Button({ className, variant = 'default', size = 'default', asChild = false, ...props }: ButtonProps) {
-  const Comp = asChild ? Slot : 'button';
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = 'default', size = 'default', asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : 'button';
 
-  const combinedStyles = cx(buttonBaseStyles, buttonVariantStyles[variant], buttonSizeStyles[size], className);
+    const combinedClassName = cx(baseButtonStyles, variantStyles[variant], sizeStyles[size], className);
 
-  return <Comp data-slot="button" className={combinedStyles} {...props} />;
-}
+    return <Comp ref={ref} data-slot="button" className={combinedClassName} {...props} />;
+  }
+);
+
+Button.displayName = 'Button';
 
 export { Button };
 export type { ButtonProps, ButtonVariant, ButtonSize };

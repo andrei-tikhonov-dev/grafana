@@ -12,6 +12,7 @@ export const getPanelTypeOptions = async () => {
     { label: 'Incoming dependencies', value: PanelTypeEnum.IncomingDependencies },
     { label: 'Outgoing dependencies', value: PanelTypeEnum.OutgoingDependencies },
     { label: 'Similar issues', value: PanelTypeEnum.SimilarTasks },
+    { label: 'Components library', value: PanelTypeEnum.ComponentsLibrary },
   ]);
 };
 

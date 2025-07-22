@@ -4,6 +4,7 @@ import React from 'react';
 import { PanelProps } from '@grafana/data';
 
 import { UiIcon, UiPanelTitle, UiText } from '../../components/ui';
+import { UiZeroState } from '../../components/ui/zero-state/UiZeroState';
 import { theme } from '../../theme';
 import { PanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -41,8 +42,12 @@ const styles = {
 const initialData: HeaderCustomDataInterface = {};
 
 export const Header: React.FC<Props> = ({ width, height, data }) => {
-  const customData = getGrafanaCustomData<HeaderCustomDataInterface>(data, initialData);
+  const { zeroState, ...customData } = getGrafanaCustomData<HeaderCustomDataInterface>(data, initialData);
   console.log(customData);
+
+  if (zeroState) {
+    return <UiZeroState {...zeroState} />;
+  }
 
   return (
     <div
