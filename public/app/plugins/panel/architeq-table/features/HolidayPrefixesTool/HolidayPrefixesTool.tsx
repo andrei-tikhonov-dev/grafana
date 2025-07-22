@@ -30,7 +30,7 @@ export const HolidayPrefixesTool: React.FC<Props> = ({ options, data, width, hei
   const {
     custom: { teamId, types },
   } = dataFrame.meta as HolidayPrefixesToolMetaType;
-  const { createRequest, updateRequest, deleteRequest, loading } = useRequest({
+  const { createRequest, updateRequest, deleteRequest, loading, isLoading } = useRequest({
     create: {
       url: options.createUrl,
       method: RequestMethod.POST,
@@ -77,7 +77,9 @@ export const HolidayPrefixesTool: React.FC<Props> = ({ options, data, width, hei
     <>
       <HeaderContainer>
         <FormModalWrapper title="Add prefix">
-          {({ onClose }) => <AddPrefix onClose={onClose} onCreate={handleCreate} typeOptions={typeOptions} />}
+          {({ onClose }) => (
+            <AddPrefix onClose={onClose} onCreate={handleCreate} typeOptions={typeOptions} isLoading={isLoading} />
+          )}
         </FormModalWrapper>
       </HeaderContainer>
 

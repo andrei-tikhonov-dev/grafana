@@ -7,4 +7,8 @@ export const enum CurrentSprintColumns {
   InProgress = 'In progress',
   Status = 'Status',
   Priority = 'Priority',
+  WorkItemAge = 'Work item age',
+  LeadTime = 'Lead time',
+  CycleTime = 'Cycle time',
+  FlowEfficiency = 'Flow efficiency',
 }

@@ -30,7 +30,7 @@ export const TeamHolidaysTool: React.FC<Props> = ({ options, data, width, height
   const {
     custom: { teamId, types },
   } = dataFrame.meta as TeamHolidaysToolMetaType;
-  const { createRequest, updateRequest, deleteRequest, loading } = useRequest({
+  const { createRequest, updateRequest, deleteRequest, loading, isLoading } = useRequest({
     create: {
       url: options.createUrl,
       method: RequestMethod.POST,
@@ -76,7 +76,9 @@ export const TeamHolidaysTool: React.FC<Props> = ({ options, data, width, height
     <>
       <HeaderContainer>
         <FormModalWrapper title="Add holiday">
-          {({ onClose }) => <AddHoliday onClose={onClose} onCreate={handleCreate} typeOptions={typeOptions} />}
+          {({ onClose }) => (
+            <AddHoliday onClose={onClose} onCreate={handleCreate} typeOptions={typeOptions} isLoading={isLoading} />
+          )}
         </FormModalWrapper>
       </HeaderContainer>
 

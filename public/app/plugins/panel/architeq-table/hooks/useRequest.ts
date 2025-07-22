@@ -1,6 +1,6 @@
 import { locationService } from '@grafana/runtime';
 
-import { RequestMethod } from '../constants';
+import { LoadingMode, RequestMethod } from '../constants';
 import { joinUrls } from '../utils';
 
 import { useLoading } from './useLoading';
@@ -104,5 +104,6 @@ export function useRequest({ create, update, delete: deleteAction, preventReload
     updateRequest,
     deleteRequest,
     loading,
+    isLoading: loading !== LoadingMode.NONE,
   };
 }

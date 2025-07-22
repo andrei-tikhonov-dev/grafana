@@ -17,9 +17,10 @@ interface Props {
   onCreate: (data: TeamAdminToolCreateTableType) => void;
   roles: RoleType['availableRoles'];
   maxWorkload: number;
+  isLoading: boolean;
 }
 
-export const AddUserForm: React.FC<Props> = ({ onClose, onCreate, roles: availableRoles, maxWorkload }) => {
+export const AddUserForm: React.FC<Props> = ({ onClose, onCreate, roles: availableRoles, maxWorkload, isLoading }) => {
   const form = useForm<TeamAdminToolCreateTableType>({
     defaultValues: {
       roles: [],
@@ -119,7 +120,7 @@ export const AddUserForm: React.FC<Props> = ({ onClose, onCreate, roles: availab
         description="Exclude this user from capacity calculations"
       />
 
-      <FormFooter onClose={onClose} />
+      <FormFooter onClose={onClose} isLoading={isLoading} />
     </form>
   );
 };

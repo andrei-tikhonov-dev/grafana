@@ -10,9 +10,10 @@ import { RoleCreateFormType } from './types';
 interface Props {
   onClose: () => void;
   onCreate: (data: RoleCreateFormType) => void;
+  isLoading: boolean;
 }
 
-export const AddRoleForm: React.FC<Props> = ({ onClose, onCreate }) => {
+export const AddRoleForm: React.FC<Props> = ({ onClose, onCreate, isLoading }) => {
   const form = useForm<RoleCreateFormType>();
   const { handleSubmit } = form;
 
@@ -30,7 +31,7 @@ export const AddRoleForm: React.FC<Props> = ({ onClose, onCreate }) => {
         rules={{ required: 'Role name is required' }}
       />
 
-      <FormFooter onClose={onClose} />
+      <FormFooter onClose={onClose} isLoading={isLoading} />
     </form>
   );
 };

@@ -11,9 +11,10 @@ import { PiAdminCreateFormType } from './types';
 interface Props {
   onClose: () => void;
   onCreate: (data: PiAdminCreateFormType) => void;
+  isLoading: boolean;
 }
 
-export const AddPiForm: React.FC<Props> = ({ onClose, onCreate }) => {
+export const AddPiForm: React.FC<Props> = ({ onClose, onCreate, isLoading }) => {
   const form = useForm<PiAdminCreateFormType>();
   const { handleSubmit } = form;
 
@@ -35,7 +36,7 @@ export const AddPiForm: React.FC<Props> = ({ onClose, onCreate }) => {
 
       <HookFormDate name={PiFields.EndDate} label="End date" form={form} rules={{ required: 'End date is required' }} />
 
-      <FormFooter onClose={onClose} />
+      <FormFooter onClose={onClose} isLoading={isLoading} />
     </form>
   );
 };

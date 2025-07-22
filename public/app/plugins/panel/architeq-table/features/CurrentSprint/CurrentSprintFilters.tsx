@@ -11,14 +11,13 @@ import { SprintPlaningColumns } from '../SprintPlaning/constants';
 import { CurrentSprintColumns } from './constants';
 import { CurrentSprintFiltersType } from './types';
 
-export const FILTER_HEIGHT = 45;
+export const FILTER_HEIGHT = 65;
 
 const getStyles = () => ({
   container: css`
     display: flex;
     gap: 2px;
     margin-bottom: 20px;
-    max-width: 1024px;
   `,
   input: css`
     flex: 1;
@@ -94,6 +93,7 @@ export const CurrentSprintFilters: React.FC<Props> = ({ assignees, statuses, typ
         <div key={key} className={styles.input}>
           <HeaderItem>
             <MultiSelect
+              noMultiValueWrap
               options={createSelectOptions(options)}
               value={createSelectOptions(filterValue)}
               onChange={handleMultiSelectChange(key)}

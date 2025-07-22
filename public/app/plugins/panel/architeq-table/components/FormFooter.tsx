@@ -18,13 +18,21 @@ interface FormFooterProps {
   onClose: () => void;
   submitLabel?: string;
   cancelLabel?: string;
+  isLoading?: boolean;
 }
 
-export const FormFooter: React.FC<FormFooterProps> = ({ onClose, submitLabel = 'Add', cancelLabel = 'Cancel' }) => {
+export const FormFooter: React.FC<FormFooterProps> = ({
+  onClose,
+  submitLabel = 'Add',
+  cancelLabel = 'Cancel',
+  isLoading,
+}) => {
   const styles = useStyles2(getStyles);
   return (
     <div className={styles.footer}>
-      <Button type="submit">{submitLabel}</Button>
+      <Button type="submit" disabled={isLoading} icon={isLoading ? 'spinner' : undefined}>
+        {submitLabel}
+      </Button>
       <Button variant="secondary" onClick={onClose}>
         {cancelLabel}
       </Button>

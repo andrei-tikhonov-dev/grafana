@@ -12,9 +12,10 @@ interface Props {
   onClose: () => void;
   onCreate: (data: PiNameCreateFormType) => void;
   piOptions: Array<{ label: string; value: string }>;
+  isLoading: boolean;
 }
 
-export const AddNameForm: React.FC<Props> = ({ onClose, onCreate, piOptions }) => {
+export const AddNameForm: React.FC<Props> = ({ onClose, onCreate, piOptions, isLoading }) => {
   const form = useForm<PiNameCreateFormType>();
   const { handleSubmit } = form;
 
@@ -36,7 +37,7 @@ export const AddNameForm: React.FC<Props> = ({ onClose, onCreate, piOptions }) =
 
       <HookFormField name={PiNamesFields.Name} label="Name" form={form} rules={{ required: 'Name is required' }} />
 
-      <FormFooter onClose={onClose} />
+      <FormFooter onClose={onClose} isLoading={isLoading} />
     </form>
   );
 };

@@ -13,9 +13,10 @@ interface Props {
   onClose: () => void;
   onCreate: (data: HolidaysCreateTableType) => void;
   typeOptions: OptionType[];
+  isLoading: boolean;
 }
 
-export const AddHoliday: React.FC<Props> = ({ onClose, onCreate, typeOptions }) => {
+export const AddHoliday: React.FC<Props> = ({ onClose, onCreate, typeOptions, isLoading }) => {
   const form = useForm<HolidaysCreateTableType>();
   const { handleSubmit } = form;
 
@@ -44,7 +45,7 @@ export const AddHoliday: React.FC<Props> = ({ onClose, onCreate, typeOptions }) 
 
       <HookFormDate name="date" label="Holiday date" form={form} rules={{ required: 'Holiday date is required' }} />
 
-      <FormFooter onClose={onClose} />
+      <FormFooter onClose={onClose} isLoading={isLoading} />
     </form>
   );
 };

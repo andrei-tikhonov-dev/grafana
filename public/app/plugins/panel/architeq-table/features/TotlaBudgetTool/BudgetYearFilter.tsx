@@ -41,6 +41,7 @@ export const BudgetYearFilter: React.FC<Props> = ({ years = [], onChange }) => {
     <div className={styles.container}>
       <HeaderItem>
         <MultiSelect
+          noMultiValueWrap
           options={years.map((year) => ({ label: year, value: year }))}
           value={filter.years.map((year) => ({ label: year, value: year }))}
           onChange={handleChange}

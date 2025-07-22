@@ -43,6 +43,7 @@ export const SprintPlaningFilters: React.FC<Props> = ({ teamMembers, roles, isGr
     <div className={styles.container}>
       <HeaderItem>
         <MultiSelect
+          noMultiValueWrap
           options={
             isGroupedByRole
               ? roles.map((role) => ({ label: role, value: role }))

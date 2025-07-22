@@ -12,9 +12,10 @@ interface Props {
   onClose: () => void;
   onCreate: (data: JiraBoardsCreateFormType) => void;
   typeOptions: OptionType[];
+  isLoading: boolean;
 }
 
-export const AddBoard: React.FC<Props> = ({ onClose, onCreate, typeOptions }) => {
+export const AddBoard: React.FC<Props> = ({ onClose, onCreate, typeOptions, isLoading }) => {
   const form = useForm<JiraBoardsCreateFormType>();
   const { handleSubmit } = form;
 
@@ -38,7 +39,7 @@ export const AddBoard: React.FC<Props> = ({ onClose, onCreate, typeOptions }) =>
 
       <HookFormField name="boardId" label="Board ID" form={form} rules={{ required: 'Board ID is required' }} />
 
-      <FormFooter onClose={onClose} />
+      <FormFooter onClose={onClose} isLoading={isLoading} />
     </form>
   );
 };

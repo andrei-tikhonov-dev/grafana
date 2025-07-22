@@ -13,9 +13,10 @@ interface Props {
   onClose: () => void;
   onCreate: (data: HolidayPrefixesCreateTableType) => void;
   typeOptions: OptionType[];
+  isLoading: boolean;
 }
 
-export const AddPrefix: React.FC<Props> = ({ onClose, onCreate, typeOptions }) => {
+export const AddPrefix: React.FC<Props> = ({ onClose, onCreate, typeOptions, isLoading }) => {
   const form = useForm<HolidayPrefixesCreateTableType>();
   const { handleSubmit } = form;
 
@@ -41,7 +42,7 @@ export const AddPrefix: React.FC<Props> = ({ onClose, onCreate, typeOptions }) =
         placeholder="Select a type"
       />
 
-      <FormFooter onClose={onClose} />
+      <FormFooter onClose={onClose} isLoading={isLoading} />
     </form>
   );
 };

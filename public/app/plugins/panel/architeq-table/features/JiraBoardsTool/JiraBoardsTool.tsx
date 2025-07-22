@@ -30,7 +30,7 @@ export const JiraBoardsTool: React.FC<Props> = ({ options, data, width, height }
   const {
     custom: { teamId, types },
   } = dataFrame.meta as JiraBoardsToolMetaType;
-  const { createRequest, updateRequest, deleteRequest, loading } = useRequest({
+  const { createRequest, updateRequest, deleteRequest, loading, isLoading } = useRequest({
     create: {
       url: options.createUrl,
       method: RequestMethod.POST,
@@ -76,7 +76,9 @@ export const JiraBoardsTool: React.FC<Props> = ({ options, data, width, height }
     <>
       <HeaderContainer>
         <FormModalWrapper title="Add board">
-          {({ onClose }) => <AddBoard onClose={onClose} onCreate={handleCreate} typeOptions={typeOptions} />}
+          {({ onClose }) => (
+            <AddBoard onClose={onClose} onCreate={handleCreate} typeOptions={typeOptions} isLoading={isLoading} />
+          )}
         </FormModalWrapper>
       </HeaderContainer>
 

@@ -30,7 +30,7 @@ export const PiNamesTool: React.FC<Props> = ({ options, data, width, height }) =
   const {
     custom: { artId, piData },
   } = dataFrame.meta as PiNameMetaType;
-  const { createRequest, updateRequest, deleteRequest, loading } = useRequest({
+  const { createRequest, updateRequest, deleteRequest, loading, isLoading } = useRequest({
     create: {
       url: options.createUrl,
       method: RequestMethod.POST,
@@ -84,7 +84,9 @@ export const PiNamesTool: React.FC<Props> = ({ options, data, width, height }) =
     <>
       <HeaderContainer>
         <FormModalWrapper title="Add name">
-          {({ onClose }) => <AddNameForm onClose={onClose} onCreate={handleCreate} piOptions={piOptions} />}
+          {({ onClose }) => (
+            <AddNameForm onClose={onClose} onCreate={handleCreate} piOptions={piOptions} isLoading={isLoading} />
+          )}
         </FormModalWrapper>
       </HeaderContainer>
 

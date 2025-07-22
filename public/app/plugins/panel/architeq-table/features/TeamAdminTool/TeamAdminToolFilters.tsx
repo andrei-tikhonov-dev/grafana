@@ -41,6 +41,7 @@ export const TeamAdminToolFilters: React.FC<Props> = ({ teamMembers = [], onChan
     <div className={styles.container}>
       <HeaderItem>
         <MultiSelect
+          noMultiValueWrap
           options={teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}
           value={filter.teamMembers.map((teamMember) => ({ label: teamMember, value: teamMember }))}
           onChange={handleChange}

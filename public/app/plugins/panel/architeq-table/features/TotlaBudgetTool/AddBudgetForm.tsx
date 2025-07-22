@@ -13,9 +13,10 @@ interface Props {
   onCreate: (data: BudgetCreateFormType) => void;
   typeOptions: Array<{ label: string; value: string }>;
   yearOptions: Array<{ label: string; value: string }>;
+  isLoading: boolean;
 }
 
-export const AddBudgetForm: React.FC<Props> = ({ onClose, onCreate, typeOptions, yearOptions }) => {
+export const AddBudgetForm: React.FC<Props> = ({ onClose, onCreate, typeOptions, yearOptions, isLoading }) => {
   const form = useForm<BudgetCreateFormType>();
   const { handleSubmit } = form;
 
@@ -59,7 +60,7 @@ export const AddBudgetForm: React.FC<Props> = ({ onClose, onCreate, typeOptions,
 
       <HookFormField name={BudgetFields.Description} label="Description" form={form} />
 
-      <FormFooter onClose={onClose} />
+      <FormFooter onClose={onClose} isLoading={isLoading} />
     </form>
   );
 };

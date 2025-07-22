@@ -25,7 +25,7 @@ export const PiAdminTool: React.FC<Props> = ({ options, data, width, height }) =
   const {
     custom: { dsoId },
   } = dataFrame.meta as PiAdminMetaType;
-  const { createRequest, updateRequest, deleteRequest, loading } = useRequest({
+  const { createRequest, updateRequest, deleteRequest, loading, isLoading } = useRequest({
     create: {
       url: options.createUrl,
       method: RequestMethod.POST,
@@ -67,7 +67,7 @@ export const PiAdminTool: React.FC<Props> = ({ options, data, width, height }) =
     <>
       <HeaderContainer>
         <FormModalWrapper title="Add PI">
-          {({ onClose }) => <AddPiForm onClose={onClose} onCreate={handleCreate} />}
+          {({ onClose }) => <AddPiForm onClose={onClose} onCreate={handleCreate} isLoading={isLoading} />}
         </FormModalWrapper>
       </HeaderContainer>
 

@@ -36,7 +36,7 @@ export const TotalBudgetTool: React.FC<Props> = ({ options, data, width, height 
   const {
     custom: { teamId, types },
   } = dataFrame.meta as BudgetMetaType;
-  const { createRequest, updateRequest, deleteRequest, loading } = useRequest({
+  const { createRequest, updateRequest, deleteRequest, loading, isLoading } = useRequest({
     create: {
       url: options.createUrl,
       method: RequestMethod.POST,
@@ -100,6 +100,7 @@ export const TotalBudgetTool: React.FC<Props> = ({ options, data, width, height 
         <FormModalWrapper title="Add budget">
           {({ onClose }) => (
             <AddBudgetForm
+              isLoading={isLoading}
               onClose={onClose}
               onCreate={handleCreate}
               typeOptions={typeOptions}

@@ -24,7 +24,7 @@ export const RolesTool: React.FC<Props> = ({ options, data, width, height }) => 
   const {
     custom: { teamId },
   } = dataFrame.meta as RoleMetaType;
-  const { createRequest, updateRequest, deleteRequest, loading } = useRequest({
+  const { createRequest, updateRequest, deleteRequest, loading, isLoading } = useRequest({
     create: {
       url: options.createUrl,
       method: RequestMethod.POST,
@@ -68,7 +68,7 @@ export const RolesTool: React.FC<Props> = ({ options, data, width, height }) => 
     <>
       <HeaderContainer>
         <FormModalWrapper title="Add role">
-          {({ onClose }) => <AddRoleForm onClose={onClose} onCreate={handleCreate} />}
+          {({ onClose }) => <AddRoleForm onClose={onClose} onCreate={handleCreate} isLoading={isLoading} />}
         </FormModalWrapper>
       </HeaderContainer>
 

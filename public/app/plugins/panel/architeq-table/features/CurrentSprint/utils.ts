@@ -15,6 +15,13 @@ export function configCurrentSprintData(dataFrame: DataFrame): DataFrame {
     { fields: [CurrentSprintColumns.TeamMember], config: getFieldConfig(Cells.User, { width: 220 }) },
     { fields: [CurrentSprintColumns.InProgress], config: getFieldConfig(Cells.Days, { width: 100, align: 'left' }) },
     { fields: [CurrentSprintColumns.Priority], config: getFieldConfig(Cells.Priority, { width: 100, align: 'left' }) },
+    { fields: [CurrentSprintColumns.WorkItemAge], config: getFieldConfig(Cells.Simple, { width: 120, align: 'left' }) },
+    { fields: [CurrentSprintColumns.LeadTime], config: getFieldConfig(Cells.Simple, { width: 100, align: 'left' }) },
+    { fields: [CurrentSprintColumns.CycleTime], config: getFieldConfig(Cells.Simple, { width: 100, align: 'left' }) },
+    {
+      fields: [CurrentSprintColumns.FlowEfficiency],
+      config: getFieldConfig(Cells.Simple, { width: 120, align: 'left' }),
+    },
   ];
 
   const dataWithTeamMembers = wrapTeamMemberField(dataFrame);

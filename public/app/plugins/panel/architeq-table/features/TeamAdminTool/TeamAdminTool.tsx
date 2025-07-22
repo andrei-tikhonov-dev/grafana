@@ -31,7 +31,7 @@ export const TeamAdminTool: React.FC<Props> = ({ options, data, width, height })
   const {
     custom: { availableRoles, teamId, maxWorkload },
   } = dataFrame.meta as TeamAdminToolMetaType;
-  const { createRequest, updateRequest, deleteRequest, loading } = useRequest({
+  const { createRequest, updateRequest, deleteRequest, loading, isLoading } = useRequest({
     create: {
       url: options.createUrl,
       method: RequestMethod.POST,
@@ -87,7 +87,13 @@ export const TeamAdminTool: React.FC<Props> = ({ options, data, width, height })
         <TeamAdminToolFilters onChange={handleFiltersChange} teamMembers={filterOptions[filterField]} />
         <FormModalWrapper title="Add team member">
           {({ onClose }) => (
-            <AddUserForm onClose={onClose} roles={roles} maxWorkload={maxWorkload} onCreate={handleCreate} />
+            <AddUserForm
+              onClose={onClose}
+              roles={roles}
+              maxWorkload={maxWorkload}
+              onCreate={handleCreate}
+              isLoading={isLoading}
+            />
           )}
         </FormModalWrapper>
       </HeaderContainer>
