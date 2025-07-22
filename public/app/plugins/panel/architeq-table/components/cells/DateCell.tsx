@@ -5,9 +5,9 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { CustomCellRendererProps, DatePickerWithInput, IconButton, useStyles2 } from '@grafana/ui';
 
 import { LoadingMode } from '../../constants';
+import { CellCustomOptionsType } from '../../types';
 import { convertDateToBE, convertDateToUI } from '../../utils';
 import { useDataTableContext } from '../DataTable/DataTableContext';
-import { CellCustomOptionsType } from '../../types';
 
 const getStyles = (_: GrafanaTheme2) => {
   return {

@@ -1,8 +1,8 @@
 import { css } from '@emotion/css';
+import { IssueTypeIcon, IssueType } from 'architeq-library';
 import React from 'react';
 
 import { CustomCellRendererProps, useStyles2 } from '@grafana/ui';
-import { IssueTypeIcon, IssueType } from 'architeq-library';
 
 import { InfoLineType } from '../../types';
 import { InfoLine } from '../InfoLine';

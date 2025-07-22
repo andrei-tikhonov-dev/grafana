@@ -3,10 +3,10 @@ import { useForm } from 'react-hook-form';
 
 import { HookFormField } from '../../components/FormField';
 import { FormFooter } from '../../components/FormFooter';
+import { HookFormSelect } from '../../components/FormSelect';
 
 import { PiNamesFields } from './constants';
 import { PiNameCreateFormType } from './types';
-import { HookFormSelect } from '../../components/FormSelect';
 
 interface Props {
   onClose: () => void;

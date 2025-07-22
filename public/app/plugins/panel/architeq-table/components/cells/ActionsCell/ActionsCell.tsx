@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { IconButton, ConfirmModal, CustomCellRendererProps } from '@grafana/ui';
+
 import { CellCustomOptionsType } from '../../../types';
 
 interface ActionsCellProps extends CustomCellRendererProps {

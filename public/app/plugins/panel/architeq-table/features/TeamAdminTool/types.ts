@@ -31,7 +31,7 @@ export interface TeamAdminToolCreateTableType {
   hourlyRate: number;
   yearlyHours: number;
   workloadRatio: number;
-  roles: { role: { label: string; value: number | string }; rate: number }[];
+  roles: Array<{ role: { label: string; value: number | string }; rate: number }>;
   workEndDate: string;
   workStartDate: string;
   excludedFromCapacity: boolean;
@@ -46,7 +46,7 @@ export interface TeamAdminToolCreatePayload {
   teamIdsToDetails: {
     [key: string]: {
       workload: number;
-      roles: { roleId?: string | number; rate: number }[];
+      roles: Array<{ roleId?: string | number; rate: number }>;
       excludedFromCapacity: boolean;
       workStartDate: string | null;
       workEndDate: string | null;

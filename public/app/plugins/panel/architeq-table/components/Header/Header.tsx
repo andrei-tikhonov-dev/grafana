@@ -1,10 +1,10 @@
 import { css } from '@emotion/css';
 import React from 'react';
-import { InfoLineType } from 'types';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
 
+import { InfoLineType } from '../../types';
 import { InfoLine } from '../InfoLine';
 
 interface Props {

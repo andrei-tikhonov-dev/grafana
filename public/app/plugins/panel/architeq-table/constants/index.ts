@@ -7,12 +7,12 @@ import { InfoLineCell } from '../components/cells/InfoLineCell';
 import { InputCell } from '../components/cells/InputCell';
 import { IssueTypeCell } from '../components/cells/IssueTypeCell';
 import { LinkCell } from '../components/cells/LinkCell';
+import { PriorityCell } from '../components/cells/PriorityCell';
 import { RoleCell } from '../components/cells/RoleCell';
 import { SelectCell } from '../components/cells/SelectCell';
 import { SimpleCell } from '../components/cells/SimpleCell';
-import { UserCell } from '../components/cells/UserCell';
-import { PriorityCell } from '../components/cells/PriorityCell';
 import { TooltipCell } from '../components/cells/TooltipCell';
+import { UserCell } from '../components/cells/UserCell';
 
 export const enum TableType {
   HistoricalData = 'HistoricalData',

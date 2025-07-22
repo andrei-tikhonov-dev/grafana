@@ -6,7 +6,7 @@ export const enum TeamHolidaysToolFields {
 }
 
 export const enum TeamHolidayTypes {
-  NationalHoliday = 'BLABLO',
+  NationalHoliday = 'National holiday',
   TeamEvent = 'Team event',
 }
 

@@ -214,6 +214,6 @@ export function getPayloadIDs(data: DataFrame, fieldName: string): { [index: num
   );
 }
 
-export function createSelectOptions(items: string[]): SelectableValue<string>[] {
+export function createSelectOptions(items: string[]): Array<SelectableValue<string>> {
   return items.map((item) => ({ label: item, value: item }));
 }

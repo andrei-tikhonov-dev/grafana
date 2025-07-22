@@ -8,6 +8,7 @@ import { LoadingMode } from '../../constants';
 import { useParentWidth } from '../../hooks/useParentWidth';
 import { CellCustomOptionsType, FieldValidation, FieldValidationType } from '../../types';
 import { useDataTableContext } from '../DataTable/DataTableContext';
+
 import { SimpleCell } from './SimpleCell';
 
 const getStyles = (_: GrafanaTheme2) => ({
