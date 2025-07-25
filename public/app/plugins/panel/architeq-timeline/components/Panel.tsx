@@ -106,15 +106,13 @@ export const Panel: React.FC<Props> = ({ options, data, width, height, fieldConf
         `
       )}
     >
-      {options.updateUrl && (
-        <UpdateButton
-          onUpdate={handleUpdate}
-          canUpdate={Boolean(canUpdate)}
-          lastUpdated={lastUpdated}
-          buttonText={buttonText}
-          loading={loading}
-        />
-      )}
+      <UpdateButton
+        onUpdate={handleUpdate}
+        canUpdate={canUpdate}
+        lastUpdated={lastUpdated}
+        buttonText={buttonText}
+        loading={loading}
+      />
       {breadCrumbs && <BreadCrumbs items={breadCrumbs} />}
       <h1 className={styles.header}>
         {options.header} {name || title} {select && <Select options={select.options} label={select.label} />}

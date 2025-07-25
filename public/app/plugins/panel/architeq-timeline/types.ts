@@ -4,7 +4,6 @@ export interface PanelOptions {
   header: string;
   goalsTitle?: string;
   goalsUpdateUrl?: string;
-  updateUrl?: string;
 }
 
 export const enum Status {
