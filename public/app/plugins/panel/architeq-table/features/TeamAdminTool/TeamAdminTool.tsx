@@ -48,10 +48,11 @@ export const TeamAdminTool: React.FC<Props> = ({ options, data, width, height })
   const roles: RoleType['availableRoles'] = availableRoles || [];
 
   const handleUpdate = async (value: number | string, { rowIndex, field }: CustomCellRendererProps) => {
-    const { teamId, memberId } = payloadIDs[rowIndex];
+    const { teamId, memberId, id } = payloadIDs[rowIndex];
 
     const payload: TeamAdminToolUpdatePayload = {
       memberId: Number(memberId),
+      id: Number(id),
       teamId: Number(teamId),
       propertyName: field.name,
       value: field.name === TeamAdminToolFields.Role ? { updatedRoles: value } : value,
@@ -60,10 +61,11 @@ export const TeamAdminTool: React.FC<Props> = ({ options, data, width, height })
   };
 
   const handleDelete = (rowIndex: number) => {
-    const { teamId, memberId } = payloadIDs[rowIndex];
+    const { teamId, memberId, id } = payloadIDs[rowIndex];
     const payload: TeamAdminToolDeletePayload = {
       memberId: Number(memberId),
       teamId: Number(teamId),
+      id: Number(id),
     };
     return deleteRequest(payload);
   };

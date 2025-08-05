@@ -58,9 +58,12 @@ export function configTeamAdminToolData({
   return configureDataFrame(dataFrame, hiddenFields, handleDelete, fieldConfigs);
 }
 
-export function getPayloadIDs(data: DataFrame): { [index: number]: { memberId?: number; teamId?: number } } {
+export function getPayloadIDs(data: DataFrame): {
+  [index: number]: { memberId?: number; teamId?: number; id?: number };
+} {
   const memberIdField = data.fields.find((field) => field.name === TeamAdminToolFields.TeamMemberID);
   const teamIdField = data.fields.find((field) => field.name === TeamAdminToolFields.TeamID);
+  const teamMemberDetailIdField = data.fields.find((field) => field.name === TeamAdminToolFields.TeamMemberDetailID);
 
   const length = data.length;
 
@@ -70,6 +73,7 @@ export function getPayloadIDs(data: DataFrame): { [index: number]: { memberId?: 
       {
         memberId: memberIdField ? Number(memberIdField.values.get(index)) : undefined,
         teamId: teamIdField ? Number(teamIdField.values.get(index)) : undefined,
+        id: teamMemberDetailIdField ? Number(teamMemberDetailIdField.values.get(index)) : undefined,
       },
     ])
   );

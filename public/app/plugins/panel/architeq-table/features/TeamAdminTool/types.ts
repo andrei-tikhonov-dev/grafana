@@ -14,6 +14,7 @@ export type TeamAdminToolMetaType = {
 
 export interface TeamAdminToolUpdatePayload {
   memberId: number;
+  id: number;
   teamId: number;
   propertyName: string;
   value: any;
@@ -22,6 +23,7 @@ export interface TeamAdminToolUpdatePayload {
 export interface TeamAdminToolDeletePayload {
   memberId: number;
   teamId: number;
+  id: number;
 }
 
 export interface TeamAdminToolCreateTableType {
