@@ -5,12 +5,12 @@ import { PanelProps } from '@grafana/data';
 
 import { UiPanelTitle, UiText, UiExpandableTable } from '../../components/ui';
 import { theme } from '../../theme';
-import { PanelOptions } from '../../types';
+import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
-import { IncomingDependenciesCustomData } from './types';
+import { MData } from './types';
 
-interface IncomingDependenciesProps extends PanelProps<PanelOptions> {}
+interface IncomingDependenciesProps extends PanelProps<TPanelOptions> {}
 
 const styles = {
   wrapper: css`
@@ -41,7 +41,7 @@ const styles = {
   `,
 };
 
-const initialData: IncomingDependenciesCustomData = {
+const initialData: MData = {
   total: 0,
   columns: [],
   innerColumns: [],
@@ -49,10 +49,7 @@ const initialData: IncomingDependenciesCustomData = {
 };
 
 export const IncomingDependencies: React.FC<IncomingDependenciesProps> = ({ width, height, data: panelData }) => {
-  const { total, columns, innerColumns, data } = getGrafanaCustomData<IncomingDependenciesCustomData>(
-    panelData,
-    initialData
-  );
+  const { total, columns, innerColumns, data } = getGrafanaCustomData<MData>(panelData, initialData);
   const initialExpandedRows = data.reduce((acc, row) => ({ ...acc, [row.id]: row.hasChanges }), {});
 
   return (

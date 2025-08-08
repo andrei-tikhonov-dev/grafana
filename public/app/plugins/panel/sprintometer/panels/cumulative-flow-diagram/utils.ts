@@ -6,20 +6,10 @@ import { theme } from '../../theme';
 import { formatDate } from '../../utils/dateTime';
 import { getCurrentPeriodSeries } from '../../utils/echarts';
 
-import {
-  CumulativeFlowDiagramAggregatedData,
-  CumulativeFlowDiagramFilteredData,
-  CumulativeFlowDiagramData,
-  CumulativeFlowDiagramPeriodData,
-  CumulativeFlowDiagramPreparedData,
-  CumulativeFlowDiagramStructuredData,
-  PeriodType,
-} from './types';
+import { MAggregatedData, MFilteredData, MData, MPeriodData, MPreparedData, MStructuredData, MPeriod } from './types';
 
-const transformStructuredDataToAggregated = (
-  data: CumulativeFlowDiagramStructuredData[]
-): CumulativeFlowDiagramAggregatedData => {
-  const result: CumulativeFlowDiagramAggregatedData = {
+const transformStructuredDataToAggregated = (data: MStructuredData[]): MAggregatedData => {
+  const result: MAggregatedData = {
     issuesAmount: {},
   };
 
@@ -30,12 +20,7 @@ const transformStructuredDataToAggregated = (
   return result;
 };
 
-export function prepareData({
-  periods,
-  issueTypes,
-  currentPeriod,
-  periodType,
-}: CumulativeFlowDiagramData): CumulativeFlowDiagramPreparedData {
+export function prepareData({ periods, issueTypes, currentPeriod, periodType }: MData): MPreparedData {
   const issueOptions = issueTypes.map(({ name }) => ({
     label: name,
     value: name,
@@ -54,10 +39,10 @@ export function prepareData({
 }
 
 type FilterDataArgs = {
-  periodsData: CumulativeFlowDiagramPeriodData[];
-  data: CumulativeFlowDiagramAggregatedData;
+  periodsData: MPeriodData[];
+  data: MAggregatedData;
   selectedIssues: string[];
-  periodType: PeriodType;
+  periodType: MPeriod;
 };
 
 export const filterCumulativeFlowDiagramData = ({
@@ -65,7 +50,7 @@ export const filterCumulativeFlowDiagramData = ({
   selectedIssues,
   periodsData,
   periodType,
-}: FilterDataArgs): CumulativeFlowDiagramFilteredData => {
+}: FilterDataArgs): MFilteredData => {
   const keysToUse =
     selectedIssues.length === 0
       ? Object.keys(data.issuesAmount)

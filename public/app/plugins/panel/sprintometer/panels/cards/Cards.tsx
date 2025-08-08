@@ -5,12 +5,12 @@ import { PanelProps } from '@grafana/data';
 
 import { UiPanelTitle } from '../../components/ui';
 import { theme } from '../../theme';
-import { PanelOptions } from '../../types';
+import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
 import { CardsCustomDataInterface } from './types';
 
-interface Props extends PanelProps<PanelOptions> {}
+interface Props extends PanelProps<TPanelOptions> {}
 
 const styles = {
   wrapper: css`

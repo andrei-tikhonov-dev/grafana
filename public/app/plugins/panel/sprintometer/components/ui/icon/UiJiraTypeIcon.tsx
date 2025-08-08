@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import React from 'react';
 
-import { JiraTypeEnum } from '../../../types';
+import { EJiraType } from '../../../types';
 import { toObjectKey } from '../../../utils/helpers';
 
 import { UiIcon } from './UiIcon';
@@ -9,49 +9,49 @@ import { IconName, JiraTypeIconProps } from './types';
 
 const DEFAULT_COLOR = '#FFFFFF';
 
-export const issueTypeIcons: Record<JiraTypeEnum, IconName> = {
-  [JiraTypeEnum.Story]: 'Bookmark',
-  [JiraTypeEnum.StrategicTheme]: 'Checklist',
-  [JiraTypeEnum.StrategicStep]: 'Extension',
-  [JiraTypeEnum.Epic]: 'Lightbulb',
-  [JiraTypeEnum.Capability]: 'Code',
-  [JiraTypeEnum.Feature]: 'Bolt',
-  [JiraTypeEnum.Objective]: 'IssueTypeObjective',
-  [JiraTypeEnum.Task]: 'Check',
-  [JiraTypeEnum.Bug]: 'SquareDot',
-  [JiraTypeEnum.Incident]: 'FolderClose',
-  [JiraTypeEnum.Improvement]: 'ArrowUpward',
+export const issueTypeIcons: Record<EJiraType, IconName> = {
+  [EJiraType.Story]: 'Bookmark',
+  [EJiraType.StrategicTheme]: 'Checklist',
+  [EJiraType.StrategicStep]: 'Extension',
+  [EJiraType.Epic]: 'Lightbulb',
+  [EJiraType.Capability]: 'Code',
+  [EJiraType.Feature]: 'Bolt',
+  [EJiraType.Objective]: 'IssueTypeObjective',
+  [EJiraType.Task]: 'Check',
+  [EJiraType.Bug]: 'SquareDot',
+  [EJiraType.Incident]: 'FolderClose',
+  [EJiraType.Improvement]: 'ArrowUpward',
 };
 
-export const issueTypeBackgroundColors: Record<JiraTypeEnum, string> = {
-  [JiraTypeEnum.Story]: '#20BE66',
-  [JiraTypeEnum.StrategicTheme]: '#FFFFFF',
-  [JiraTypeEnum.StrategicStep]: '#0499D8',
-  [JiraTypeEnum.Epic]: '#FCB32A',
-  [JiraTypeEnum.Capability]: '#0499D8',
-  [JiraTypeEnum.Feature]: '#6634FA',
-  [JiraTypeEnum.Objective]: '#FFFFFF',
-  [JiraTypeEnum.Task]: '#0499D8',
-  [JiraTypeEnum.Bug]: '#D43758',
-  [JiraTypeEnum.Incident]: '#FFFFFF',
-  [JiraTypeEnum.Improvement]: '#20BE66',
+export const issueTypeBackgroundColors: Record<EJiraType, string> = {
+  [EJiraType.Story]: '#20BE66',
+  [EJiraType.StrategicTheme]: '#FFFFFF',
+  [EJiraType.StrategicStep]: '#0499D8',
+  [EJiraType.Epic]: '#FCB32A',
+  [EJiraType.Capability]: '#0499D8',
+  [EJiraType.Feature]: '#6634FA',
+  [EJiraType.Objective]: '#FFFFFF',
+  [EJiraType.Task]: '#0499D8',
+  [EJiraType.Bug]: '#D43758',
+  [EJiraType.Incident]: '#FFFFFF',
+  [EJiraType.Improvement]: '#20BE66',
 };
 
-export const issueTypeColors: Record<JiraTypeEnum, string> = {
-  [JiraTypeEnum.Story]: DEFAULT_COLOR,
-  [JiraTypeEnum.StrategicTheme]: '#212226',
-  [JiraTypeEnum.StrategicStep]: DEFAULT_COLOR,
-  [JiraTypeEnum.Epic]: DEFAULT_COLOR,
-  [JiraTypeEnum.Capability]: DEFAULT_COLOR,
-  [JiraTypeEnum.Feature]: DEFAULT_COLOR,
-  [JiraTypeEnum.Objective]: '#02599B',
-  [JiraTypeEnum.Task]: DEFAULT_COLOR,
-  [JiraTypeEnum.Bug]: DEFAULT_COLOR,
-  [JiraTypeEnum.Incident]: '#D43758',
-  [JiraTypeEnum.Improvement]: DEFAULT_COLOR,
+export const issueTypeColors: Record<EJiraType, string> = {
+  [EJiraType.Story]: DEFAULT_COLOR,
+  [EJiraType.StrategicTheme]: '#212226',
+  [EJiraType.StrategicStep]: DEFAULT_COLOR,
+  [EJiraType.Epic]: DEFAULT_COLOR,
+  [EJiraType.Capability]: DEFAULT_COLOR,
+  [EJiraType.Feature]: DEFAULT_COLOR,
+  [EJiraType.Objective]: '#02599B',
+  [EJiraType.Task]: DEFAULT_COLOR,
+  [EJiraType.Bug]: DEFAULT_COLOR,
+  [EJiraType.Incident]: '#D43758',
+  [EJiraType.Improvement]: DEFAULT_COLOR,
 };
 
-const getStyles = (name: JiraTypeEnum) => {
+const getStyles = (name: EJiraType) => {
   return {
     container: css`
       display: inline-flex;
@@ -64,7 +64,7 @@ const getStyles = (name: JiraTypeEnum) => {
 };
 
 export const UiJiraTypeIcon: React.FC<JiraTypeIconProps> = ({ name, size = 'sm', ...props }) => {
-  const iconName = toObjectKey<JiraTypeEnum>(name);
+  const iconName = toObjectKey<EJiraType>(name);
   const styles = getStyles(iconName);
 
   return (

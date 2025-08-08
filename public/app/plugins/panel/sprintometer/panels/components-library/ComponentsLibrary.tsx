@@ -15,7 +15,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '../../components/shadcn/popover';
 import { UiButton, UiPanelTitle, UiSelect } from '../../components/ui';
 import { theme } from '../../theme';
-import { PanelOptions } from '../../types';
+import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
 import { BreadcrumbExample } from './Demo/BreadcrumbsExample';
@@ -32,7 +32,7 @@ import { SwitchDemo } from './Demo/SwitchDemo';
 import { jiraStatusGroups } from './Demo/selectData';
 import { ComponentsLibraryCustomDataInterface } from './types';
 
-interface Props extends PanelProps<PanelOptions> {}
+interface Props extends PanelProps<TPanelOptions> {}
 
 const styles = {
   wrapper: css`

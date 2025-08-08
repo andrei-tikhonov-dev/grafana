@@ -3,7 +3,7 @@ import React from 'react';
 
 import { UiCard, UiText, UiTitle } from '../../../components/ui';
 import { theme2 } from '../../../theme/theme';
-import { DateType } from '../../../types';
+import { TDate } from '../../../types';
 import { TimelineInterface } from '../types';
 
 import { Day, DayVariant } from './Day';
@@ -63,11 +63,11 @@ const styles = {
   `,
 };
 
-const normalizeDate = (date: DateType): string => {
+const normalizeDate = (date: TDate): string => {
   return new Date(date).toISOString().split('T')[0];
 };
 
-const getDayVariant = (dayDate: DateType, currentDate: DateType, isWorking: boolean): DayVariant => {
+const getDayVariant = (dayDate: TDate, currentDate: TDate, isWorking: boolean): DayVariant => {
   const normalizedDayDate = normalizeDate(dayDate);
   const normalizedCurrentDate = normalizeDate(currentDate);
 

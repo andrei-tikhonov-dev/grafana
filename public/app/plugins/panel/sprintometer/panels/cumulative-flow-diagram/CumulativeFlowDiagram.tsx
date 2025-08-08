@@ -7,14 +7,14 @@ import { MultiSelect } from '@grafana/ui';
 import { useEcharts } from '../../hooks/useEcharts';
 import { usePluginState } from '../../hooks/usePluginState';
 import { theme } from '../../theme';
-import { PanelOptions } from '../../types';
+import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
 import { PLACEHOLDER_SELECT_ISSUE } from './constants';
-import { CumulativeFlowDiagramData } from './types';
+import { MData } from './types';
 import { filterCumulativeFlowDiagramData, getCumulativeFlowDiagramOptions, prepareData } from './utils';
 
-interface CumulativeFlowDiagramProps extends PanelProps<PanelOptions> {}
+interface CumulativeFlowDiagramProps extends PanelProps<TPanelOptions> {}
 
 const styles = {
   wrapper: css`
@@ -48,7 +48,7 @@ const styles = {
   `,
 };
 
-const initialData: CumulativeFlowDiagramData = {
+const initialData: MData = {
   periodType: 'string',
   currentPeriod: '',
   periods: [],
@@ -75,7 +75,7 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
   const [state, setState] = usePluginState<CumulativeFlowDiagramState>(options, onOptionsChange, initialState);
   const { selectedIssues, selectedStatuses } = state;
 
-  const customData = getGrafanaCustomData<CumulativeFlowDiagramData>(panelData, initialData);
+  const customData = getGrafanaCustomData<MData>(panelData, initialData);
 
   const { periodsData, currentPeriod, issueOptions, data, periodType } = useMemo(() => {
     return prepareData(customData);

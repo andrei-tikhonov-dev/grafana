@@ -6,14 +6,14 @@ import { PanelProps } from '@grafana/data';
 import { UiIcon, UiPanelTitle, UiText } from '../../components/ui';
 import { UiZeroState } from '../../components/ui/zero-state/UiZeroState';
 import { theme } from '../../theme';
-import { PanelOptions } from '../../types';
+import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
 import { Timeline } from './components/Timeline';
 import { sprintTimeline } from './mocks/timeline';
 import { HeaderCustomDataInterface } from './types';
 
-interface Props extends PanelProps<PanelOptions> {}
+interface Props extends PanelProps<TPanelOptions> {}
 
 const styles = {
   wrapper: css`

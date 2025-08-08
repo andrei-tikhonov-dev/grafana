@@ -2,12 +2,12 @@ import { css, cx } from '@emotion/css';
 import React from 'react';
 
 import { theme2 } from '../../../theme/theme';
-import { ZeroStateInterface } from '../../../types';
+import { TZeroState } from '../../../types';
 import { UiButton } from '../button/UiButton';
 import { UiText } from '../text/UiText';
 import { UiTitle } from '../title/UiTitle';
 
-export interface UiZeroStateProps extends ZeroStateInterface {
+export interface UiZeroStateProps extends TZeroState {
   className?: string | undefined;
 }
 

@@ -1,37 +1,37 @@
 import { SelectableValue } from '@grafana/data';
 
-export type PeriodType = 'date' | 'string';
+export interface MData {
+  periodType: MPeriod;
+  currentPeriod: string;
+  periods: MPeriodData[];
+  issueTypes: MStructuredData[];
+}
 
-export type CumulativeFlowDiagramPeriodData = {
+export type MPeriod = 'date' | 'string';
+
+export type MPeriodData = {
   value: string;
 };
 
-export type CumulativeFlowDiagramStructuredData = {
+export type MStructuredData = {
   name: string;
   issuesAmount: Record<string, number[]>;
 };
 
-export interface CumulativeFlowDiagramData {
-  periodType: PeriodType;
-  currentPeriod: string;
-  periods: CumulativeFlowDiagramPeriodData[];
-  issueTypes: CumulativeFlowDiagramStructuredData[];
-}
-
-export type CumulativeFlowDiagramAggregatedData = {
+export type MAggregatedData = {
   issuesAmount: Record<string, Record<string, number[]>>;
 };
 
-export interface CumulativeFlowDiagramPreparedData {
-  periodsData: CumulativeFlowDiagramPeriodData[];
+export interface MPreparedData {
+  periodsData: MPeriodData[];
   currentPeriod: string;
   issueOptions: Array<SelectableValue<string>>;
   statusOptions: Array<SelectableValue<string>>;
-  periodType: PeriodType;
-  data: CumulativeFlowDiagramAggregatedData;
+  periodType: MPeriod;
+  data: MAggregatedData;
 }
 
-export type CumulativeFlowDiagramFilteredData = {
+export type MFilteredData = {
   filteredData: Array<{ data: number[]; name: string }>;
   periods: string[];
 };

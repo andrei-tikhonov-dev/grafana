@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ColumnTypeEnum, UserInterface } from '../../../types';
+import { EColumnType, TUser } from '../../../types';
 import { formatRelativeDate } from '../../../utils/dateTime';
 import { isNullish } from '../../../utils/helpers';
 
@@ -21,7 +21,7 @@ type CellRenderer = (value: any) => React.ReactNode;
 const EMPTY_CELL = <span>&nbsp;</span>;
 
 const renderUserCell = (value: unknown): React.ReactNode => {
-  const user = value as UserInterface;
+  const user = value as TUser;
   return <DefaultCell value={user?.name} />;
 };
 
@@ -33,27 +33,27 @@ const renderDefaultCell = (value: unknown): React.ReactNode => {
   return <DefaultCell value={value} />;
 };
 
-const cellRenderers: Record<ColumnTypeEnum, CellRenderer> = {
-  [ColumnTypeEnum.Link]: (value) => <LinkCell value={value} />,
-  [ColumnTypeEnum.HasChanges]: (value) => <HasChangesCell value={value} />,
-  [ColumnTypeEnum.IssueTypeIcon]: (value) => <JiraTypeIconCell value={value} />,
-  [ColumnTypeEnum.IssueStatus]: (value) => <JiraChangesHistoryCell value={value} />,
-  [ColumnTypeEnum.Changes]: (value) => <JiraChangesHistoryCell value={value} />,
-  [ColumnTypeEnum.Sprint]: (value) => <JiraChangesHistoryCell value={value} />,
-  [ColumnTypeEnum.User]: renderUserCell,
-  [ColumnTypeEnum.Priority]: renderDefaultCell,
-  [ColumnTypeEnum.Date]: renderDateCell,
-  [ColumnTypeEnum.Default]: renderDefaultCell,
-  [ColumnTypeEnum.Number]: renderDefaultCell,
-  [ColumnTypeEnum.Boolean]: renderDefaultCell,
-  [ColumnTypeEnum.ART]: renderDefaultCell,
-  [ColumnTypeEnum.Text]: renderDefaultCell,
-  [ColumnTypeEnum.Team]: renderDefaultCell,
+const cellRenderers: Record<EColumnType, CellRenderer> = {
+  [EColumnType.Link]: (value) => <LinkCell value={value} />,
+  [EColumnType.HasChanges]: (value) => <HasChangesCell value={value} />,
+  [EColumnType.IssueTypeIcon]: (value) => <JiraTypeIconCell value={value} />,
+  [EColumnType.IssueStatus]: (value) => <JiraChangesHistoryCell value={value} />,
+  [EColumnType.Changes]: (value) => <JiraChangesHistoryCell value={value} />,
+  [EColumnType.Sprint]: (value) => <JiraChangesHistoryCell value={value} />,
+  [EColumnType.User]: renderUserCell,
+  [EColumnType.Priority]: renderDefaultCell,
+  [EColumnType.Date]: renderDateCell,
+  [EColumnType.Default]: renderDefaultCell,
+  [EColumnType.Number]: renderDefaultCell,
+  [EColumnType.Boolean]: renderDefaultCell,
+  [EColumnType.ART]: renderDefaultCell,
+  [EColumnType.Text]: renderDefaultCell,
+  [EColumnType.Team]: renderDefaultCell,
 };
 
 const getRenderer = (type: string): CellRenderer => {
-  const columnType = type as ColumnTypeEnum;
-  return cellRenderers[columnType] ?? cellRenderers[ColumnTypeEnum.Default];
+  const columnType = type as EColumnType;
+  return cellRenderers[columnType] ?? cellRenderers[EColumnType.Default];
 };
 
 export const renderCellContent = ({ value, type }: RenderCellProps): React.ReactNode => {

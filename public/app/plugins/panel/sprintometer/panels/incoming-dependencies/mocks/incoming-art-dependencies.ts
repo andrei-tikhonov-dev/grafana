@@ -1,91 +1,91 @@
-import { ColumnMeta, ColumnTypeEnum, JiraTypeEnum } from '../../../types';
-import { IncomingArtDependenciesCustomData, InnerArtIssueKey, OuterArtIssueKey } from '../types';
+import { TColumnMeta, EColumnType, EJiraType } from '../../../types';
+import { MCustomData, EInnerArtIssueKey, EOuterArtIssueKey } from '../types';
 
-const columns: ColumnMeta[] = [
+const columns: TColumnMeta[] = [
   {
-    key: OuterArtIssueKey.IssueKey,
+    key: EOuterArtIssueKey.IssueKey,
     title: 'Feature key',
-    type: ColumnTypeEnum.Link,
+    type: EColumnType.Link,
   },
   {
-    key: OuterArtIssueKey.IssueType,
-    type: ColumnTypeEnum.IssueTypeIcon,
+    key: EOuterArtIssueKey.IssueType,
+    type: EColumnType.IssueTypeIcon,
   },
   {
-    key: OuterArtIssueKey.Summary,
+    key: EOuterArtIssueKey.Summary,
     title: 'Summary',
-    type: ColumnTypeEnum.Text,
+    type: EColumnType.Text,
   },
   {
-    key: OuterArtIssueKey.HasChanges,
-    type: ColumnTypeEnum.HasChanges,
+    key: EOuterArtIssueKey.HasChanges,
+    type: EColumnType.HasChanges,
   },
   {
-    key: OuterArtIssueKey.Status,
+    key: EOuterArtIssueKey.Status,
     title: 'Status',
-    type: ColumnTypeEnum.IssueStatus,
+    type: EColumnType.IssueStatus,
   },
   {
-    key: OuterArtIssueKey.ActiveDependencies,
+    key: EOuterArtIssueKey.ActiveDependencies,
     title: 'Active dependencies',
-    type: ColumnTypeEnum.Number,
+    type: EColumnType.Number,
   },
 ];
 
-const innerColumns: ColumnMeta[] = [
+const innerColumns: TColumnMeta[] = [
   {
-    key: InnerArtIssueKey.IssueKey,
+    key: EInnerArtIssueKey.IssueKey,
     title: 'Issue key',
-    type: ColumnTypeEnum.Link,
+    type: EColumnType.Link,
   },
   {
-    key: InnerArtIssueKey.IssueType,
-    type: ColumnTypeEnum.IssueTypeIcon,
+    key: EInnerArtIssueKey.IssueType,
+    type: EColumnType.IssueTypeIcon,
   },
   {
-    key: InnerArtIssueKey.Summary,
+    key: EInnerArtIssueKey.Summary,
     title: 'Summary',
-    type: ColumnTypeEnum.Text,
+    type: EColumnType.Text,
   },
   {
-    key: InnerArtIssueKey.HasChanges,
-    type: ColumnTypeEnum.HasChanges,
+    key: EInnerArtIssueKey.HasChanges,
+    type: EColumnType.HasChanges,
   },
   {
-    key: InnerArtIssueKey.OwnerArt,
+    key: EInnerArtIssueKey.OwnerArt,
     title: 'Owner ART',
-    type: ColumnTypeEnum.Team,
+    type: EColumnType.Team,
   },
   {
-    key: InnerArtIssueKey.OwnerTeam,
+    key: EInnerArtIssueKey.OwnerTeam,
     title: 'Owner team',
-    type: ColumnTypeEnum.Team,
+    type: EColumnType.Team,
   },
   {
-    key: InnerArtIssueKey.Status,
+    key: EInnerArtIssueKey.Status,
     title: 'Status',
-    type: ColumnTypeEnum.IssueStatus,
+    type: EColumnType.IssueStatus,
   },
   {
-    key: InnerArtIssueKey.FixedVersion,
+    key: EInnerArtIssueKey.FixedVersion,
     title: 'Fixed version',
-    type: ColumnTypeEnum.Changes,
+    type: EColumnType.Changes,
   },
   {
-    key: InnerArtIssueKey.PlannedVersion,
+    key: EInnerArtIssueKey.PlannedVersion,
     title: 'Planned version',
-    type: ColumnTypeEnum.Changes,
+    type: EColumnType.Changes,
     size: 'sm',
   },
   {
-    key: InnerArtIssueKey.LastUpdate,
+    key: EInnerArtIssueKey.LastUpdate,
     title: 'Last update',
-    type: ColumnTypeEnum.Date,
+    type: EColumnType.Date,
     size: 'sm',
   },
 ];
 
-export const data: IncomingArtDependenciesCustomData = {
+export const data: MCustomData = {
   columns,
   innerColumns,
   data: [
@@ -96,7 +96,7 @@ export const data: IncomingArtDependenciesCustomData = {
         url: 'https://jira.company.com/browse/FEAT-789',
         text: 'FEAT-789',
       },
-      issueType: JiraTypeEnum.Epic,
+      issueType: EJiraType.Epic,
       summary: 'Mobile app performance optimization',
       status: {
         current: 'In Progress',
@@ -111,7 +111,7 @@ export const data: IncomingArtDependenciesCustomData = {
             url: 'https://jira.company.com/browse/TECH-101',
             text: 'TECH-101',
           },
-          issueType: JiraTypeEnum.Story,
+          issueType: EJiraType.Story,
           summary: 'Optimize database queries for mobile API',
           ownerTeam: 'Platform Team',
           ownerArt: 'Platform ART',
@@ -136,7 +136,7 @@ export const data: IncomingArtDependenciesCustomData = {
             url: 'https://jira.company.com/browse/TECH-102',
             text: 'TECH-102',
           },
-          issueType: JiraTypeEnum.Story,
+          issueType: EJiraType.Story,
           summary: 'Implement image compression middleware',
           ownerTeam: 'Infrastructure Team',
           ownerArt: 'Platform ART',
@@ -163,7 +163,7 @@ export const data: IncomingArtDependenciesCustomData = {
         url: 'https://jira.company.com/browse/FEAT-890',
         text: 'FEAT-890',
       },
-      issueType: JiraTypeEnum.Story,
+      issueType: EJiraType.Story,
       summary: 'Real-time notifications system',
       status: {
         current: 'Ready for Testing',
@@ -178,7 +178,7 @@ export const data: IncomingArtDependenciesCustomData = {
             url: 'https://jira.company.com/browse/INFRA-201',
             text: 'INFRA-201',
           },
-          issueType: JiraTypeEnum.Story,
+          issueType: EJiraType.Story,
           summary: 'Setup WebSocket infrastructure',
           ownerTeam: 'DevOps Team',
           ownerArt: 'Infrastructure ART',
@@ -203,7 +203,7 @@ export const data: IncomingArtDependenciesCustomData = {
             url: 'https://jira.company.com/browse/INFRA-202',
             text: 'INFRA-202',
           },
-          issueType: JiraTypeEnum.Task,
+          issueType: EJiraType.Task,
           summary: 'Configure push notification service',
           ownerTeam: 'Backend Team',
           ownerArt: 'Platform ART',
@@ -228,7 +228,7 @@ export const data: IncomingArtDependenciesCustomData = {
             url: 'https://jira.company.com/browse/INFRA-203',
             text: 'INFRA-203',
           },
-          issueType: JiraTypeEnum.Story,
+          issueType: EJiraType.Story,
           summary: 'Implement notification preferences API',
           ownerTeam: 'API Team',
           ownerArt: 'Product ART',
@@ -255,7 +255,7 @@ export const data: IncomingArtDependenciesCustomData = {
         url: 'https://jira.company.com/browse/FEAT-991',
         text: 'FEAT-991',
       },
-      issueType: JiraTypeEnum.Epic,
+      issueType: EJiraType.Epic,
       summary: 'Multi-language support implementation',
       status: {
         current: 'Planning',
@@ -270,7 +270,7 @@ export const data: IncomingArtDependenciesCustomData = {
             url: 'https://jira.company.com/browse/I18N-301',
             text: 'I18N-301',
           },
-          issueType: JiraTypeEnum.Story,
+          issueType: EJiraType.Story,
           summary: 'Setup internationalization framework',
           ownerTeam: 'Frontend Team',
           ownerArt: 'UI/UX ART',

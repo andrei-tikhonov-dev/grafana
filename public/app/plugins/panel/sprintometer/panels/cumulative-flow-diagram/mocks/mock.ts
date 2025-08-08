@@ -1,6 +1,6 @@
-import { CumulativeFlowDiagramData } from '../types';
+import { MData } from '../types';
 
-export const cfdData: CumulativeFlowDiagramData = {
+export const cfdData: MData = {
   currentPeriod: '2025-04-13T00:00:00Z',
   periodType: 'date',
   periods: [

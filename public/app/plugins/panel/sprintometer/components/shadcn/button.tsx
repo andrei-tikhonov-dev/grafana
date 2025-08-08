@@ -123,7 +123,6 @@ const sizeStyles = {
 
   sm: css`
     height: 32px;
-    border-radius: ${theme2.radii.md};
     gap: 6px;
     padding: 0 12px;
 
@@ -134,7 +133,6 @@ const sizeStyles = {
 
   lg: css`
     height: 40px;
-    border-radius: ${theme2.radii.md};
     padding: 0 24px;
 
     &:has(> svg) {

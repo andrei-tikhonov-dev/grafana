@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { Popover, PopoverContent, PopoverTrigger } from '../../../components/shadcn/popover';
 import { theme2 } from '../../../theme/theme';
-import { DateType } from '../../../types';
+import { TDate } from '../../../types';
 import { formatDay, formatDayOfWeek, formatFullDate } from '../../../utils/dateTime';
 import { EventInterface, EventTypeEnum } from '../types';
 
@@ -112,7 +112,7 @@ type DayVariant = keyof typeof dayVariantStyles;
 type CircleVariant = keyof typeof circleStyles;
 
 interface DayProps extends React.ComponentProps<'div'> {
-  date: DateType;
+  date: TDate;
   events?: EventInterface[];
   variant?: DayVariant;
 }

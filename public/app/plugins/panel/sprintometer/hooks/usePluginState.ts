@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
 
-import { PanelOptions } from '../types';
+import { TPanelOptions } from '../types';
 
 export const usePluginState = <T extends Record<string, any>>(
-  options: PanelOptions,
-  onOptionsChange: (options: PanelOptions) => void,
+  options: TPanelOptions,
+  onOptionsChange: (options: TPanelOptions) => void,
   initialState: T
 ): [T, (newState: T | ((prevState: T) => T)) => void] => {
   const [state, setState] = useState<T>(() => {

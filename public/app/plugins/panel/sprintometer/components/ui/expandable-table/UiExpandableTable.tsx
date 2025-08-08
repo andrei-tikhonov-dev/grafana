@@ -3,25 +3,25 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { UiEllipsis, UiIcon, renderCellContent } from '../';
 import { theme } from '../../../theme';
-import { Table, ColumnSize } from '../../../types';
+import { TTable, TColumnSize } from '../../../types';
 
 type RowId = number;
 
-interface ExpandableTableProps<T extends { id: RowId }, U = any> extends Table<T, U> {
+interface ExpandableTableProps<T extends { id: RowId }, U = any> extends TTable<T, U> {
   renderCell?: (props: { data: any; type: string; value: any }) => React.ReactNode;
   initialExpandedRows?: Record<RowId, boolean>;
   disableExpand?: boolean;
 }
 
 interface TableColumn {
-  size?: ColumnSize;
+  size?: TColumnSize;
   hidden?: boolean;
   key: string;
   title?: string;
   type: string;
 }
 
-const COLUMN_SIZES: Record<ColumnSize, string> = {
+const COLUMN_SIZES: Record<TColumnSize, string> = {
   xs: '42px',
   sm: '100px',
   md: '150px',
@@ -34,7 +34,7 @@ const COLUMN_SIZES: Record<ColumnSize, string> = {
 const DEFAULT_COLUMN_WIDTH = 'minmax(100px, 1fr)';
 const EXPAND_TOGGLE_WIDTH = '40px';
 
-const getColumnWidth = (size?: ColumnSize): string => {
+const getColumnWidth = (size?: TColumnSize): string => {
   return size ? COLUMN_SIZES[size] : DEFAULT_COLUMN_WIDTH;
 };
 

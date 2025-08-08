@@ -8,11 +8,11 @@ import { UiEllipsis } from '../../components/ui';
 import { useEcharts } from '../../hooks/useEcharts';
 import { usePluginState } from '../../hooks/usePluginState';
 import { theme } from '../../theme';
-import { PanelOptions } from '../../types';
+import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
-import { BurndownSummary } from './components/BurndownSummary';
 import { ScopeChangesViewer } from './components/ScopeChangesViewer';
+import { Summary } from './components/Summary';
 import {
   ISSUES_AMOUNT_COLOR,
   LABEL_ISSUES_AMOUNT,
@@ -21,10 +21,10 @@ import {
   PLACEHOLDER_SELECT_VALUE,
   STORY_POINTS_COLOR,
 } from './constants';
-import { BurndownCustomData, ValueMode } from './types';
+import { MBurndownCustomData, EValueMode } from './types';
 import { filterBurndownChartData, getChartOptions, prepareData } from './utils';
 
-interface BurndownChartProps extends PanelProps<PanelOptions> {}
+interface BurndownChartProps extends PanelProps<TPanelOptions> {}
 
 const styles = {
   wrapper: css`
@@ -64,18 +64,18 @@ const styles = {
   `,
 };
 
-const initialData: BurndownCustomData = {
+const initialData: MBurndownCustomData = {
   currentDate: '',
   days: [],
   issueTypes: [],
   summary: {
-    [ValueMode.StoryPoints]: { completed: 0, remaining: 0, total: 0, percentage: 0 },
-    [ValueMode.IssuesAmount]: { completed: 0, remaining: 0, total: 0, percentage: 0 },
+    [EValueMode.StoryPoints]: { completed: 0, remaining: 0, total: 0, percentage: 0 },
+    [EValueMode.IssuesAmount]: { completed: 0, remaining: 0, total: 0, percentage: 0 },
   },
 };
 
 interface BurndownChartState {
-  valueMode: ValueMode;
+  valueMode: EValueMode;
   selectedIssues: string[];
   showNonWorkingDays: boolean;
 }
@@ -88,7 +88,7 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
   onOptionsChange,
 }) => {
   const initialState: BurndownChartState = {
-    valueMode: ValueMode.StoryPoints,
+    valueMode: EValueMode.StoryPoints,
     selectedIssues: [],
     showNonWorkingDays: true,
   };
@@ -96,7 +96,7 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
   const [state, setState] = usePluginState<BurndownChartState>(options, onOptionsChange, initialState);
   const { valueMode, selectedIssues, showNonWorkingDays } = state;
 
-  const customData = getGrafanaCustomData<BurndownCustomData>(panelData, initialData);
+  const customData = getGrafanaCustomData<MBurndownCustomData>(panelData, initialData);
 
   const { summary, daysData, currentDay, issueOptions, valueOptions, data, scopeChanges } = useMemo(() => {
     return prepareData(customData);
@@ -113,7 +113,7 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
   const option = useMemo(
     () =>
       getChartOptions({
-        color: valueMode === ValueMode.StoryPoints ? STORY_POINTS_COLOR : ISSUES_AMOUNT_COLOR,
+        color: valueMode === EValueMode.StoryPoints ? STORY_POINTS_COLOR : ISSUES_AMOUNT_COLOR,
         actual,
         ideal,
         days,
@@ -129,7 +129,7 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
   const handleValueModeChange = (value: SelectableValue<string>) => {
     setState((prevState) => ({
       ...prevState,
-      valueMode: value.value as ValueMode,
+      valueMode: value.value as EValueMode,
     }));
   };
 
@@ -196,8 +196,8 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
         <div ref={chartRef} className={styles.content} />
 
         <div className={styles.summaryContainer}>
-          <BurndownSummary name={LABEL_STORY_POINTS} summary={summary.storyPoints} color={STORY_POINTS_COLOR} />
-          <BurndownSummary name={LABEL_ISSUES_AMOUNT} summary={summary.issuesAmount} color={ISSUES_AMOUNT_COLOR} />
+          <Summary name={LABEL_STORY_POINTS} summary={summary.storyPoints} color={STORY_POINTS_COLOR} />
+          <Summary name={LABEL_ISSUES_AMOUNT} summary={summary.issuesAmount} color={ISSUES_AMOUNT_COLOR} />
         </div>
       </div>
     </div>

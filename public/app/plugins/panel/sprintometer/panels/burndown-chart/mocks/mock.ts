@@ -1,4 +1,4 @@
-import { BurndownCustomData } from '../types';
+import { MBurndownCustomData } from '../types';
 
 export const data = {
   'Story Points': {
@@ -31,7 +31,7 @@ export const data = {
   },
 };
 
-export const burndownData: BurndownCustomData = {
+export const burndownData: MBurndownCustomData = {
   currentDate: '2025-04-13T00:00:00Z',
   days: [
     { date: '2025-04-02T00:00:00Z', isWorking: true, scopeChanges: [] },

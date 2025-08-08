@@ -1,4 +1,4 @@
-export enum ColumnTypeEnum {
+export enum EColumnType {
   Link = 'link',
   HasChanges = 'hasChanges',
   IssueTypeIcon = 'issueTypeIcon',
@@ -16,33 +16,34 @@ export enum ColumnTypeEnum {
   Default = 'default',
 }
 
-export type ColumnSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
+export type TColumnSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
 
-export interface PanelOptions {
-  panelType: PanelTypeEnum;
+export interface TPanelOptions {
+  panelType: EPanelType;
   savedState: string;
 }
 
-export const enum PanelTypeEnum {
+export const enum EPanelType {
   BurndownChart = 'BurndownChart',
+  ComponentsLibrary = 'ComponentsLibrary',
   CumulativeFlowDiagram = 'CumulativeFlowDiagram',
-  IncomingDependencies = 'IncomingDependencies',
-  OutgoingDependencies = 'OutgoingDependencies',
-  SimilarTasks = 'SimilarTasks',
   EmptyPanel = 'EmptyPanel',
   Header = 'Header',
-  ComponentsLibrary = 'ComponentsLibrary',
+  IncomingDependencies = 'IncomingDependencies',
+  OutgoingDependencies = 'OutgoingDependencies',
+  PlannerBoard = 'PlannerBoard',
+  SimilarTasks = 'SimilarTasks',
 }
 
-export interface Table<Data, InnerData = unknown> {
-  columns: ColumnMeta[];
-  innerColumns: ColumnMeta[];
+export interface TTable<Data, InnerData = unknown> {
+  columns: TColumnMeta[];
+  innerColumns: TColumnMeta[];
   data: Array<Data & { innerData?: InnerData[] }>;
 }
 
-export interface ColumnMeta {
+export interface TColumnMeta {
   key: string;
-  type: ColumnTypeEnum;
+  type: EColumnType | string;
 
   title?: string;
   hidden?: boolean;
@@ -50,10 +51,10 @@ export interface ColumnMeta {
   editable?: boolean;
   options?: Array<{ id: number; label: string }>;
   tip?: string;
-  size?: ColumnSize;
+  size?: TColumnSize;
 }
 
-export enum JiraPriorityEnum {
+enum EJiraPriority {
   Blocker = 'blocker',
   Critical = 'critical',
   Highest = 'highest',
@@ -64,7 +65,9 @@ export enum JiraPriorityEnum {
   Low = 'low',
 }
 
-export enum JiraTypeEnum {
+export type TJiraPriority = EJiraPriority | string;
+
+export enum EJiraType {
   Story = 'story',
   Task = 'task',
   Bug = 'bug',
@@ -78,7 +81,7 @@ export enum JiraTypeEnum {
   Incident = 'incident',
 }
 
-export enum PanelStatusEnum {
+export enum EDashboardStatus {
   Complete = 'Complete',
   Good = 'Good',
   OnTrack = 'OnTrack',
@@ -92,44 +95,55 @@ export enum PanelStatusEnum {
   PlentyResources = 'PlentyResources',
 }
 
-export interface JiraIssueTypeData {
-  type: JiraTypeEnum;
+export interface TJiraIssueType {
+  type: EJiraType | string;
   name: string;
 }
 
-export type PanelStatusType = keyof typeof PanelStatusEnum;
+enum ESprintometerStatus {
+  OnTrack = 'OnTrack',
+  NeedAttention = 'NeedAttention',
+  Warning = 'Warning',
+}
 
-export type UrlType = string;
+export type TSprintometerStatus = ESprintometerStatus | string;
+
+export type TDashboardStatus = keyof typeof EDashboardStatus;
+
+export type TUrl = string;
 
 // example: 2025-05-20T15:30:00Z
-export type DateType = string;
+export type TDate = string;
 
-export interface Link {
-  url: UrlType;
+export interface TLink {
+  url: TUrl;
   text: string;
 }
 
-export interface JiraChangesHistory {
+export interface TJiraChangesHistory {
   current: string;
   previous?: string | null;
 }
 
-export interface UserInterface {
+export interface TUser {
   name: string;
   avatar?: string;
-  url?: UrlType;
+  url?: TUrl;
 }
 
-export interface Period {
-  startDate: DateType;
-  endDate: DateType;
-  currentDate?: DateType;
+export interface TPeriod {
+  startDate: TDate;
+  endDate: TDate;
+  isCurrent?: boolean;
+  currentDate?: TDate;
 }
 
-export interface RequestInfo extends Record<string, any> {}
+export interface TRequestInfo extends Record<string, any> {}
 
-export interface ZeroStateInterface {
+export interface TZeroState {
   title: string;
   description: string;
-  link: Link;
+  link: TLink;
 }
+
+export type TId = number;

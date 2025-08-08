@@ -1,9 +1,9 @@
-import { DateType, PanelStatusType, UserInterface, ZeroStateInterface } from '../../types';
+import { TDate, TDashboardStatus, TUser, TZeroState } from '../../types';
 
 export interface HeaderCustomDataInterface extends Record<string, any> {
   timeline?: TimelineInterface;
   requestInfo?: { externalBoardId?: number; externalSprintId?: number };
-  zeroState?: ZeroStateInterface;
+  zeroState?: TZeroState;
 }
 
 export enum EventTypeEnum {
@@ -14,15 +14,15 @@ export enum EventTypeEnum {
 
 export interface EventInterface extends Record<string, any> {
   type: `${EventTypeEnum}`;
-  users?: UserInterface[];
+  users?: TUser[];
   text: string;
 }
 
 export interface TimelineInterface {
-  currentDate: DateType;
+  currentDate: TDate;
   weeks: Array<{
     days: Array<{
-      date: DateType;
+      date: TDate;
       isWorking: boolean;
       events: EventInterface[];
     }>;
@@ -71,7 +71,7 @@ export interface HeaderDeprecatedCustomData {
     options?: DeprecatedOptionType[];
   };
   statuses?: Array<{
-    status: PanelStatusType;
+    status: TDashboardStatus;
     title: string;
     description?: string;
     link?: string;

@@ -1,16 +1,14 @@
-import {
-  JiraTypeEnum,
-  JiraPriorityEnum,
-  Table,
-  UserInterface,
-  Link,
-  JiraChangesHistory,
-  JiraIssueTypeData,
-} from '../../types';
+import { EJiraType, TJiraPriority, TTable, TUser, TLink, TJiraChangesHistory, TJiraIssueType } from '../../types';
 
-// ART types
+export interface MCustomData extends TTable<MOuterArtIssue, MInnerArtIssue> {
+  total: number;
+}
 
-export enum OuterArtIssueKey {
+export interface MData extends TTable<MOuterIssue, MInnerIssue> {
+  total: number;
+}
+
+export enum EOuterArtIssueKey {
   Id = 'id',
   IssueKey = 'issueKey',
   HasChanges = 'hasChanges',
@@ -21,7 +19,7 @@ export enum OuterArtIssueKey {
   InnerData = 'innerData',
 }
 
-export enum InnerArtIssueKey {
+export enum EInnerArtIssueKey {
   Id = 'id',
   IssueKey = 'issueKey',
   HasChanges = 'hasChanges',
@@ -35,37 +33,31 @@ export enum InnerArtIssueKey {
   PlannedVersion = 'plannedVersion',
 }
 
-export interface OuterArtIssue {
-  [OuterArtIssueKey.Id]: number;
-  [OuterArtIssueKey.HasChanges]: boolean;
-  [OuterArtIssueKey.IssueKey]: Link;
-  [OuterArtIssueKey.IssueType]: JiraTypeEnum | JiraIssueTypeData;
-  [OuterArtIssueKey.Summary]: string;
-  [OuterArtIssueKey.Status]: JiraChangesHistory;
-  [OuterArtIssueKey.ActiveDependencies]: number;
-  [OuterArtIssueKey.InnerData]: InnerArtIssue[];
+export interface MOuterArtIssue {
+  [EOuterArtIssueKey.Id]: number;
+  [EOuterArtIssueKey.HasChanges]: boolean;
+  [EOuterArtIssueKey.IssueKey]: TLink;
+  [EOuterArtIssueKey.IssueType]: EJiraType | TJiraIssueType;
+  [EOuterArtIssueKey.Summary]: string;
+  [EOuterArtIssueKey.Status]: TJiraChangesHistory;
+  [EOuterArtIssueKey.ActiveDependencies]: number;
+  [EOuterArtIssueKey.InnerData]: MInnerArtIssue[];
 }
-export interface InnerArtIssue {
-  [InnerArtIssueKey.Id]: number;
-  [InnerArtIssueKey.HasChanges]: boolean;
-  [InnerArtIssueKey.IssueKey]: Link;
-  [InnerArtIssueKey.IssueType]: JiraTypeEnum | JiraIssueTypeData;
-  [InnerArtIssueKey.Summary]: string;
-  [InnerArtIssueKey.OwnerTeam]: string;
-  [InnerArtIssueKey.OwnerArt]: string;
-  [InnerArtIssueKey.Status]: JiraChangesHistory;
-  [InnerArtIssueKey.LastUpdate]: string;
-  [InnerArtIssueKey.FixedVersion]: JiraChangesHistory;
-  [InnerArtIssueKey.PlannedVersion]: JiraChangesHistory;
-}
-
-export interface IncomingArtDependenciesCustomData extends Table<OuterArtIssue, InnerArtIssue> {
-  total: number;
+export interface MInnerArtIssue {
+  [EInnerArtIssueKey.Id]: number;
+  [EInnerArtIssueKey.HasChanges]: boolean;
+  [EInnerArtIssueKey.IssueKey]: TLink;
+  [EInnerArtIssueKey.IssueType]: EJiraType | TJiraIssueType;
+  [EInnerArtIssueKey.Summary]: string;
+  [EInnerArtIssueKey.OwnerTeam]: string;
+  [EInnerArtIssueKey.OwnerArt]: string;
+  [EInnerArtIssueKey.Status]: TJiraChangesHistory;
+  [EInnerArtIssueKey.LastUpdate]: string;
+  [EInnerArtIssueKey.FixedVersion]: TJiraChangesHistory;
+  [EInnerArtIssueKey.PlannedVersion]: TJiraChangesHistory;
 }
 
-// Team types
-
-export enum OuterIssueKey {
+export enum EOuterIssueKey {
   Id = 'id',
   IssueKey = 'issueKey',
   HasChanges = 'hasChanges',
@@ -78,7 +70,7 @@ export enum OuterIssueKey {
   InnerData = 'innerData',
 }
 
-export enum InnerIssueKey {
+export enum EInnerIssueKey {
   Id = 'id',
   IssueKey = 'issueKey',
   HasChanges = 'hasChanges',
@@ -90,31 +82,27 @@ export enum InnerIssueKey {
   LastUpdate = 'lastUpdate',
   Sprint = 'sprint',
 }
-export interface OuterIssue {
-  [OuterIssueKey.Id]: number;
-  [OuterIssueKey.HasChanges]: boolean;
-  [OuterIssueKey.IssueKey]: Link;
-  [OuterIssueKey.IssueType]: JiraTypeEnum | JiraIssueTypeData;
-  [OuterIssueKey.Summary]: string;
-  [OuterIssueKey.Status]: JiraChangesHistory;
-  [OuterIssueKey.Assignee]: UserInterface;
-  [OuterIssueKey.Priority]: JiraPriorityEnum;
-  [OuterIssueKey.ActiveDependencies]: number;
-  [OuterIssueKey.InnerData]: InnerIssue[];
+export interface MOuterIssue {
+  [EOuterIssueKey.Id]: number;
+  [EOuterIssueKey.HasChanges]: boolean;
+  [EOuterIssueKey.IssueKey]: TLink;
+  [EOuterIssueKey.IssueType]: EJiraType | TJiraIssueType;
+  [EOuterIssueKey.Summary]: string;
+  [EOuterIssueKey.Status]: TJiraChangesHistory;
+  [EOuterIssueKey.Assignee]: TUser;
+  [EOuterIssueKey.Priority]: TJiraPriority;
+  [EOuterIssueKey.ActiveDependencies]: number;
+  [EOuterIssueKey.InnerData]: MInnerIssue[];
 }
-export interface InnerIssue {
-  [InnerIssueKey.Id]: number;
-  [InnerIssueKey.HasChanges]: boolean;
-  [InnerIssueKey.IssueKey]: Link;
-  [InnerIssueKey.IssueType]: JiraTypeEnum | JiraIssueTypeData;
-  [InnerIssueKey.Summary]: string;
-  [InnerIssueKey.OwnerTeam]: string;
-  [InnerIssueKey.Status]: JiraChangesHistory;
-  [InnerIssueKey.LastUpdate]: string;
-  [InnerIssueKey.Priority]: string;
-  [InnerIssueKey.Sprint]: JiraChangesHistory;
-}
-
-export interface IncomingDependenciesCustomData extends Table<OuterIssue, InnerIssue> {
-  total: number;
+export interface MInnerIssue {
+  [EInnerIssueKey.Id]: number;
+  [EInnerIssueKey.HasChanges]: boolean;
+  [EInnerIssueKey.IssueKey]: TLink;
+  [EInnerIssueKey.IssueType]: EJiraType | TJiraIssueType;
+  [EInnerIssueKey.Summary]: string;
+  [EInnerIssueKey.OwnerTeam]: string;
+  [EInnerIssueKey.Status]: TJiraChangesHistory;
+  [EInnerIssueKey.LastUpdate]: string;
+  [EInnerIssueKey.Priority]: string;
+  [EInnerIssueKey.Sprint]: TJiraChangesHistory;
 }

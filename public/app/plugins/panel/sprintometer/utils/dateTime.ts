@@ -1,4 +1,4 @@
-import { DateType } from '../types';
+import { TDate } from '../types';
 
 export const formatFullDate = (date?: string): string => {
   if (!date) {
@@ -25,7 +25,7 @@ export const formatDate = (date?: string): string => {
   return `${day} ${month}`;
 };
 
-export const formatDayOfWeek = (date: DateType): string => {
+export const formatDayOfWeek = (date: TDate): string => {
   return new Date(date).toLocaleDateString('en-US', { weekday: 'short' });
 };
 

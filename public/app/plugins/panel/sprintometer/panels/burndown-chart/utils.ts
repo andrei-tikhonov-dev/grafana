@@ -14,21 +14,21 @@ import {
   LEGEND_NON_WORKING_DAYS,
 } from './constants';
 import {
-  BurndownChartAggregatedData,
-  BurndownChartFilteredData,
-  BurndownCustomData,
-  BurndownDayData,
-  BurndownPreparedData,
-  BurndownStructuredData,
-  NonWorkingDays,
-  ScopeChanges,
-  TotalScopeChanges,
-  ValueMode,
+  MAggregatedData,
+  MFilteredData,
+  MBurndownCustomData,
+  MDayData,
+  MPreparedData,
+  MStructuredData,
+  MNonWorkingDays,
+  MScopeChanges,
+  MTotalScopeChanges,
+  EValueMode,
 } from './types';
 
-function groupScopeChangesByDayAndStatus(days: BurndownDayData[]): {
-  scopeChanges: ScopeChanges;
-  totalScopeChanges: TotalScopeChanges;
+function groupScopeChangesByDayAndStatus(days: MDayData[]): {
+  scopeChanges: MScopeChanges;
+  totalScopeChanges: MTotalScopeChanges;
 } {
   const scopeChanges: { [key: string]: Record<string, number> } = {};
   const totalScopeChanges: Record<string, number> = {};
@@ -58,29 +58,29 @@ function groupScopeChangesByDayAndStatus(days: BurndownDayData[]): {
   return { scopeChanges, totalScopeChanges };
 }
 
-const transformStructuredDataToAggregated = (data: BurndownStructuredData[]): BurndownChartAggregatedData => {
-  const result: BurndownChartAggregatedData = {
-    [ValueMode.StoryPoints]: {},
-    [ValueMode.IssuesAmount]: {},
+const transformStructuredDataToAggregated = (data: MStructuredData[]): MAggregatedData => {
+  const result: MAggregatedData = {
+    [EValueMode.StoryPoints]: {},
+    [EValueMode.IssuesAmount]: {},
   };
 
   data.forEach((item) => {
-    result[ValueMode.StoryPoints][item.name] = {
-      actual: item[ValueMode.StoryPoints].actual,
-      ideal: item[ValueMode.StoryPoints].ideal,
+    result[EValueMode.StoryPoints][item.name] = {
+      actual: item[EValueMode.StoryPoints].actual,
+      ideal: item[EValueMode.StoryPoints].ideal,
     };
 
-    result[ValueMode.IssuesAmount][item.name] = {
-      actual: item[ValueMode.IssuesAmount].actual,
-      ideal: item[ValueMode.IssuesAmount].ideal,
+    result[EValueMode.IssuesAmount][item.name] = {
+      actual: item[EValueMode.IssuesAmount].actual,
+      ideal: item[EValueMode.IssuesAmount].ideal,
     };
   });
 
   return result;
 };
 
-function getNonworkingDays(days: BurndownDayData[]): NonWorkingDays {
-  const nonWorkingDays: NonWorkingDays = [];
+function getNonworkingDays(days: MDayData[]): MNonWorkingDays {
+  const nonWorkingDays: MNonWorkingDays = [];
   let nonWorkingSequenceStart: number | null = null;
 
   for (let i = 0; i < days.length; i++) {
@@ -102,15 +102,15 @@ function getNonworkingDays(days: BurndownDayData[]): NonWorkingDays {
   return nonWorkingDays;
 }
 
-export function prepareData({ days, issueTypes, summary, currentDate }: BurndownCustomData): BurndownPreparedData {
+export function prepareData({ days, issueTypes, summary, currentDate }: MBurndownCustomData): MPreparedData {
   const issueOptions = issueTypes.map(({ name }) => ({
     label: name,
     value: name,
   }));
 
   const valueOptions = [
-    { label: LABEL_STORY_POINTS, value: ValueMode.StoryPoints },
-    { label: LABEL_ISSUES_AMOUNT, value: ValueMode.IssuesAmount },
+    { label: LABEL_STORY_POINTS, value: EValueMode.StoryPoints },
+    { label: LABEL_ISSUES_AMOUNT, value: EValueMode.IssuesAmount },
   ];
 
   const { scopeChanges, totalScopeChanges } = groupScopeChangesByDayAndStatus(days);
@@ -128,9 +128,9 @@ export function prepareData({ days, issueTypes, summary, currentDate }: Burndown
 }
 
 type FilterBurndownChartDataArgs = {
-  daysData: BurndownDayData[];
-  data: BurndownChartAggregatedData;
-  valueMode: ValueMode;
+  daysData: MDayData[];
+  data: MAggregatedData;
+  valueMode: EValueMode;
   selectedIssues: string[];
   showNonWorkingDays: boolean;
 };
@@ -141,7 +141,7 @@ export const filterBurndownChartData = ({
   selectedIssues,
   daysData,
   showNonWorkingDays,
-}: FilterBurndownChartDataArgs): BurndownChartFilteredData => {
+}: FilterBurndownChartDataArgs): MFilteredData => {
   const keysToUse =
     selectedIssues.length === 0 ? Object.keys(data[valueMode]) : selectedIssues.filter((name) => data[valueMode][name]);
 
@@ -204,7 +204,7 @@ function aggregateValues(arrays: number[][]): number[] {
 
 function formatTooltip(
   params: Array<{ axisValue: string; axisValueLabel: string }>,
-  scopeChanges: ScopeChanges
+  scopeChanges: MScopeChanges
 ): string {
   const { axisValueLabel, axisValue } = params[0];
   const changes = Object.entries(scopeChanges[axisValue]);
@@ -232,9 +232,9 @@ interface ChartOptions {
   ideal: number[];
   days: string[];
   currentDay: string;
-  nonWorkingDays: NonWorkingDays;
+  nonWorkingDays: MNonWorkingDays;
   color: string;
-  scopeChanges: ScopeChanges;
+  scopeChanges: MScopeChanges;
 }
 
 export const getChartOptions = ({

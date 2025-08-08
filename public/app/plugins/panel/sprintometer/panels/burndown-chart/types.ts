@@ -1,76 +1,76 @@
 import { SelectableValue } from '@grafana/data';
 
-export enum ValueMode {
+export interface MBurndownCustomData {
+  currentDate: string;
+  days: MDayData[];
+  issueTypes: MStructuredData[];
+  summary: {
+    [EValueMode.StoryPoints]: MSummary;
+    [EValueMode.IssuesAmount]: MSummary;
+  };
+}
+
+export enum EValueMode {
   StoryPoints = 'storyPoints',
   IssuesAmount = 'issuesAmount',
 }
 
-export type BurndownSummaryType = {
+export type MSummary = {
   completed: number;
   remaining: number;
   total: number;
   percentage: number;
 };
 
-export type BurndownIssueData = { summary: string; issueKey: string; url: string; status: string };
+export type MIssueData = { summary: string; issueKey: string; url: string; status: string };
 
-export type BurndownDayData = {
+export type MDayData = {
   date: string;
   isWorking: boolean;
-  scopeChanges: BurndownIssueData[];
+  scopeChanges: MIssueData[];
 };
 
-export type BurndownStructuredData = {
+export type MStructuredData = {
   name: string;
-  [ValueMode.IssuesAmount]: {
+  [EValueMode.IssuesAmount]: {
     actual: number[];
     ideal: number[];
   };
-  [ValueMode.StoryPoints]: {
+  [EValueMode.StoryPoints]: {
     actual: number[];
     ideal: number[];
   };
 };
 
-export interface BurndownCustomData {
-  currentDate: string;
-  days: BurndownDayData[];
-  issueTypes: BurndownStructuredData[];
-  summary: {
-    [ValueMode.StoryPoints]: BurndownSummaryType;
-    [ValueMode.IssuesAmount]: BurndownSummaryType;
-  };
-}
-
-export type BurndownChartAggregatedData = {
-  [mode in ValueMode]: Record<string, { actual: number[]; ideal: number[] }>;
+export type MAggregatedData = {
+  [mode in EValueMode]: Record<string, { actual: number[]; ideal: number[] }>;
 };
 
-export type ScopeChanges = {
+export type MScopeChanges = {
   [key: string]: Record<string, number>;
 };
 
-export type TotalScopeChanges = Record<string, number>;
+export type MTotalScopeChanges = Record<string, number>;
 
-export interface BurndownPreparedData {
-  daysData: BurndownDayData[];
-  data: BurndownChartAggregatedData;
+export interface MPreparedData {
+  daysData: MDayData[];
+  data: MAggregatedData;
   issueOptions: Array<SelectableValue<string>>;
   valueOptions: Array<SelectableValue<string>>;
   currentDay: string;
-  scopeChanges: ScopeChanges;
-  totalScopeChanges: TotalScopeChanges;
+  scopeChanges: MScopeChanges;
+  totalScopeChanges: MTotalScopeChanges;
   summary: {
-    issuesAmount: BurndownSummaryType;
-    storyPoints: BurndownSummaryType;
+    issuesAmount: MSummary;
+    storyPoints: MSummary;
   };
 }
 
-export type NonWorkingDays = Array<[string, string]>;
+export type MNonWorkingDays = Array<[string, string]>;
 
-export type BurndownChartFilteredData = {
+export type MFilteredData = {
   actual: number[];
   ideal: number[];
   days: string[];
-  nonWorkingDays: NonWorkingDays;
+  nonWorkingDays: MNonWorkingDays;
 };

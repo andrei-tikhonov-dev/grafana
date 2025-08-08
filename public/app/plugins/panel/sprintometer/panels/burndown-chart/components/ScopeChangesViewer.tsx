@@ -7,10 +7,10 @@ import { UiIcon, UiLink } from '../../../components/ui';
 import { theme } from '../../../theme';
 import { formatDate } from '../../../utils/dateTime';
 import { toObjectKey } from '../../../utils/helpers';
-import { BurndownDayData } from '../types';
+import { MDayData } from '../types';
 
 interface Props {
-  daysData: BurndownDayData[];
+  daysData: MDayData[];
 }
 
 const styles = {

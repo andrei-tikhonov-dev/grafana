@@ -2,56 +2,56 @@ import { css } from '@emotion/css';
 import React, { useState } from 'react';
 
 import { UiMultiSelect, UiIcon } from '../../../components/ui';
-import { JiraTypeEnum } from '../../../types';
+import { EJiraType } from '../../../types';
 
 const containerStyles = css`
   max-width: 576px;
 `;
 
 const jiraTypesList = [
-  { value: JiraTypeEnum.Story, label: 'Story', icon: () => <UiIcon name="Bookmark" size="sm" /> },
-  { value: JiraTypeEnum.Epic, label: 'Epic', icon: () => <UiIcon name="Lightbulb" size="sm" /> },
-  { value: JiraTypeEnum.Task, label: 'Task', icon: () => <UiIcon name="Check" size="sm" /> },
-  { value: JiraTypeEnum.Bug, label: 'Bug', icon: () => <UiIcon name="SquareDot" size="sm" /> },
+  { value: EJiraType.Story, label: 'Story', icon: () => <UiIcon name="Bookmark" size="sm" /> },
+  { value: EJiraType.Epic, label: 'Epic', icon: () => <UiIcon name="Lightbulb" size="sm" /> },
+  { value: EJiraType.Task, label: 'Task', icon: () => <UiIcon name="Check" size="sm" /> },
+  { value: EJiraType.Bug, label: 'Bug', icon: () => <UiIcon name="SquareDot" size="sm" /> },
   {
-    value: JiraTypeEnum.Feature,
+    value: EJiraType.Feature,
     label: 'Feature',
     icon: () => <UiIcon name="Bolt" size="sm" />,
   },
   {
-    value: JiraTypeEnum.Improvement,
+    value: EJiraType.Improvement,
     label: 'Improvement',
     icon: () => <UiIcon name="ArrowUpward" size="sm" />,
   },
   {
-    value: JiraTypeEnum.Incident,
+    value: EJiraType.Incident,
     label: 'Incident',
     icon: () => <UiIcon name="FolderClose" size="sm" />,
   },
   {
-    value: JiraTypeEnum.Capability,
+    value: EJiraType.Capability,
     label: 'Capability',
     icon: () => <UiIcon name="Code" size="sm" />,
   },
   {
-    value: JiraTypeEnum.Objective,
+    value: EJiraType.Objective,
     label: 'Objective',
     icon: () => <UiIcon name="IssueTypeObjective" size="sm" />,
   },
   {
-    value: JiraTypeEnum.StrategicTheme,
+    value: EJiraType.StrategicTheme,
     label: 'Strategic Theme',
     icon: () => <UiIcon name="Checklist" size="sm" />,
   },
   {
-    value: JiraTypeEnum.StrategicStep,
+    value: EJiraType.StrategicStep,
     label: 'Strategic Step',
     icon: () => <UiIcon name="Extension" size="sm" />,
   },
 ];
 
 export function MultiSelectTest() {
-  const [selectedJiraTypes, setSelectedJiraTypes] = useState<string[]>([JiraTypeEnum.Story, JiraTypeEnum.Task]);
+  const [selectedJiraTypes, setSelectedJiraTypes] = useState<string[]>([EJiraType.Story, EJiraType.Task]);
 
   return (
     <div className={containerStyles}>

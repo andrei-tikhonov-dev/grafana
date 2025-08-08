@@ -4,11 +4,11 @@ import React from 'react';
 import { UiIcon } from '../../../components/ui';
 import { IconName } from '../../../components/ui/icon/types';
 import { theme } from '../../../theme';
-import { BurndownSummaryType } from '../types';
+import { MSummary } from '../types';
 
 interface Props {
   name: string;
-  summary: BurndownSummaryType;
+  summary: MSummary;
   color: string;
 }
 
@@ -82,7 +82,7 @@ const styles = {
   },
 };
 
-export const BurndownSummary: React.FC<Props> = ({ name, summary, color }) => {
+export const Summary: React.FC<Props> = ({ name, summary, color }) => {
   const { completed, remaining, total, percentage } = summary;
 
   const stats = [
