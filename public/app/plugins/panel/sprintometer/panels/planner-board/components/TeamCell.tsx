@@ -1,16 +1,18 @@
 import { css } from '@emotion/css';
 import * as React from 'react';
 
-import { UiAvatarGroup, UiTitle } from '../../../components/ui';
+import { UiAvatarGroup } from '../../../components/ui';
 import { theme3 } from '../../../theme/theme';
 import { MTeam } from '../types';
+
+import { TeamBadge } from './TeamBadge';
 
 const wrapperStyles = css`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: ${theme3.tailwind.spacing};
-  padding: calc(${theme3.tailwind.spacing} * 4);
+  gap: calc(${theme3.tailwind.spacing} * 2);
+  padding: calc(${theme3.tailwind.spacing} * 4) calc(${theme3.tailwind.spacing} * 2);
 `;
 
 type Props = {
@@ -20,7 +22,7 @@ type Props = {
 export function TeamCell({ team }: Props) {
   return (
     <div className={wrapperStyles}>
-      <UiTitle>{team.name}</UiTitle>
+      <TeamBadge team={team} size="lg" />
       <UiAvatarGroup users={team.members} size="sm" />
     </div>
   );

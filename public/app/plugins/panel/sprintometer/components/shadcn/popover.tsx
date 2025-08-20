@@ -1,175 +1,130 @@
-import { css, cx } from '@emotion/css';
+import { css, cx, keyframes } from '@emotion/css';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import * as React from 'react';
 
-import { theme2 } from '../../theme/theme';
+import { theme3 } from '../../theme/theme';
 
-const popoverContentBase = css`
-  z-index: ${theme2.zIndices.popover};
-  width: 288px;
-  transform-origin: center;
-  border-radius: ${theme2.radii.lg};
-  border: 1px solid ${theme2.colors.border.subtle};
-  background-color: ${theme2.colors.background.surface};
-  padding: ${theme2.spacing.lg};
-  box-shadow: ${theme2.shadows.lg};
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
+const zoomIn = keyframes`
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+`;
+
+const zoomOut = keyframes`
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.95);
+  }
+`;
+
+const slideInFromTop = keyframes`
+  from {
+    transform: translateY(-0.5rem);
+  }
+  to {
+    transform: translateY(0);
+  }
+`;
+
+const slideInFromBottom = keyframes`
+  from {
+    transform: translateY(0.5rem);
+  }
+  to {
+    transform: translateY(0);
+  }
+`;
+
+const slideInFromLeft = keyframes`
+  from {
+    transform: translateX(-0.5rem);
+  }
+  to {
+    transform: translateX(0);
+  }
+`;
+
+const slideInFromRight = keyframes`
+  from {
+    transform: translateX(0.5rem);
+  }
+  to {
+    transform: translateX(0);
+  }
+`;
+
+const popoverContentStyles = css`
+  background-color: ${theme3.shadcn.popover};
+  color: ${theme3.shadcn.popoverForeground};
+  z-index: ${theme3.custom.zIndexPopover};
+  width: 18rem;
+  border-radius: ${theme3.tailwind.radiusMd};
+  border: 1px solid ${theme3.shadcn.border};
+  padding: ${parseFloat(theme3.tailwind.spacing) * 4}rem;
+  box-shadow: ${theme3.tailwind.shadowMd};
   outline: none;
-  color: ${theme2.colors.text.primary};
 
-  /* Animation states */
   &[data-state='open'] {
-    animation: popoverIn ${theme2.transitions.duration.fast} ${theme2.transitions.easing.out};
+    animation:
+      ${fadeIn} 150ms ease-out,
+      ${zoomIn} 150ms ease-out;
   }
 
   &[data-state='closed'] {
-    animation: popoverOut ${theme2.transitions.duration.fast} ${theme2.transitions.easing.in};
+    animation:
+      ${fadeOut} 150ms ease-in,
+      ${zoomOut} 150ms ease-in;
   }
 
-  /* Side-specific animations */
-  &[data-side='bottom'] {
-    animation-name: popoverInFromTop;
+  &[data-state='open'][data-side='bottom'] {
+    animation:
+      ${fadeIn} 150ms ease-out,
+      ${zoomIn} 150ms ease-out,
+      ${slideInFromTop} 150ms ease-out;
   }
 
-  &[data-side='left'] {
-    animation-name: popoverInFromRight;
+  &[data-state='open'][data-side='top'] {
+    animation:
+      ${fadeIn} 150ms ease-out,
+      ${zoomIn} 150ms ease-out,
+      ${slideInFromBottom} 150ms ease-out;
   }
 
-  &[data-side='right'] {
-    animation-name: popoverInFromLeft;
+  &[data-state='open'][data-side='left'] {
+    animation:
+      ${fadeIn} 150ms ease-out,
+      ${zoomIn} 150ms ease-out,
+      ${slideInFromRight} 150ms ease-out;
   }
 
-  &[data-side='top'] {
-    animation-name: popoverInFromBottom;
-  }
-
-  /* Keyframe animations */
-  @keyframes popoverIn {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes popoverOut {
-    from {
-      opacity: 1;
-      transform: scale(1);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-  }
-
-  @keyframes popoverInFromTop {
-    from {
-      opacity: 0;
-      transform: scale(0.95) translateY(-8px);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-  }
-
-  @keyframes popoverInFromRight {
-    from {
-      opacity: 0;
-      transform: scale(0.95) translateX(8px);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1) translateX(0);
-    }
-  }
-
-  @keyframes popoverInFromLeft {
-    from {
-      opacity: 0;
-      transform: scale(0.95) translateX(-8px);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1) translateX(0);
-    }
-  }
-
-  @keyframes popoverInFromBottom {
-    from {
-      opacity: 0;
-      transform: scale(0.95) translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-  }
-
-  /* Closed state animations */
-  &[data-state='closed'] {
-    &[data-side='bottom'] {
-      animation-name: popoverOutToTop;
-    }
-
-    &[data-side='left'] {
-      animation-name: popoverOutToRight;
-    }
-
-    &[data-side='right'] {
-      animation-name: popoverOutToLeft;
-    }
-
-    &[data-side='top'] {
-      animation-name: popoverOutToBottom;
-    }
-  }
-
-  @keyframes popoverOutToTop {
-    from {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.95) translateY(-8px);
-    }
-  }
-
-  @keyframes popoverOutToRight {
-    from {
-      opacity: 1;
-      transform: scale(1) translateX(0);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.95) translateX(8px);
-    }
-  }
-
-  @keyframes popoverOutToLeft {
-    from {
-      opacity: 1;
-      transform: scale(1) translateX(0);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.95) translateX(-8px);
-    }
-  }
-
-  @keyframes popoverOutToBottom {
-    from {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.95) translateY(8px);
-    }
+  &[data-state='open'][data-side='right'] {
+    animation:
+      ${fadeIn} 150ms ease-out,
+      ${zoomIn} 150ms ease-out,
+      ${slideInFromLeft} 150ms ease-out;
   }
 `;
 
@@ -193,7 +148,7 @@ function PopoverContent({
         data-slot="popover-content"
         align={align}
         sideOffset={sideOffset}
-        className={cx(popoverContentBase, className)}
+        className={cx(popoverContentStyles, className)}
         {...props}
       />
     </PopoverPrimitive.Portal>

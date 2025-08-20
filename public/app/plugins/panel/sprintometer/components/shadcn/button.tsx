@@ -2,27 +2,25 @@ import { css, cx } from '@emotion/css';
 import { Slot } from '@radix-ui/react-slot';
 import * as React from 'react';
 
-import { theme2 } from '../../theme/theme';
+import { theme3 } from '../../theme/theme';
 
 const baseButtonStyles = css`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 0.5rem;
   white-space: nowrap;
-  border-radius: ${theme2.radii.md};
-  font-size: ${theme2.typography.fontSize.sm};
-  font-weight: ${theme2.typography.fontWeight.medium};
-  transition: all ${theme2.transitions.duration.normal};
+  border-radius: ${theme3.tailwind.radiusSm};
+  font-size: ${theme3.tailwind.textSm};
+  font-weight: ${theme3.tailwind.fontWeightMedium};
+  transition: all 150ms;
   flex-shrink: 0;
   outline: none;
   border: 1px solid transparent;
-  cursor: pointer;
 
   &:disabled {
     pointer-events: none;
     opacity: 0.5;
-    cursor: not-allowed;
   }
 
   & svg {
@@ -31,128 +29,138 @@ const baseButtonStyles = css`
   }
 
   & svg:not([class*='size-']) {
-    width: 16px;
-    height: 16px;
+    width: 1rem;
+    height: 1rem;
   }
 
   &:focus-visible {
-    outline: none;
-    border-color: ${theme2.colors.brand.primary};
-    box-shadow: 0 0 0 3px rgba(238, 82, 46, 0.5);
+    border-color: ${theme3.shadcn.ring};
+    box-shadow: 0 0 0 3px rgba(113, 113, 122, 0.5);
   }
 
   &[aria-invalid='true'] {
-    border-color: ${theme2.colors.semantic.error};
-    box-shadow: 0 0 0 3px rgba(177, 38, 80, 0.2);
-  }
-`;
-
-const createHoverStyles = (backgroundColor: string) => css`
-  &:hover:not(:disabled) {
-    background-color: ${backgroundColor};
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+    border-color: ${theme3.shadcn.destructive};
   }
 `;
 
 const variantStyles = {
   default: css`
-    background-color: ${theme2.colors.brand.primary};
-    color: ${theme2.colors.text.inverted};
-    box-shadow: ${theme2.shadows.xs};
-    ${createHoverStyles('rgba(238, 82, 46, 0.9)')}
-  `,
-
-  destructive: css`
-    background-color: ${theme2.colors.semantic.error};
-    color: ${theme2.colors.text.inverted};
-    box-shadow: ${theme2.shadows.xs};
-    ${createHoverStyles('rgba(177, 38, 80, 0.9)')}
-
-    &:focus-visible {
-      box-shadow: 0 0 0 3px rgba(177, 38, 80, 0.2);
-    }
-  `,
-
-  outline: css`
-    border: 1px solid ${theme2.colors.border.default};
-    background-color: ${theme2.colors.background.surface};
-    box-shadow: ${theme2.shadows.xs};
+    background-color: ${theme3.custom.colorPrimary};
+    color: ${theme3.shadcn.primaryForeground};
+    box-shadow: ${theme3.tailwind.shadowXs};
 
     &:hover:not(:disabled) {
-      background-color: ${theme2.colors.background.muted};
-      color: ${theme2.colors.text.primary};
+      background-color: color-mix(in srgb, ${theme3.custom.colorPrimary} 80%, white 20%);
     }
   `,
+  destructive: css`
+    background-color: ${theme3.shadcn.destructive};
+    color: white;
+    box-shadow: ${theme3.tailwind.shadowXs};
 
-  secondary: css`
-    background-color: ${theme2.colors.brand.secondary};
-    color: ${theme2.colors.text.inverted};
-    box-shadow: ${theme2.shadows.xs};
-    ${createHoverStyles(theme2.colors.brand.accent)}
+    &:hover:not(:disabled) {
+      background-color: rgba(239, 68, 68, 0.9);
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+    }
   `,
+  outline: css`
+    border-color: ${theme3.custom.colorSecondary};
+    background-color: ${theme3.shadcn.background};
+    box-shadow: ${theme3.tailwind.shadowXs};
 
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, ${theme3.custom.colorSecondary} 10%, white 90%);
+      color: ${theme3.shadcn.accentForeground};
+    }
+  `,
+  secondary: css`
+    background-color: ${theme3.shadcn.secondary};
+    color: ${theme3.shadcn.secondaryForeground};
+    box-shadow: ${theme3.tailwind.shadowXs};
+
+    &:hover:not(:disabled) {
+      background-color: rgba(245, 245, 245, 0.8);
+    }
+  `,
   ghost: css`
     background-color: transparent;
 
     &:hover:not(:disabled) {
-      background-color: ${theme2.colors.background.muted};
-      color: ${theme2.colors.text.primary};
+      background-color: ${theme3.shadcn.accent};
+      color: ${theme3.shadcn.accentForeground};
     }
   `,
-
   link: css`
-    color: ${theme2.colors.brand.primary};
-    text-decoration-line: underline;
-    text-underline-offset: 4px;
     background-color: transparent;
+    color: ${theme3.shadcn.primary};
+    text-underline-offset: 4px;
 
     &:hover:not(:disabled) {
       text-decoration: underline;
     }
   `,
-} as const;
+};
 
 const sizeStyles = {
+  xs: css`
+    height: auto;
+    padding: 0.125rem 0.5rem;
+    font-size: ${theme3.tailwind.textXs};
+    line-height: ${theme3.tailwind.textXsLineHeight};
+    border-radius: ${theme3.tailwind.radiusSm};
+    gap: 0.25rem;
+
+    & svg:not([class*='size-']) {
+      width: 0.75rem;
+      height: 0.75rem;
+    }
+  `,
   default: css`
-    height: 36px;
-    padding: 8px 16px;
+    height: 2.25rem;
+    padding: 0.5rem 1rem;
 
     &:has(> svg) {
-      padding: 8px 12px;
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
     }
   `,
-
   sm: css`
-    height: 32px;
-    gap: 6px;
-    padding: 0 12px;
+    height: 2rem;
+    border-radius: ${theme3.tailwind.radiusMd};
+    gap: 0.375rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
 
     &:has(> svg) {
-      padding: 0 10px;
+      padding-left: 0.625rem;
+      padding-right: 0.625rem;
     }
   `,
-
   lg: css`
-    height: 40px;
-    padding: 0 24px;
+    height: 2.5rem;
+    border-radius: ${theme3.tailwind.radiusMd};
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 
     &:has(> svg) {
-      padding: 0 16px;
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
   `,
-
   icon: css`
-    width: 36px;
-    height: 36px;
+    width: 2.25rem;
+    height: 2.25rem;
     padding: 0;
   `,
-} as const;
+};
 
-type ButtonVariant = keyof typeof variantStyles;
-type ButtonSize = keyof typeof sizeStyles;
-
-interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
+interface ButtonProps extends React.ComponentProps<'button'> {
+  variant?: keyof typeof variantStyles;
+  size?: keyof typeof sizeStyles;
   asChild?: boolean;
 }
 
@@ -160,13 +168,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'default', size = 'default', asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
 
-    const combinedClassName = cx(baseButtonStyles, variantStyles[variant], sizeStyles[size], className);
-
-    return <Comp ref={ref} data-slot="button" className={combinedClassName} {...props} />;
+    return (
+      <Comp
+        ref={ref}
+        data-slot="button"
+        className={cx(baseButtonStyles, variantStyles[variant], sizeStyles[size], className)}
+        {...props}
+      />
+    );
   }
 );
 
 Button.displayName = 'Button';
 
 export { Button };
-export type { ButtonProps, ButtonVariant, ButtonSize };

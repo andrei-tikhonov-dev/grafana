@@ -1,4 +1,12 @@
-import { TDate } from '../types';
+import { TDate, TPeriod } from '../types';
+
+export const formatFullPeriod = (period?: TPeriod): string => {
+  if (!period || !period.startDate || !period.endDate) {
+    return '';
+  }
+
+  return `${formatFullDate(period.startDate)} – ${formatFullDate(period.endDate)}`;
+};
 
 export const formatFullDate = (date?: string): string => {
   if (!date) {

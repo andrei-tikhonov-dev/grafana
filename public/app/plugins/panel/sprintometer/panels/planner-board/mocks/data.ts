@@ -1,6 +1,4 @@
-import { MPlannerBoardCustom } from '../types';
-
-export const data: MPlannerBoardCustom = {
+export const data = {
   teams: [
     {
       id: 1,

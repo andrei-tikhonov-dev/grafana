@@ -1,183 +1,138 @@
-import { css, cx } from '@emotion/css';
+import { css, cx, keyframes } from '@emotion/css';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import * as React from 'react';
 
-import { theme } from '../../theme';
+import { theme3 } from '../../theme/theme';
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
+const zoomIn = keyframes`
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+`;
+
+const zoomOut = keyframes`
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.95);
+  }
+`;
+
+const slideInFromTop = keyframes`
+  from {
+    transform: translateY(-0.5rem);
+  }
+  to {
+    transform: translateY(0);
+  }
+`;
+
+const slideInFromBottom = keyframes`
+  from {
+    transform: translateY(0.5rem);
+  }
+  to {
+    transform: translateY(0);
+  }
+`;
+
+const slideInFromLeft = keyframes`
+  from {
+    transform: translateX(-0.5rem);
+  }
+  to {
+    transform: translateX(0);
+  }
+`;
+
+const slideInFromRight = keyframes`
+  from {
+    transform: translateX(0.5rem);
+  }
+  to {
+    transform: translateX(0);
+  }
+`;
 
 const tooltipContentStyles = css`
-  background-color: ${theme.colors.semantic.tooltip};
-  color: ${theme.colors.semantic.textLite};
-  z-index: 50;
+  background-color: ${theme3.shadcn.primary};
+  color: ${theme3.shadcn.primaryForeground};
+  z-index: ${theme3.custom.zIndexTooltip};
   width: fit-content;
-  transform-origin: center;
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 12px;
-  line-height: 16px;
+  transform-origin: var(--radix-tooltip-content-transform-origin);
+  border-radius: ${theme3.tailwind.radiusMd};
+  padding: ${parseFloat(theme3.tailwind.spacing) * 1.5}rem ${parseFloat(theme3.tailwind.spacing) * 3}rem;
+  font-size: ${theme3.tailwind.textXs};
+  line-height: ${theme3.tailwind.textXsLineHeight};
   text-wrap: balance;
-  box-shadow: ${theme.shadows.z1};
 
-  animation-duration: 150ms;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  animation-fill-mode: forwards;
-
-  &[data-state='open'] {
-    animation-name: fadeInZoom;
-  }
+  animation:
+    ${fadeIn} 150ms ease-out,
+    ${zoomIn} 150ms ease-out;
 
   &[data-state='closed'] {
-    animation-name: fadeOutZoom;
+    animation:
+      ${fadeOut} 150ms ease-in,
+      ${zoomOut} 150ms ease-in;
   }
 
-  &[data-side='bottom'][data-state='open'] {
-    animation-name: fadeInZoomBottom;
+  &[data-side='bottom'] {
+    animation:
+      ${fadeIn} 150ms ease-out,
+      ${zoomIn} 150ms ease-out,
+      ${slideInFromTop} 150ms ease-out;
   }
 
-  &[data-side='left'][data-state='open'] {
-    animation-name: fadeInZoomLeft;
+  &[data-side='top'] {
+    animation:
+      ${fadeIn} 150ms ease-out,
+      ${zoomIn} 150ms ease-out,
+      ${slideInFromBottom} 150ms ease-out;
   }
 
-  &[data-side='right'][data-state='open'] {
-    animation-name: fadeInZoomRight;
+  &[data-side='left'] {
+    animation:
+      ${fadeIn} 150ms ease-out,
+      ${zoomIn} 150ms ease-out,
+      ${slideInFromRight} 150ms ease-out;
   }
 
-  &[data-side='top'][data-state='open'] {
-    animation-name: fadeInZoomTop;
-  }
-
-  &[data-side='bottom'][data-state='closed'] {
-    animation-name: fadeOutZoomBottom;
-  }
-
-  &[data-side='left'][data-state='closed'] {
-    animation-name: fadeOutZoomLeft;
-  }
-
-  &[data-side='right'][data-state='closed'] {
-    animation-name: fadeOutZoomRight;
-  }
-
-  &[data-side='top'][data-state='closed'] {
-    animation-name: fadeOutZoomTop;
-  }
-
-  @keyframes fadeInZoom {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes fadeOutZoom {
-    from {
-      opacity: 1;
-      transform: scale(1);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-  }
-
-  @keyframes fadeInZoomBottom {
-    from {
-      opacity: 0;
-      transform: scale(0.95) translateY(-8px);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-  }
-
-  @keyframes fadeOutZoomBottom {
-    from {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.95) translateY(-8px);
-    }
-  }
-
-  @keyframes fadeInZoomLeft {
-    from {
-      opacity: 0;
-      transform: scale(0.95) translateX(8px);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1) translateX(0);
-    }
-  }
-
-  @keyframes fadeOutZoomLeft {
-    from {
-      opacity: 1;
-      transform: scale(1) translateX(0);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.95) translateX(8px);
-    }
-  }
-
-  @keyframes fadeInZoomRight {
-    from {
-      opacity: 0;
-      transform: scale(0.95) translateX(-8px);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1) translateX(0);
-    }
-  }
-
-  @keyframes fadeOutZoomRight {
-    from {
-      opacity: 1;
-      transform: scale(1) translateX(0);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.95) translateX(-8px);
-    }
-  }
-
-  @keyframes fadeInZoomTop {
-    from {
-      opacity: 0;
-      transform: scale(0.95) translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-  }
-
-  @keyframes fadeOutZoomTop {
-    from {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.95) translateY(8px);
-    }
+  &[data-side='right'] {
+    animation:
+      ${fadeIn} 150ms ease-out,
+      ${zoomIn} 150ms ease-out,
+      ${slideInFromLeft} 150ms ease-out;
   }
 `;
 
 const tooltipArrowStyles = css`
-  background-color: ${theme.colors.semantic.tooltip};
-  fill: ${theme.colors.semantic.tooltip};
+  background-color: ${theme3.shadcn.primary};
+  fill: ${theme3.shadcn.primary};
   z-index: 50;
-  width: 10px;
-  height: 10px;
+  width: 0.625rem;
+  height: 0.625rem;
   transform: translateY(calc(-50% - 2px)) rotate(45deg);
   border-radius: 2px;
 `;

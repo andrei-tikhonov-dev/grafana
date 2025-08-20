@@ -8,10 +8,14 @@ import { Avatar, AvatarImage, AvatarFallback } from '../../shadcn/avatar';
 interface UiAvatarProps {
   user: TUser;
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
 }
 
 const avatarSizeStyles = {
+  xs: css`
+    width: 1rem;
+    height: 1rem;
+  `,
   sm: css`
     width: 1.5rem;
     height: 1.5rem;
@@ -29,7 +33,7 @@ const avatarSizeStyles = {
 const fallbackTextStyles = css`
   font-size: ${theme3.tailwind.textSm};
   font-weight: ${theme3.tailwind.fontWeightMedium};
-  color: ${theme3.shadcn.mutedForeground};
+  color: ${theme3.tailwind.colorWhite};
 `;
 
 function getInitials(name: string): string {
@@ -41,7 +45,7 @@ function getInitials(name: string): string {
     .slice(0, 2);
 }
 
-function UiAvatar({ user, className, size = 'sm' }: UiAvatarProps) {
+function UiAvatar({ user, className, size = 'md' }: UiAvatarProps) {
   const initials = getInitials(user.name);
 
   return (

@@ -42,7 +42,7 @@ export interface MIssue {
   dependencies: MIssue[];
   children?: MIssue[];
   assignee: TUser;
-  url?: TUrl;
+  url: TUrl;
   issueType: TJiraIssueType;
   priority: TJiraPriority;
   status: string;

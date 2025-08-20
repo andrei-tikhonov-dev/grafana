@@ -21,7 +21,7 @@ const avatarImageStyles = css`
 `;
 
 const avatarFallbackStyles = css`
-  background-color: ${theme3.shadcn.muted};
+  background-color: ${theme3.custom.colorPrimary};
   display: flex;
   width: 100%;
   height: 100%;

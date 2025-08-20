@@ -5,11 +5,23 @@ import * as React from 'react';
 import { ScrollArea, ScrollBar } from '../../../components/shadcn/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/shadcn/table';
 import { theme3 } from '../../../theme/theme';
+import { customTheme } from '../custom-theme';
 import { UTableData } from '../types';
 
 const getWrapperStyles = (width: number) => css`
-  padding: calc(${theme3.tailwind.spacing} * 4);
+  padding: calc(${theme3.tailwind.spacing} * 4) calc(${theme3.tailwind.spacing} * 8)
+    calc(${theme3.tailwind.spacing} * 4) 0;
   width: ${width}px;
+`;
+
+const tableStyles = css`
+  border: 1px solid ${theme3.shadcn.border};
+`;
+
+const tableBodyStyles = css`
+  & tr:nth-child(even) {
+    background-color: ${customTheme.pbColorZebra};
+  }
 `;
 
 const tableCellStyles = css`
@@ -40,7 +52,7 @@ export function DataTable({ columns, data, width }: Props) {
 
   return (
     <ScrollArea className={getWrapperStyles(width)}>
-      <Table>
+      <Table className={tableStyles}>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -52,7 +64,7 @@ export function DataTable({ columns, data, width }: Props) {
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody>
+        <TableBody className={tableBodyStyles}>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>

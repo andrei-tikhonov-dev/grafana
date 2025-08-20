@@ -17,3 +17,17 @@ export { UiMultiSelect } from './select/UiMultiSelect';
 
 export { UiAvatar } from './avatar/UiAvatar';
 export { UiAvatarGroup } from './avatar-group/UiAvatarGroup';
+
+export { UiColorDotBadge } from './badge/UiColorDotBadge';
+export { UiColorBadge } from './badge/UiColorBadge';
+export { UiJiraStatusBadge } from './badge/UiJiraStatusBadge';
+
+export {
+  UiCardAction,
+  UiCardContent,
+  UiCardDescription,
+  UiCardHeader,
+  UiCardTitle,
+  UiColorCard,
+  UiCardFooter,
+} from './card/UiColorCard';

@@ -2,14 +2,16 @@ import { ColumnDef } from '@tanstack/react-table';
 import * as React from 'react';
 
 import { IssuesCell } from './components/IssuesCell';
+import { PhaseHeaderCell } from './components/PhaseHeaderCell';
 import { TeamCell } from './components/TeamCell';
+import { TeamHeaderCell } from './components/TeamHeaderCell';
 import { MPlannerBoardCustom, MTeam, MIssue, UTableRow, UTableData } from './types';
 
 export function convertToTableFormat(plannerData: MPlannerBoardCustom): UTableData {
   const columns: Array<ColumnDef<UTableRow>> = [
     {
       id: 'team',
-      header: () => 'Teams',
+      header: () => <TeamHeaderCell />,
       accessorKey: 'team',
       cell: ({ getValue }) => {
         const team = getValue() as MTeam;
@@ -18,7 +20,7 @@ export function convertToTableFormat(plannerData: MPlannerBoardCustom): UTableDa
     },
     ...plannerData.phases.map((phase) => ({
       id: `phase_${phase.id}`,
-      header: () => phase.name,
+      header: () => <PhaseHeaderCell phase={phase} />,
       accessorKey: `phase_${phase.id}`,
       cell: ({ getValue }: any) => {
         const issues = getValue() as MIssue[];

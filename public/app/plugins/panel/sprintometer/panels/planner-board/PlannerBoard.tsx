@@ -6,7 +6,6 @@ import { PanelProps } from '@grafana/data';
 import { ScrollArea } from '../../components/shadcn/scroll-area';
 import { UiPanelTitle } from '../../components/ui';
 import { UiZeroState } from '../../components/ui/zero-state/UiZeroState';
-import { theme } from '../../theme';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
@@ -19,7 +18,6 @@ interface Props extends PanelProps<TPanelOptions> {}
 const styles = {
   wrapper: css`
     padding: 10px;
-    font-family: ${theme.typography.fontFamily};
     display: flex;
     flex-direction: column;
   `,

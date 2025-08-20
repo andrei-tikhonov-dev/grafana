@@ -393,9 +393,45 @@ export const tailwind = {
   animateBounce: 'bounce 1s infinite',
 };
 
+const custom = {
+  chart: [
+    '#EE522E',
+    '#6634FA',
+    '#2DDE69',
+    '#0499D8',
+    '#49C231',
+    '#FCB32A',
+    '#F74C60',
+    '#FC722D',
+    '#F680F0',
+    '#00C4CE',
+    '#336DF4',
+    '#AB1C17',
+    '#391AB3',
+    '#02599B',
+    '#FF6B6B',
+    '#32CD32',
+    '#8A2BE2',
+    '#008B8B',
+    '#DAA520',
+    '#DC143C',
+  ],
+  colorPrimary: '#EE522E',
+  colorSecondary: '#6634FA',
+  zIndexHide: -1,
+  zIndexBase: 0,
+  zIndexDropdown: 1000,
+  zIndexSticky: 1100,
+  zIndexOverlay: 1200,
+  zIndexModal: 1300,
+  zIndexPopover: 1400,
+  zIndexTooltip: 1500,
+};
+
 export const theme3 = {
   shadcn,
   tailwind,
+  custom,
 };
 
 export const theme2 = {
@@ -540,5 +576,3 @@ export const theme2 = {
     },
   },
 } as const;
-
-export type Theme2 = typeof theme2;

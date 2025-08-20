@@ -2,7 +2,7 @@ import { css } from '@emotion/css';
 import React from 'react';
 
 import { EJiraType } from '../../../types';
-import { toObjectKey } from '../../../utils/helpers';
+import { findInEnum } from '../../../utils/enums';
 
 import { UiIcon } from './UiIcon';
 import { IconName, JiraTypeIconProps } from './types';
@@ -64,12 +64,12 @@ const getStyles = (name: EJiraType) => {
 };
 
 export const UiJiraTypeIcon: React.FC<JiraTypeIconProps> = ({ name, size = 'sm', ...props }) => {
-  const iconName = toObjectKey<EJiraType>(name);
-  const styles = getStyles(iconName);
+  const normalizedName = findInEnum(EJiraType, name, EJiraType.Task);
+  const styles = getStyles(normalizedName);
 
   return (
     <div className={styles.container}>
-      <UiIcon name={issueTypeIcons[iconName]} size={size} {...props} />
+      <UiIcon name={issueTypeIcons[normalizedName]} size={size} {...props} />
     </div>
   );
 };

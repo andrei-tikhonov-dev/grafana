@@ -54,7 +54,7 @@ export interface TColumnMeta {
   size?: TColumnSize;
 }
 
-enum EJiraPriority {
+export enum EJiraPriority {
   Blocker = 'blocker',
   Critical = 'critical',
   Highest = 'highest',
@@ -81,6 +81,18 @@ export enum EJiraType {
   Incident = 'incident',
 }
 
+export enum EJiraStatus {
+  ToDo = 'toDo',
+  InProgress = 'inProgress',
+  InReview = 'inReview',
+  InTesting = 'inTesting',
+  Blocked = 'blocked',
+  ReadyForDeployment = 'readyForDeployment',
+  Done = 'done',
+  Cancelled = 'cancelled',
+  Unknown = 'unknown',
+}
+
 export enum EDashboardStatus {
   Complete = 'Complete',
   Good = 'Good',
@@ -100,7 +112,8 @@ export interface TJiraIssueType {
   name: string;
 }
 
-enum ESprintometerStatus {
+export enum ESprintometerStatus {
+  Default = 'Default',
   OnTrack = 'OnTrack',
   NeedAttention = 'NeedAttention',
   Warning = 'Warning',

@@ -4,14 +4,14 @@ import * as React from 'react';
 import { theme3 } from '../../../theme/theme';
 import { MIssue } from '../types';
 
-import { Dependency } from './Dependency';
+import { TeamBadge } from './TeamBadge';
 
 const wrapperStyles = css`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: ${theme3.tailwind.spacing};
-  border: 1px dotted ${theme3.shadcn.border};
+  border: 1px dashed ${theme3.shadcn.border};
   padding: ${theme3.tailwind.spacing};
   border-radius: ${theme3.tailwind.radiusXs};
 `;
@@ -40,7 +40,7 @@ export function Dependencies({ dependencies }: Props) {
       {dependenciesWithoutArt.length > 0 && (
         <div className={containerStyles}>
           {dependenciesWithoutArt.map((issue) => (
-            <Dependency team={issue.ownerTeam} key={issue.id} />
+            <TeamBadge team={issue.ownerTeam} key={issue.id} />
           ))}
         </div>
       )}
@@ -48,7 +48,7 @@ export function Dependencies({ dependencies }: Props) {
       {dependenciesWithArt.length > 0 && (
         <div className={containerStyles}>
           {dependenciesWithArt.map((issue) => (
-            <Dependency team={issue.ownerTeam} key={issue.id} />
+            <TeamBadge team={issue.ownerTeam} key={issue.id} />
           ))}
         </div>
       )}
