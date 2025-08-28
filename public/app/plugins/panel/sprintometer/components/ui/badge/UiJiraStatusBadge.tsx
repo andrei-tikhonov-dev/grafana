@@ -55,11 +55,10 @@ export function UiJiraStatusBadge({ status, size = 'xs', ...props }: UiJiraStatu
   const config = STATUS_CONFIG[normalizedStatus];
 
   const color = config?.color;
-  const label = config?.label;
 
   return (
     <UiColorBadge color={color} size={size} {...props}>
-      {label}
+      {status}
     </UiColorBadge>
   );
 }

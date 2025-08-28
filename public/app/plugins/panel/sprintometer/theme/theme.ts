@@ -288,6 +288,7 @@ export const tailwind = {
   breakpointLg: '64rem',
   breakpointXl: '80rem',
   breakpoint2xl: '96rem',
+  container4xs: '10rem',
   container3xs: '16rem',
   container2xs: '18rem',
   containerXs: '20rem',

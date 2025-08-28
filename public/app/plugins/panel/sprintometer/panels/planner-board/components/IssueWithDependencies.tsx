@@ -32,12 +32,16 @@ type IssueWithDependenciesProps = {
 };
 
 export function IssueWithDependencies({ issue }: IssueWithDependenciesProps) {
-  const hasDependencies = issue.dependencies && issue.dependencies.length > 0;
+  const validDependencies = React.useMemo(
+    () => issue.dependencies?.filter((dependency) => dependency.ownerTeam) || [],
+    [issue.dependencies]
+  );
+
   return (
     <div className={wrapperStyles}>
       <IssueCard issue={issue} className={issueCardStyles} action={<ShowMore issue={issue} />} />
 
-      {hasDependencies && (
+      {validDependencies.length > 0 && (
         <>
           <div className={arrowStyles}>
             <svg width="27" height="6" viewBox="0 0 27 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -48,7 +52,7 @@ export function IssueWithDependencies({ issue }: IssueWithDependenciesProps) {
             </svg>
           </div>
 
-          <Dependencies dependencies={issue.dependencies} />
+          <Dependencies dependencies={validDependencies} />
         </>
       )}
     </div>

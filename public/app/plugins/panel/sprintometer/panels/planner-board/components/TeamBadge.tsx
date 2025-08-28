@@ -8,20 +8,50 @@ import { theme3 } from '../../../theme/theme';
 import { MTeam } from '../types';
 
 const wrapperStyles = css`
-  max-width: ${theme3.tailwind.container3xs};
+  max-width: ${theme3.tailwind.container4xs};
   overflow: hidden;
 `;
 
-type Props = { team: MTeam; size?: BadgeSize };
+interface TeamBadgeProps {
+  team: MTeam;
+  size?: BadgeSize;
+  color?: string;
+  isExternal?: boolean;
+  className?: string;
+}
 
-export function TeamBadge({ team, size }: Props) {
-  const isExternal = Boolean(team.art);
-  const teamColor = useColor(team.id);
-  const color = isExternal ? theme3.tailwind.colorGray500 : teamColor;
+export function TeamBadge({
+  team,
+  size = 'xs',
+  color: overrideColor,
+  isExternal: forceExternal,
+  className,
+}: TeamBadgeProps) {
+  const isExternal = forceExternal ?? Boolean(team?.art);
+  const idColor = useColor(team?.id);
+  const label = isExternal ? `ART ${team?.art?.name}: ${team?.name}` : team?.name;
+
+  const teamColor = React.useMemo(() => {
+    if (overrideColor) {
+      return overrideColor;
+    }
+    if (isExternal) {
+      return theme3.tailwind.colorGray500;
+    }
+    return team.color || idColor;
+  }, [overrideColor, isExternal, team?.color, idColor]);
+
+  if (!team) {
+    return null;
+  }
 
   return (
-    <UiColorDotBadge color={color} size={size} className={wrapperStyles}>
-      <UiEllipsis>{team.name}</UiEllipsis>
+    <UiColorDotBadge
+      color={teamColor}
+      size={size}
+      className={className ? `${wrapperStyles} ${className}` : wrapperStyles}
+    >
+      <UiEllipsis>{label}</UiEllipsis>
     </UiColorDotBadge>
   );
 }

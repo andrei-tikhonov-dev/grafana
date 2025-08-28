@@ -39,7 +39,7 @@ export interface MIssue {
   summary: string;
   startDate?: TDate;
   plannedPi?: MPi;
-  dependencies: MIssue[];
+  dependencies?: MIssue[];
   children?: MIssue[];
   assignee: TUser;
   url: TUrl;

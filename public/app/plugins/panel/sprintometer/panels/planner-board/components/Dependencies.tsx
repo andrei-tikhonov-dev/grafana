@@ -28,8 +28,8 @@ type Props = {
 };
 
 export function Dependencies({ dependencies }: Props) {
-  const dependenciesWithoutArt = dependencies.filter((issue) => !issue.ownerTeam.art);
-  const dependenciesWithArt = dependencies.filter((issue) => issue.ownerTeam.art);
+  const dependenciesWithoutArt = dependencies.filter((issue) => !issue.ownerTeam?.art);
+  const dependenciesWithArt = dependencies.filter((issue) => issue.ownerTeam?.art);
 
   if (dependencies.length === 0) {
     return null;

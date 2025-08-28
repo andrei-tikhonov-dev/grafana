@@ -47,7 +47,7 @@ const footerStyles = css`
   align-items: center;
   justify-content: space-between;
   overflow: hidden;
-  gap: ${theme3.tailwind.spacing};
+  gap: calc(${theme3.tailwind.spacing} * 4);
   padding-left: calc(${theme3.tailwind.spacing} * 2);
   padding-right: calc(${theme3.tailwind.spacing} * 2);
   width: 100%;
@@ -65,6 +65,10 @@ const footerBagesStyle = css`
 const badgeStyle = css`
   border: 1px solid ${theme3.shadcn.border};
   background-color: ${theme3.tailwind.colorWhite};
+`;
+
+const userStyle = css`
+  max-width: calc(${theme3.tailwind.container3xs} - 2rem);
 `;
 
 type IssueCardProps = {
@@ -92,7 +96,7 @@ export function IssueCard({ issue, className, action, teamVisible }: IssueCardPr
         <div className={footerBagesStyle}>
           {issue.status && <UiJiraStatusBadge status={issue.status} />}
           {issue.priority && <UiJiraPriorityBadge priority={issue.priority} />}
-          {issue.dependencies?.length > 0 && (
+          {issue.dependencies && issue.dependencies?.length > 0 && (
             <Badge size="xs" variant="secondary" className={badgeStyle}>
               <UiIcon name="AccountTree" />
               {issue.dependencies.length}
@@ -100,9 +104,9 @@ export function IssueCard({ issue, className, action, teamVisible }: IssueCardPr
           )}
 
           {issue.assignee && (
-            <Badge variant="secondary" className={badgeStyle}>
+            <Badge variant="secondary" className={cx(badgeStyle, userStyle)}>
               <UiAvatar size="xs" user={issue.assignee} />
-              {issue.assignee?.name}
+              <UiEllipsis>{issue.assignee?.name}</UiEllipsis>
             </Badge>
           )}
           {teamVisible && issue.ownerTeam && <TeamBadge team={issue.ownerTeam} />}

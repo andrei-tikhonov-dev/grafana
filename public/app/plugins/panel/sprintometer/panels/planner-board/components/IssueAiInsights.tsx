@@ -6,7 +6,7 @@ import { UiColorCard, UiCardContent, UiCardHeader } from '../../../components/ui
 import { theme3 } from '../../../theme/theme';
 import { ESprintometerStatus } from '../../../types';
 import { findInEnum } from '../../../utils/enums';
-import { cardColors } from '../custom-theme';
+import { aiInsightsColors } from '../custom-theme';
 import { MIssue } from '../types';
 
 interface IssueAiInsightsProps {
@@ -30,7 +30,7 @@ const aiHeaderStyles = css`
 `;
 
 const insightTextStyles = css`
-  margin-bottom: calc(${theme3.tailwind.spacing} * 2);
+  margin-bottom: calc(${theme3.tailwind.spacing} * 8);
 `;
 
 const suggestedActionStyles = css`
@@ -57,7 +57,7 @@ export function IssueAiInsights({ issue, className }: IssueAiInsightsProps) {
   }
 
   const status = findInEnum(ESprintometerStatus, String(issue.sprintometerData?.status), ESprintometerStatus.Default);
-  const cardColor = cardColors[status];
+  const cardColor = aiInsightsColors[status];
 
   const suggestedActionColorStyles = css``;
 

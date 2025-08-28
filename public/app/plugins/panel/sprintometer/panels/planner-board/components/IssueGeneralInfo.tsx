@@ -50,43 +50,53 @@ export function IssueGeneralInfo({ issue, className }: IssueGeneralInfoProps) {
       </div>
 
       <div className={infoGridStyles}>
-        <InfoRow
-          icon={<Zap size={16} />}
-          label="Status:"
-          value={<UiJiraStatusBadge size="sm" status={issue.status} />}
-        />
+        {issue.status && (
+          <InfoRow
+            icon={<Zap size={16} />}
+            label="Status:"
+            value={<UiJiraStatusBadge size="sm" status={issue.status} />}
+          />
+        )}
 
         {issue.plannedPi && <InfoRow icon={<Target size={16} />} label="Planned PI:" value={issue.plannedPi.name} />}
 
-        <InfoRow icon={<Calendar size={16} />} label="Start date:" value={formatFullDate(issue.startDate)} />
+        {issue.startDate && (
+          <InfoRow icon={<Calendar size={16} />} label="Start date:" value={formatFullDate(issue.startDate)} />
+        )}
 
-        <InfoRow
-          icon={<Users size={16} />}
-          label="Owning team:"
-          value={<TeamBadge size="sm" team={issue.ownerTeam} />}
-        />
+        {issue.ownerTeam && (
+          <InfoRow
+            icon={<Users size={16} />}
+            label="Owning team:"
+            value={<TeamBadge size="sm" team={issue.ownerTeam} />}
+          />
+        )}
 
-        <InfoRow
-          icon={<User size={16} />}
-          label="Assignee:"
-          value={
-            <div className={userStyles}>
-              {issue.assignee && <UiAvatar size="sm" user={issue.assignee} />}
-              <span>{issue.assignee?.name || 'Unassigned'}</span>
-            </div>
-          }
-        />
+        {issue.assignee && (
+          <InfoRow
+            icon={<User size={16} />}
+            label="Assignee:"
+            value={
+              <div className={userStyles}>
+                {<UiAvatar size="sm" user={issue.assignee} />}
+                <span>{issue.assignee.name || 'Unassigned'}</span>
+              </div>
+            }
+          />
+        )}
 
-        <InfoRow
-          icon={<AlertCircle size={16} />}
-          label="Priority:"
-          value={
-            <>
-              <UiJiraPriorityIcon name={issue.priority} />
-              {issue.priority.charAt(0).toUpperCase() + issue.priority.slice(1)}
-            </>
-          }
-        />
+        {issue.priority && (
+          <InfoRow
+            icon={<AlertCircle size={16} />}
+            label="Priority:"
+            value={
+              <>
+                <UiJiraPriorityIcon name={issue.priority} />
+                {issue.priority.charAt(0).toUpperCase() + issue.priority.slice(1)}
+              </>
+            }
+          />
+        )}
       </div>
     </div>
   );

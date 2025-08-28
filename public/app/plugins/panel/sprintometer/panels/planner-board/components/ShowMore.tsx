@@ -9,6 +9,7 @@ import { theme3 } from '../../../theme/theme';
 import { MIssue } from '../types';
 
 import { IssueAiInsights } from './IssueAiInsights';
+import { IssueChildren } from './IssueChildren';
 import { IssueDependencies } from './IssueDependencies';
 import { IssueGeneralInfo } from './IssueGeneralInfo';
 import { IssueHeader } from './IssueHeader';
@@ -57,6 +58,8 @@ export function ShowMore({ issue, buttonText = 'Show more', className }: ShowMor
             <IssueGeneralInfo issue={issue} />
 
             <IssueDependencies issue={issue} />
+
+            <IssueChildren issue={issue} />
           </div>
 
           <div className={footerStyles}>

@@ -57,7 +57,6 @@ export function IssueDependencies({ issue, className }: IssueDependenciesProps) 
   const externalDependencies =
     issue.dependencies?.filter((dep) => dep.ownerTeam?.art?.id !== issue.ownerTeam?.art?.id) || [];
 
-  // Группировка внешних зависимостей по ART
   const externalDependenciesByArt = externalDependencies.reduce(
     (acc, dep) => {
       const artId = dep.ownerTeam?.art?.id;
