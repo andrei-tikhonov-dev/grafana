@@ -21,6 +21,9 @@ export { UiAvatarGroup } from './avatar-group/UiAvatarGroup';
 export { UiColorDotBadge } from './badge/UiColorDotBadge';
 export { UiColorBadge } from './badge/UiColorBadge';
 export { UiJiraStatusBadge } from './badge/UiJiraStatusBadge';
+export { UiFiltersContainer } from './filter-container/UiFiltersContainer';
+export { UiSwitch } from './switch/UiSwitch';
+export { UiColorDot } from './color-dot/UiColorDot';
 
 export {
   UiCardAction,

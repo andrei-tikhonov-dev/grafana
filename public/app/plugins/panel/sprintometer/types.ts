@@ -33,6 +33,7 @@ export const enum EPanelType {
   OutgoingDependencies = 'OutgoingDependencies',
   PlannerBoard = 'PlannerBoard',
   SimilarTasks = 'SimilarTasks',
+  Roadmap = 'Roadmap',
 }
 
 export interface TTable<Data, InnerData = unknown> {
@@ -84,13 +85,7 @@ export enum EJiraType {
 export enum EJiraStatus {
   ToDo = 'toDo',
   InProgress = 'inProgress',
-  InReview = 'inReview',
-  InTesting = 'inTesting',
-  Blocked = 'blocked',
-  ReadyForDeployment = 'readyForDeployment',
   Done = 'done',
-  Cancelled = 'cancelled',
-  Unknown = 'unknown',
 }
 
 export enum EDashboardStatus {
@@ -105,6 +100,11 @@ export enum EDashboardStatus {
   MonitorClosely = 'MonitorClosely',
   ExceededResources = 'ExceededResources',
   PlentyResources = 'PlentyResources',
+}
+
+export interface TJiraStatus {
+  type: EJiraStatus;
+  name: string;
 }
 
 export interface TJiraIssueType {

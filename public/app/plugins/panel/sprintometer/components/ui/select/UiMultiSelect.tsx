@@ -1,7 +1,7 @@
 import { css, cx } from '@emotion/css';
 import * as React from 'react';
 
-import { theme2 } from '../../../theme/theme';
+import { theme3 } from '../../../theme/theme';
 import { Badge } from '../../shadcn/badge';
 import { Button } from '../../shadcn/button';
 import {
@@ -25,14 +25,15 @@ const badgeStyles = css`
 const triggerButtonStyles = css`
   display: flex;
   width: 100%;
-  padding: 4px;
   min-height: 40px;
   height: auto;
   align-items: center;
   justify-content: space-between;
+  border: 1px solid ${theme3.shadcn.border};
+  padding: ${theme3.tailwind.spacing};
 
   &:hover {
-    background-color: ${theme2.colors.background.surface} !important;
+    background-color: ${theme3.shadcn.background} !important;
   }
 
   & svg {
@@ -63,7 +64,7 @@ const clearIconStyles = css`
   margin-left: 8px;
   margin-right: 8px;
   cursor: pointer;
-  color: ${theme2.colors.text.secondary};
+  color: ${theme3.shadcn.mutedForeground};
 `;
 
 const separatorStyles = css`
@@ -76,7 +77,7 @@ const chevronIconStyles = css`
   margin-left: 8px;
   margin-right: 8px;
   cursor: pointer;
-  color: ${theme2.colors.text.secondary};
+  color: ${theme3.shadcn.mutedForeground};
 `;
 
 const placeholderContainerStyles = css`
@@ -89,8 +90,8 @@ const placeholderContainerStyles = css`
 `;
 
 const placeholderTextStyles = css`
-  font-size: ${theme2.typography.fontSize.sm};
-  color: ${theme2.colors.text.secondary};
+  font-size: ${theme3.tailwind.textSm};
+  color: ${theme3.shadcn.mutedForeground};
   margin-left: 12px;
   margin-right: 12px;
 `;
@@ -98,7 +99,7 @@ const placeholderTextStyles = css`
 const chevronPlaceholderStyles = css`
   height: 16px;
   cursor: pointer;
-  color: ${theme2.colors.text.secondary};
+  color: ${theme3.shadcn.mutedForeground};
   margin-left: 8px;
   margin-right: 8px;
 `;
@@ -115,13 +116,13 @@ const iconContainerStyles = css`
   width: 16px;
   align-items: center;
   justify-content: center;
-  border-radius: ${theme2.radii.sm};
-  border: 1px solid ${theme2.colors.brand.primary};
+  border-radius: ${theme3.tailwind.radiusSm};
+  border: 1px solid ${theme3.custom.colorPrimary};
 `;
 
 const iconContainerSelectedStyles = css`
-  background-color: ${theme2.colors.brand.primary};
-  color: ${theme2.colors.text.inverted};
+  background-color: ${theme3.custom.colorPrimary};
+  color: ${theme3.shadcn.primaryForeground};
 `;
 
 const iconContainerUnselectedStyles = css`
@@ -136,7 +137,7 @@ const optionIconStyles = css`
   margin-right: 8px;
   height: 16px;
   width: 16px;
-  color: ${theme2.colors.text.secondary};
+  color: ${theme3.shadcn.mutedForeground};
 `;
 
 const commandItemStyles = css`
@@ -164,8 +165,8 @@ const closeButtonStyles = css`
 
 const extraBadgeStyles = css`
   background-color: transparent;
-  color: ${theme2.colors.text.primary};
-  border-color: ${theme2.colors.border.subtle};
+  color: ${theme3.shadcn.foreground};
+  border-color: ${theme3.shadcn.border};
 
   &:hover {
     background-color: transparent;
@@ -179,10 +180,10 @@ const badgeIconStyles = css`
 const badgeCloseIconStyles = css`
   height: 12px;
   width: 12px;
-  color: ${theme2.colors.text.secondary};
+  color: ${theme3.shadcn.mutedForeground};
 
   &:hover {
-    color: ${theme2.colors.text.primary};
+    color: ${theme3.shadcn.foreground};
   }
   cursor: pointer;
 `;

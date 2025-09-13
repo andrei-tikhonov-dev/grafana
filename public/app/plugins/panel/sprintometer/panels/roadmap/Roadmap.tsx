@@ -6,6 +6,8 @@ import { PanelProps } from '@grafana/data';
 import { theme } from '../../theme';
 import { TPanelOptions } from '../../types';
 
+import DemoBasic from './components/DemoBasic';
+
 interface CumulativeFlowDiagramProps extends PanelProps<TPanelOptions> {}
 
 const styles = {
@@ -65,7 +67,7 @@ export const Roadmap: React.FC<CumulativeFlowDiagramProps> = ({
           `
         )}
       >
-        ROADMAP
+        <DemoBasic darkMode={false} />
       </div>
     </div>
   );

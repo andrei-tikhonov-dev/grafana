@@ -28,7 +28,8 @@ export function TeamBadge({
   className,
 }: TeamBadgeProps) {
   const isExternal = forceExternal ?? Boolean(team?.art);
-  const idColor = useColor(team?.id);
+  const getColor = useColor();
+  const idColor = getColor(team?.id);
   const label = isExternal ? `ART ${team?.art?.name}: ${team?.name}` : team?.name;
 
   const teamColor = React.useMemo(() => {

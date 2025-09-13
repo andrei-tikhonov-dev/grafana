@@ -1,11 +1,13 @@
 import { ColumnDef } from '@tanstack/react-table';
 import * as React from 'react';
 
+import { EJiraStatus, ESprintometerStatus } from '../../types';
+
 import { IssuesCell } from './components/IssuesCell';
 import { PhaseHeaderCell } from './components/PhaseHeaderCell';
 import { TeamCell } from './components/TeamCell';
 import { TeamHeaderCell } from './components/TeamHeaderCell';
-import { MPlannerBoardCustom, MTeam, MIssue, UTableRow, UTableData } from './types';
+import { MFilterState, MIssue, MPhase, MPlannerBoardCustom, MTeam, UTableData, UTableRow } from './types';
 
 export function convertToTableFormat(plannerData: MPlannerBoardCustom): UTableData {
   const columns: Array<ColumnDef<UTableRow>> = [
@@ -46,4 +48,119 @@ export function convertToTableFormat(plannerData: MPlannerBoardCustom): UTableDa
     columns,
     data,
   };
+}
+
+// export function filterData({ teams, phases, filters }: { teams: MTeam[]; phases: MPhase[]; filters: MFilterState }): {
+//   teams: MTeam[];
+//   phases: MPhase[];
+// } {
+//   const { selectedTeams, hasOpenDependencies, hasDependencies, hasProblems } = filters;
+//   console.log(selectedTeams, hasOpenDependencies, hasDependencies, hasProblems);
+//   // 1. Если selectedTeams не пустой массив,
+//   // надо в массиве teams найти для каждого элемента selectedTeams соответсвующую команду по id, и удалить все остальные команды из массива teams
+//   // а также сохранить порядковые номера в массиве teams для каждого удаленного элемента в переменную deletedTeamKeys.
+//   // затем используя deletedTeamKeys, пройти по всем элементам MPhase и удалить из items все соответствующие по порядку элементы массива
+//   // 2. если hasDependencies true, надо пройти по всем элементам MPhase items и удалить все элементы issues
+//   // у которых dependencies?: undefined, null или пустой массив;
+//   // 3. если hasProblems true, надо пройти по всем элементам MPhase items и удалить все элементы issues у которых
+//   // sprintometerData.status не равны NeedAttention или Warning
+//   // Результат действия фильтров должен быть скомбинирован
+//
+//   return { teams, phases };
+// }
+
+export function filterData({ teams, phases, filters }: { teams: MTeam[]; phases: MPhase[]; filters: MFilterState }): {
+  teams: MTeam[];
+  phases: MPhase[];
+} {
+  const { selectedTeams, hasOpenDependencies, hasDependencies, hasProblems } = filters;
+
+  let filteredTeams = [...teams];
+  let filteredPhases = phases.map((phase) => ({
+    ...phase,
+    items: phase.items.map((item) => ({
+      ...item,
+      issues: [...item.issues],
+    })),
+  }));
+
+  // 1. Team filtering
+  if (selectedTeams.length > 0) {
+    const deletedTeamKeys: number[] = [];
+
+    // Find indices of teams to remove
+    filteredTeams.forEach((team, index) => {
+      if (!selectedTeams.includes(team.id)) {
+        deletedTeamKeys.push(index);
+      }
+    });
+
+    // Remove teams not in selectedTeams (in reverse order to maintain indices)
+    for (let i = deletedTeamKeys.length - 1; i >= 0; i--) {
+      filteredTeams.splice(deletedTeamKeys[i], 1);
+    }
+
+    // Remove corresponding items from phases (in reverse order)
+    filteredPhases = filteredPhases.map((phase) => ({
+      ...phase,
+      items: phase.items.filter((_, index) => !deletedTeamKeys.includes(index)),
+    }));
+  }
+
+  // 2. Dependencies filtering
+  if (hasDependencies) {
+    filteredPhases = filteredPhases.map((phase) => ({
+      ...phase,
+      items: phase.items.map((item) => ({
+        ...item,
+        issues: item.issues.filter((issue) => issue.dependencies && issue.dependencies.length > 0),
+      })),
+    }));
+  }
+
+  // 3. Problems filtering
+  if (hasProblems) {
+    filteredPhases = filteredPhases.map((phase) => ({
+      ...phase,
+      items: phase.items.map((item) => ({
+        ...item,
+        issues: item.issues.filter(
+          (issue) =>
+            issue.sprintometerData &&
+            (issue.sprintometerData.status === ESprintometerStatus.NeedAttention ||
+              issue.sprintometerData.status === ESprintometerStatus.Warning)
+        ),
+      })),
+    }));
+  }
+
+  // 4. Open dependencies filtering
+  if (hasOpenDependencies) {
+    filteredPhases = filteredPhases.map((phase) => ({
+      ...phase,
+      items: phase.items.map((item) => ({
+        ...item,
+        issues: item.issues.filter((issue) => {
+          if (!issue.dependencies || issue.dependencies.length === 0) {
+            return false;
+          }
+
+          // Check if any dependency is not completed
+          return issue.dependencies.some((dependency) => dependency.status.type !== EJiraStatus.Done);
+        }),
+      })),
+    }));
+  }
+
+  return { teams: filteredTeams, phases: filteredPhases };
+}
+
+export function countTotalIssues(phases: MPhase[]): number {
+  return phases.reduce((totalCount, phase) => {
+    const phaseCount = phase.items.reduce((itemsCount, item) => {
+      return itemsCount + item.issues.length;
+    }, 0);
+
+    return totalCount + phaseCount;
+  }, 0);
 }

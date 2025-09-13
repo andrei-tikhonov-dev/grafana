@@ -6,12 +6,15 @@ import { PanelProps } from '@grafana/data';
 import { ScrollArea } from '../../components/shadcn/scroll-area';
 import { UiPanelTitle } from '../../components/ui';
 import { UiZeroState } from '../../components/ui/zero-state/UiZeroState';
+import { useColor } from '../../hooks/useColor';
+import { usePluginState } from '../../hooks/usePluginState';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
 import { DataTable } from './components/DataTable';
-import { MPlannerBoardCustom } from './types';
-import { convertToTableFormat } from './utils';
+import { Filters } from './components/Filters';
+import { MFilterState, MPlannerBoardCustom, MTeam } from './types';
+import { convertToTableFormat, countTotalIssues, filterData } from './utils';
 
 interface Props extends PanelProps<TPanelOptions> {}
 
@@ -21,21 +24,6 @@ const styles = {
     display: flex;
     flex-direction: column;
   `,
-  content: css`
-    flex: 1 1 auto;
-    padding-right: 16px;
-    padding-top: 16px;
-    overflow-y: auto;
-  `,
-  headerInfo: css`
-    display: flex;
-    gap: 24px;
-  `,
-  headerInfoItem: css`
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  `,
 };
 
 const initialData: MPlannerBoardCustom = {
@@ -43,10 +31,29 @@ const initialData: MPlannerBoardCustom = {
   phases: [],
 };
 
-export const PlannerBoard: React.FC<Props> = ({ width, height, data }) => {
-  const { zeroState, phases, teams } = getGrafanaCustomData<MPlannerBoardCustom>(data, initialData);
+const initialFilterState: MFilterState = {
+  selectedTeams: [],
+  hasOpenDependencies: false,
+  hasDependencies: false,
+  hasProblems: false,
+};
 
-  const tableData = convertToTableFormat({ phases, teams });
+export const PlannerBoard: React.FC<Props> = ({ width, height, data, options, onOptionsChange }) => {
+  const getColor = useColor();
+  const { zeroState, phases, teams } = getGrafanaCustomData<MPlannerBoardCustom>(data, initialData);
+  const [filterState, setFilterState] = usePluginState<MFilterState>(options, onOptionsChange, initialFilterState);
+  const { teams: filteredTeams, phases: filteredPhases } = filterData({ teams, phases, filters: filterState });
+
+  const teamOptions: MTeam[] = teams.map(({ id, name, color }) => ({
+    id,
+    name,
+    color: color || getColor(id),
+    members: [],
+  }));
+
+  const tableData = convertToTableFormat({ phases: filteredPhases, teams: filteredTeams });
+  const totalIssues = countTotalIssues(phases);
+  const filteredIssues = countTotalIssues(filteredPhases);
 
   if (zeroState) {
     return <UiZeroState {...zeroState} />;
@@ -63,6 +70,13 @@ export const PlannerBoard: React.FC<Props> = ({ width, height, data }) => {
       )}
     >
       <UiPanelTitle>Planner board</UiPanelTitle>
+      <Filters
+        teamOptions={teamOptions}
+        onFilterChange={setFilterState}
+        defaultFilterState={filterState}
+        totalIssues={totalIssues}
+        filteredIssues={filteredIssues}
+      />
       <DataTable {...tableData} width={width} />
     </ScrollArea>
   );

@@ -10,6 +10,7 @@ import {
   TUser,
   TZeroState,
   TUrl,
+  TJiraStatus,
 } from '../../types';
 
 export interface MPlannerBoardCustom extends Record<string, any> {
@@ -45,7 +46,7 @@ export interface MIssue {
   url: TUrl;
   issueType: TJiraIssueType;
   priority: TJiraPriority;
-  status: string;
+  status: TJiraStatus;
   ownerTeam: MTeam;
   sprintometerData?: MSprintometerData;
 }
@@ -86,4 +87,11 @@ export interface UTableRow {
 export interface UTableData {
   columns: Array<ColumnDef<UTableRow>>;
   data: UTableRow[];
+}
+
+export interface MFilterState {
+  selectedTeams: TId[];
+  hasProblems: boolean;
+  hasDependencies: boolean;
+  hasOpenDependencies: boolean;
 }

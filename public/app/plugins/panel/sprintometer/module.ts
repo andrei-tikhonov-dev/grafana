@@ -12,8 +12,9 @@ export const getPanelTypeOptions = async () => {
     { label: 'Incoming dependencies', value: EPanelType.IncomingDependencies },
     { label: 'Outgoing dependencies', value: EPanelType.OutgoingDependencies },
     { label: 'Similar issues', value: EPanelType.SimilarTasks },
-    { label: 'Components library', value: EPanelType.ComponentsLibrary },
     { label: 'Planner board', value: EPanelType.PlannerBoard },
+    { label: 'Roadmap', value: EPanelType.Roadmap },
+    { label: 'Components library', value: EPanelType.ComponentsLibrary },
   ]);
 };
 
