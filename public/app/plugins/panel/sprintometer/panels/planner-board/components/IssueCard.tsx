@@ -13,13 +13,14 @@ import {
   UiCardFooter,
   UiJiraStatusBadge,
 } from '../../../components/ui';
-import { theme3 } from '../../../theme/theme';
-import { MIssue } from '../types';
-import { ESprintometerStatus } from '../../../types';
-import { cardColors } from '../custom-theme';
-import { findInEnum } from '../../../utils/enums';
-import { TeamBadge } from './TeamBadge';
 import { UiJiraPriorityBadge } from '../../../components/ui/badge/UiJiraPriorityBadge';
+import { theme3 } from '../../../theme/theme';
+import { ESprintometerStatus } from '../../../types';
+import { findInEnum } from '../../../utils/enums';
+import { cardColors } from '../custom-theme';
+import { MIssue } from '../types';
+
+import { TeamBadge } from './TeamBadge';
 
 const cardStyles = css`
   border-radius: ${theme3.tailwind.radiusSm};
@@ -74,11 +75,11 @@ const userStyle = css`
 type IssueCardProps = {
   issue: MIssue;
   teamVisible?: boolean;
-  action?: React.ReactNode;
+  bottomSlot?: React.ReactNode;
   className?: string;
 };
 
-export function IssueCard({ issue, className, action, teamVisible }: IssueCardProps) {
+export function IssueCard({ issue, className, bottomSlot, teamVisible }: IssueCardProps) {
   const progress =
     issue.sprintometerData?.progress !== undefined ? <span>{issue.sprintometerData?.progress}%</span> : '';
   const status = findInEnum(ESprintometerStatus, String(issue.sprintometerData?.status), ESprintometerStatus.Default);
@@ -111,7 +112,7 @@ export function IssueCard({ issue, className, action, teamVisible }: IssueCardPr
           )}
           {teamVisible && issue.ownerTeam && <TeamBadge team={issue.ownerTeam} />}
         </div>
-        {action}
+        {bottomSlot}
       </UiCardFooter>
     </UiColorCard>
   );

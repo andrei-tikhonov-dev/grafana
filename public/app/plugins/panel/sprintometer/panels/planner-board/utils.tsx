@@ -50,25 +50,6 @@ export function convertToTableFormat(plannerData: MPlannerBoardCustom): UTableDa
   };
 }
 
-// export function filterData({ teams, phases, filters }: { teams: MTeam[]; phases: MPhase[]; filters: MFilterState }): {
-//   teams: MTeam[];
-//   phases: MPhase[];
-// } {
-//   const { selectedTeams, hasOpenDependencies, hasDependencies, hasProblems } = filters;
-//   console.log(selectedTeams, hasOpenDependencies, hasDependencies, hasProblems);
-//   // 1. Если selectedTeams не пустой массив,
-//   // надо в массиве teams найти для каждого элемента selectedTeams соответсвующую команду по id, и удалить все остальные команды из массива teams
-//   // а также сохранить порядковые номера в массиве teams для каждого удаленного элемента в переменную deletedTeamKeys.
-//   // затем используя deletedTeamKeys, пройти по всем элементам MPhase и удалить из items все соответствующие по порядку элементы массива
-//   // 2. если hasDependencies true, надо пройти по всем элементам MPhase items и удалить все элементы issues
-//   // у которых dependencies?: undefined, null или пустой массив;
-//   // 3. если hasProblems true, надо пройти по всем элементам MPhase items и удалить все элементы issues у которых
-//   // sprintometerData.status не равны NeedAttention или Warning
-//   // Результат действия фильтров должен быть скомбинирован
-//
-//   return { teams, phases };
-// }
-
 export function filterData({ teams, phases, filters }: { teams: MTeam[]; phases: MPhase[]; filters: MFilterState }): {
   teams: MTeam[];
   phases: MPhase[];

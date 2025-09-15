@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { Zap, Target, AlertCircle, User, Calendar, Users } from 'lucide-react';
+import { Zap, Target, AlertCircle, User, Calendar, Users, CalendarArrowUp } from 'lucide-react';
 import * as React from 'react';
 
 import { UiIcon, UiAvatar, UiJiraStatusBadge, UiTitle } from '../../../components/ui';
@@ -59,6 +59,10 @@ export function IssueGeneralInfo({ issue, className }: IssueGeneralInfoProps) {
         )}
 
         {issue.plannedPi && <InfoRow icon={<Target size={16} />} label="Planned PI:" value={issue.plannedPi.name} />}
+
+        {issue.plannedFor && (
+          <InfoRow icon={<CalendarArrowUp size={16} />} label="Planned for:" value={issue.plannedFor} />
+        )}
 
         {issue.startDate && (
           <InfoRow icon={<Calendar size={16} />} label="Start date:" value={formatFullDate(issue.startDate)} />

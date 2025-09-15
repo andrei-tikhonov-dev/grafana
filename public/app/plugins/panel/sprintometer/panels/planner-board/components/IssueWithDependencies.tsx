@@ -39,7 +39,7 @@ export function IssueWithDependencies({ issue }: IssueWithDependenciesProps) {
 
   return (
     <div className={wrapperStyles}>
-      <IssueCard issue={issue} className={issueCardStyles} action={<ShowMore issue={issue} />} />
+      <IssueCard issue={issue} className={issueCardStyles} bottomSlot={<ShowMore issue={issue} />} />
 
       {validDependencies.length > 0 && (
         <>

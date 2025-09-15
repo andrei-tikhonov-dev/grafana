@@ -6,6 +6,7 @@ import { theme3 } from '../../../theme/theme';
 import { MIssue } from '../types';
 
 import { IssueCard } from './IssueCard';
+import { PlannedForBadge } from './PlannedForBadge';
 
 interface IssueDependenciesProps {
   issue: MIssue;
@@ -57,27 +58,24 @@ export function IssueDependencies({ issue, className }: IssueDependenciesProps) 
   const externalDependencies =
     issue.dependencies?.filter((dep) => dep.ownerTeam?.art?.id !== issue.ownerTeam?.art?.id) || [];
 
-  const externalDependenciesByArt = externalDependencies.reduce(
-    (acc, dep) => {
-      const artId = dep.ownerTeam?.art?.id;
-      const artName = dep.ownerTeam?.art?.name;
+  const externalDependenciesByArt = externalDependencies.reduce((acc, dep) => {
+    const artId = dep.ownerTeam?.art?.id;
+    const artName = dep.ownerTeam?.art?.name;
 
-      if (!artId || !artName) {
-        return acc;
-      }
-
-      if (!acc[artId]) {
-        acc[artId] = {
-          name: artName,
-          dependencies: [],
-        };
-      }
-
-      acc[artId].dependencies.push(dep);
+    if (!artId || !artName) {
       return acc;
-    },
-    {} as Record<string, { name: string; dependencies: MIssue[] }>
-  );
+    }
+
+    if (!acc[artId]) {
+      acc[artId] = {
+        name: artName,
+        dependencies: [],
+      };
+    }
+
+    acc[artId].dependencies.push(dep);
+    return acc;
+  }, {} as Record<string, { name: string; dependencies: MIssue[] }>);
 
   return (
     <div className={sectionStyles}>
@@ -89,7 +87,12 @@ export function IssueDependencies({ issue, className }: IssueDependenciesProps) 
       {internalDependencies.length > 0 && (
         <div className={dependencyContainerStyles}>
           {internalDependencies.map((dependencyIssue) => (
-            <IssueCard issue={dependencyIssue} key={dependencyIssue.issueKey} teamVisible />
+            <IssueCard
+              issue={dependencyIssue}
+              key={dependencyIssue.issueKey}
+              bottomSlot={dependencyIssue.plannedFor && <PlannedForBadge plannedFor={dependencyIssue.plannedFor} />}
+              teamVisible
+            />
           ))}
         </div>
       )}
@@ -100,7 +103,12 @@ export function IssueDependencies({ issue, className }: IssueDependenciesProps) 
             <div key={artId} className={artGroupContainerStyles}>
               <div className={dependencyHeaderStyles}>ART: {artGroup.name}</div>
               {artGroup.dependencies.map((dependencyIssue) => (
-                <IssueCard issue={dependencyIssue} key={dependencyIssue.issueKey} teamVisible />
+                <IssueCard
+                  issue={dependencyIssue}
+                  key={dependencyIssue.issueKey}
+                  bottomSlot={dependencyIssue.plannedFor && <PlannedForBadge plannedFor={dependencyIssue.plannedFor} />}
+                  teamVisible
+                />
               ))}
             </div>
           ))}

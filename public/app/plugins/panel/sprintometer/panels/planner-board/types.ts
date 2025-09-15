@@ -40,6 +40,7 @@ export interface MIssue {
   summary: string;
   startDate?: TDate;
   plannedPi?: MPi;
+  plannedFor?: string;
   dependencies?: MIssue[];
   children?: MIssue[];
   assignee: TUser;

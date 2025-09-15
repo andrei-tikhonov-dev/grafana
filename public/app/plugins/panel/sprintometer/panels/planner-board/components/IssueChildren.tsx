@@ -6,6 +6,7 @@ import { theme3 } from '../../../theme/theme';
 import { MIssue } from '../types';
 
 import { IssueCard } from './IssueCard';
+import { PlannedForBadge } from './PlannedForBadge';
 
 interface IssueChildrenProps {
   issue: MIssue;
@@ -47,7 +48,12 @@ export function IssueChildren({ issue, className }: IssueChildrenProps) {
 
       <div className={childrenContainerStyles}>
         {issue.children.map((childIssue) => (
-          <IssueCard issue={childIssue} key={childIssue.issueKey} teamVisible />
+          <IssueCard
+            issue={childIssue}
+            key={childIssue.issueKey}
+            bottomSlot={childIssue.plannedFor && <PlannedForBadge plannedFor={childIssue.plannedFor} />}
+            teamVisible
+          />
         ))}
       </div>
     </div>
