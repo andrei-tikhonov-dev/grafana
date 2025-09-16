@@ -85,6 +85,20 @@ export function useRequest({ create, update, delete: deleteAction, preventReload
     return performRequest(payload, actionWithId);
   };
 
+  const customUpdateRequest = (payload: any, url: string) => {
+    if (!update) {
+      notifyError(['Invalid update configuration.']);
+      return Promise.resolve(false);
+    }
+
+    const actionWithId: ActionOptionsType = {
+      ...update,
+      url: joinUrls(String(update.url), url),
+    };
+
+    return performRequest(payload, actionWithId);
+  };
+
   const deleteRequest = (payload: any, id?: string) => {
     if (!deleteAction) {
       notifyError(['Invalid delete configuration.']);
@@ -101,6 +115,7 @@ export function useRequest({ create, update, delete: deleteAction, preventReload
 
   return {
     createRequest,
+    customUpdateRequest,
     updateRequest,
     deleteRequest,
     loading,

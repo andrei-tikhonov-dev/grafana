@@ -1,11 +1,15 @@
 export type JiraStatusMapperToolMetaType = {
   custom: {
-    teamId: number;
-    types: string[];
+    errors?: string[];
+    possibleStatuses: Record<string, string>;
   };
 };
 
-export interface JiraStatusMapperToolUpdatePayload {
-  propertyName: string;
+export type BoardOption = {
+  label: string;
   value: string;
+};
+
+export interface JiraStatusMapperToolUpdatePayload {
+  sprintometerStatus: string;
 }

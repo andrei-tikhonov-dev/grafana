@@ -214,6 +214,15 @@ export function getPayloadIDs(data: DataFrame, fieldName: string): { [index: num
   );
 }
 
+export function getColumnDataObject(data: DataFrame, fieldName: string): { [index: number]: string } {
+  const idField = data.fields.find((field) => field.name === fieldName);
+  const length = data.length;
+
+  return Object.fromEntries(
+    Array.from({ length }, (_, index) => [index, idField ? String(idField.values.get(index)) : ''])
+  );
+}
+
 export function createSelectOptions(items: string[]): Array<SelectableValue<string>> {
   return items.map((item) => ({ label: item, value: item }));
 }

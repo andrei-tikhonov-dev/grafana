@@ -1,8 +1,8 @@
 export const enum JiraStatusMapperToolFields {
-  JiraBoard = 'Jira board',
-  JiraStatus = 'Jira status',
-  Status = 'Mapped status',
-  Id = 'ID',
+  BoardID = 'Board ID',
+  ColumnName = 'Column name',
+  Status = 'Status',
+  BoardName = 'Board name',
 }
 
-export const hiddenFields = [JiraStatusMapperToolFields.Id, JiraStatusMapperToolFields.JiraBoard];
+export const hiddenFields = [JiraStatusMapperToolFields.BoardName, JiraStatusMapperToolFields.BoardID];
