@@ -22,16 +22,16 @@ export const JiraStatusMapperTool: React.FC<JiraStatusMapperToolProps> = ({ opti
   const dataFrame = data.series[0];
   const meta = dataFrame.meta as JiraStatusMapperToolMetaType;
   const { boardOptions, boardIDs, boardNames, typeOptions } = useMemo(() => {
-    const boardIds = getColumnDataObject(dataFrame, JiraStatusMapperToolFields.BoardID);
-    const boardNms = getColumnDataObject(dataFrame, JiraStatusMapperToolFields.BoardName);
-    const brdOptions = getFilterOptions(dataFrame);
-    const tpOptions = objectToOptionArray(meta.custom.possibleStatuses);
+    const boardIDs = getColumnDataObject(dataFrame, JiraStatusMapperToolFields.BoardID);
+    const boardNames = getColumnDataObject(dataFrame, JiraStatusMapperToolFields.ColumnName);
+    const boardOptions = getFilterOptions(dataFrame);
+    const typeOptions = objectToOptionArray(meta.custom.possibleStatuses);
 
     return {
-      boardOptions: brdOptions,
-      boardIDs: boardIds,
-      boardNames: boardNms,
-      typeOptions: tpOptions,
+      boardOptions,
+      boardIDs,
+      boardNames,
+      typeOptions,
     };
   }, [dataFrame, meta.custom.possibleStatuses]);
 
