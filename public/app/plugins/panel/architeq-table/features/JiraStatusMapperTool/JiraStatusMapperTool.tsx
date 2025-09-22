@@ -21,16 +21,12 @@ interface JiraStatusMapperToolProps extends TablePanelProps {}
 export const JiraStatusMapperTool: React.FC<JiraStatusMapperToolProps> = ({ options, data, width, height }) => {
   const dataFrame = data.series[0];
   const meta = dataFrame.meta as JiraStatusMapperToolMetaType;
-  const { boardOptions, boardIDs, boardNames, typeOptions } = useMemo(() => {
-    const boardIDs = getColumnDataObject(dataFrame, JiraStatusMapperToolFields.BoardID);
-    const boardNames = getColumnDataObject(dataFrame, JiraStatusMapperToolFields.ColumnName);
+  const { boardOptions, typeOptions } = useMemo(() => {
     const boardOptions = getFilterOptions(dataFrame);
     const typeOptions = objectToOptionArray(meta.custom.possibleStatuses);
 
     return {
       boardOptions,
-      boardIDs,
-      boardNames,
       typeOptions,
     };
   }, [dataFrame, meta.custom.possibleStatuses]);
@@ -45,19 +41,6 @@ export const JiraStatusMapperTool: React.FC<JiraStatusMapperToolProps> = ({ opti
     },
   });
 
-  const handleUpdate = useCallback(
-    async (value: string, { rowIndex }: CustomCellRendererProps) => {
-      const payload: JiraStatusMapperToolUpdatePayload = {
-        sprintometerStatus: value,
-      };
-
-      const boardId = String(boardIDs[rowIndex]);
-      const boardName = encodeURIComponent(boardNames[rowIndex]);
-      return customUpdateRequest(payload, `${boardId}/${boardName}`);
-    },
-    [boardIDs, boardNames, customUpdateRequest]
-  );
-
   const configuredData = useMemo(() => {
     const filteredData = filterData(dataFrame, board);
     return configJiraStatusMapperToolData({
@@ -67,9 +50,23 @@ export const JiraStatusMapperTool: React.FC<JiraStatusMapperToolProps> = ({ opti
     });
   }, [dataFrame, board, typeOptions]);
 
+  const handleUpdate = useCallback(
+    async (value: string, { rowIndex }: CustomCellRendererProps) => {
+      const boardNames = getColumnDataObject(configuredData, JiraStatusMapperToolFields.ColumnName);
+      const payload: JiraStatusMapperToolUpdatePayload = {
+        sprintometerStatus: value,
+      };
+
+      const boardId = board.value;
+      const boardName = encodeURIComponent(boardNames[rowIndex]);
+      return customUpdateRequest(payload, `${boardId}/${boardName}`);
+    },
+    [configuredData, customUpdateRequest, board.value]
+  );
+
   return (
     <>
-      {meta.custom.errors?.length && showErrors && (
+      {meta.custom.errors && meta.custom.errors.length > 0 && showErrors && (
         <Alert title="Errors" severity="error" onRemove={() => setShowErrors(false)}>
           <ul style={{ margin: 0, paddingLeft: '20px' }}>
             {meta.custom.errors.map((error, index) => (
