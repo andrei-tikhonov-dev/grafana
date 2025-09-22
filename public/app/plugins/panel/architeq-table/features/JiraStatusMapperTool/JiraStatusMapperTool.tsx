@@ -52,7 +52,7 @@ export const JiraStatusMapperTool: React.FC<JiraStatusMapperToolProps> = ({ opti
       };
 
       const boardId = String(boardIDs[rowIndex]);
-      const boardName = String(boardNames[rowIndex]);
+      const boardName = encodeURIComponent(boardNames[rowIndex]);
       return customUpdateRequest(payload, `${boardId}/${boardName}`);
     },
     [boardIDs, boardNames, customUpdateRequest]
