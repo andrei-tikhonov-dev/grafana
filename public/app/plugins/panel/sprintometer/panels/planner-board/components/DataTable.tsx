@@ -6,7 +6,7 @@ import { ScrollArea, ScrollBar } from '../../../components/shadcn/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/shadcn/table';
 import { theme3 } from '../../../theme/theme';
 import { customTheme } from '../custom-theme';
-import { UTableData } from '../types';
+import { MTableData } from '../types';
 
 const getWrapperStyles = (width: number) => css`
   padding: calc(${theme3.tailwind.spacing} * 4) calc(${theme3.tailwind.spacing} * 8)
@@ -41,7 +41,7 @@ const tableHeadStyles = css`
   }
 `;
 
-type Props = UTableData & { width: number };
+type Props = MTableData & { width: number };
 
 export function DataTable({ columns, data, width }: Props) {
   const table = useReactTable({

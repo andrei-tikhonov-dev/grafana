@@ -47,7 +47,7 @@ export const PlannerBoard: React.FC<Props> = ({ width, height, data, options, on
   const teamOptions: MTeam[] = teams.map(({ id, name, color }) => ({
     id,
     name,
-    color: color || getColor(id),
+    color: color || getColor(name),
     members: [],
   }));
 

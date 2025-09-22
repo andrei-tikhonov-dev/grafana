@@ -28,8 +28,8 @@ type Props = {
 };
 
 export function Dependencies({ dependencies }: Props) {
-  const dependenciesWithoutArt = dependencies.filter((issue) => !issue.ownerTeam?.art);
-  const dependenciesWithArt = dependencies.filter((issue) => issue.ownerTeam?.art);
+  const internalDependencies = dependencies.filter((issue) => !issue.ownerTeam?.isExternal);
+  const externalDependencies = dependencies.filter((issue) => issue.ownerTeam?.isExternal);
 
   if (dependencies.length === 0) {
     return null;
@@ -37,17 +37,17 @@ export function Dependencies({ dependencies }: Props) {
 
   return (
     <div className={wrapperStyles}>
-      {dependenciesWithoutArt.length > 0 && (
+      {internalDependencies.length > 0 && (
         <div className={containerStyles}>
-          {dependenciesWithoutArt.map((issue) => (
+          {internalDependencies.map((issue) => (
             <TeamBadge team={issue.ownerTeam} key={issue.id} />
           ))}
         </div>
       )}
 
-      {dependenciesWithArt.length > 0 && (
+      {externalDependencies.length > 0 && (
         <div className={containerStyles}>
-          {dependenciesWithArt.map((issue) => (
+          {externalDependencies.map((issue) => (
             <TeamBadge team={issue.ownerTeam} key={issue.id} />
           ))}
         </div>

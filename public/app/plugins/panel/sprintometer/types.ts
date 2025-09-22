@@ -34,6 +34,7 @@ export const enum EPanelType {
   PlannerBoard = 'PlannerBoard',
   SimilarTasks = 'SimilarTasks',
   Roadmap = 'Roadmap',
+  IssueMap = 'IssueMap',
 }
 
 export interface TTable<Data, InnerData = unknown> {

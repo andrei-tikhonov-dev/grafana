@@ -15,43 +15,52 @@ const wrapperStyles = css`
 interface TeamBadgeProps {
   team: MTeam;
   size?: BadgeSize;
-  color?: string;
-  isExternal?: boolean;
   className?: string;
 }
 
-export function TeamBadge({
-  team,
-  size = 'xs',
-  color: overrideColor,
-  isExternal: forceExternal,
-  className,
-}: TeamBadgeProps) {
-  const isExternal = forceExternal ?? Boolean(team?.art);
-  const getColor = useColor();
-  const idColor = getColor(team?.id);
-  const label = isExternal ? `ART ${team?.art?.name}: ${team?.name}` : team?.name;
+const EMPTY_NAME = 'Unknown';
 
-  const teamColor = React.useMemo(() => {
-    if (overrideColor) {
-      return overrideColor;
-    }
-    if (isExternal) {
-      return theme3.tailwind.colorGray500;
-    }
-    return team.color || idColor;
-  }, [overrideColor, isExternal, team?.color, idColor]);
+const getTeamLabel = (team: MTeam): string => {
+  if (!team.isExternal) {
+    return team?.name || EMPTY_NAME;
+  }
+
+  const artName = team?.art?.name;
+  const teamName = team?.name;
+
+  if (!artName && !teamName) {
+    return EMPTY_NAME;
+  }
+
+  if (artName && teamName) {
+    return `${artName}: ${teamName}`;
+  }
+
+  return artName || teamName || EMPTY_NAME;
+};
+
+const getTeamColor = (team: MTeam, idColor: string): string => {
+  if (team.isExternal) {
+    return theme3.tailwind.colorGray500;
+  }
+
+  return team.color || idColor;
+};
+
+export function TeamBadge({ team, size = 'xs', className }: TeamBadgeProps) {
+  const getColor = useColor();
 
   if (!team) {
     return null;
   }
 
+  const generatedColor = getColor(team.name);
+  const label = getTeamLabel(team);
+  const teamColor = getTeamColor(team, generatedColor);
+  const wrapperClassName = className ? `${wrapperStyles} ${className}` : wrapperStyles;
+
   return (
-    <UiColorDotBadge
-      color={teamColor}
-      size={size}
-      className={className ? `${wrapperStyles} ${className}` : wrapperStyles}
-    >
+    <UiColorDotBadge color={teamColor} size={size} className={wrapperClassName}>
       <UiEllipsis>{label}</UiEllipsis>
     </UiColorDotBadge>
   );

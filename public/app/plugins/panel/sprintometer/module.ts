@@ -15,6 +15,7 @@ export const getPanelTypeOptions = async () => {
     { label: 'Planner board', value: EPanelType.PlannerBoard },
     { label: 'Roadmap', value: EPanelType.Roadmap },
     { label: 'Components library', value: EPanelType.ComponentsLibrary },
+    { label: 'Issue map', value: EPanelType.IssueMap },
   ]);
 };
 

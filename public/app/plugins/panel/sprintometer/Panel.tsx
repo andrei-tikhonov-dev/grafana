@@ -27,6 +27,7 @@ const Panels = {
   [EPanelType.ComponentsLibrary]: ComponentsLibrary,
   [EPanelType.PlannerBoard]: PlannerBoard,
   [EPanelType.Roadmap]: () => <div>ToDo</div>,
+  [EPanelType.IssueMap]: () => <div>ToDo</div>,
 };
 
 export const Panel: React.FC<Props> = (props) => {

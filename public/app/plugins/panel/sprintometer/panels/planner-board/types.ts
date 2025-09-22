@@ -25,6 +25,7 @@ export interface MTeam {
   members: TUser[];
   color?: string;
   art?: MArt;
+  isExternal?: boolean;
 }
 
 export interface MSprintometerData {
@@ -80,14 +81,14 @@ export interface MInfo {
   action: string;
 }
 
-export interface UTableRow {
+export interface MTableRow {
   team: MTeam;
   [key: string]: MTeam | MIssue[];
 }
 
-export interface UTableData {
-  columns: Array<ColumnDef<UTableRow>>;
-  data: UTableRow[];
+export interface MTableData {
+  columns: Array<ColumnDef<MTableRow>>;
+  data: MTableRow[];
 }
 
 export interface MFilterState {

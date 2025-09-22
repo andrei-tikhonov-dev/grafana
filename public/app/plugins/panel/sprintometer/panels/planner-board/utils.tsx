@@ -7,10 +7,10 @@ import { IssuesCell } from './components/IssuesCell';
 import { PhaseHeaderCell } from './components/PhaseHeaderCell';
 import { TeamCell } from './components/TeamCell';
 import { TeamHeaderCell } from './components/TeamHeaderCell';
-import { MFilterState, MIssue, MPhase, MPlannerBoardCustom, MTeam, UTableData, UTableRow } from './types';
+import { MFilterState, MIssue, MPhase, MPlannerBoardCustom, MTeam, MTableData, MTableRow } from './types';
 
-export function convertToTableFormat(plannerData: MPlannerBoardCustom): UTableData {
-  const columns: Array<ColumnDef<UTableRow>> = [
+export function convertToTableFormat(plannerData: MPlannerBoardCustom): MTableData {
+  const columns: Array<ColumnDef<MTableRow>> = [
     {
       id: 'team',
       header: () => <TeamHeaderCell />,
@@ -31,8 +31,8 @@ export function convertToTableFormat(plannerData: MPlannerBoardCustom): UTableDa
     })),
   ];
 
-  const data: UTableRow[] = plannerData.teams.map((team, teamIndex) => {
-    const row: UTableRow = {
+  const data: MTableRow[] = plannerData.teams.map((team, teamIndex) => {
+    const row: MTableRow = {
       team: team,
     };
 

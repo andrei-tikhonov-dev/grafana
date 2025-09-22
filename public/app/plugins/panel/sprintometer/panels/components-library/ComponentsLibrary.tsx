@@ -28,6 +28,7 @@ import { ExampleCombobox } from './Demo/ExampleCombobox';
 import { FancyMultiSelect } from './Demo/FancyMultiSelect';
 import { FormExample } from './Demo/FormExample';
 import { MultiSelectTest } from './Demo/MultiSelectTest';
+import { SprintPeriodSelectTest } from './Demo/SprintPeriodSelectTest';
 import { SwitchDemo } from './Demo/SwitchDemo';
 import { jiraStatusGroups } from './Demo/selectData';
 import { ComponentsLibraryCustomDataInterface } from './types';
@@ -71,6 +72,10 @@ export const ComponentsLibrary: React.FC<Props> = ({ width, height, data }) => {
       <UiPanelTitle>Component library</UiPanelTitle>
       <CommandExample />
       <div className={styles.content}>
+        <div className={styles.test}>
+          <SprintPeriodSelectTest />
+        </div>
+
         <div className={styles.test}>
           <BreadcrumbExample />
         </div>

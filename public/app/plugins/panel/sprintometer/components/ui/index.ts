@@ -14,6 +14,7 @@ export { renderCellContent } from './expandable-table/renderCellContent';
 
 export { UiSelect } from './select/UiSelect';
 export { UiMultiSelect } from './select/UiMultiSelect';
+export { UiPeriodSelect } from './period-select/UiPeriodSelect';
 
 export { UiAvatar } from './avatar/UiAvatar';
 export { UiAvatarGroup } from './avatar-group/UiAvatarGroup';
