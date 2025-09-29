@@ -34,7 +34,7 @@ export const JiraStatusMapperTool: React.FC<JiraStatusMapperToolProps> = ({ opti
   const [board, setBoard] = useState<BoardOption>(boardOptions[0]);
   const [showErrors, setShowErrors] = useState<boolean>(true);
 
-  const { customUpdateRequest, loading } = useRequest({
+  const { updateRequest, loading } = useRequest({
     update: {
       url: options.updateUrl,
       method: RequestMethod.POST,
@@ -52,16 +52,16 @@ export const JiraStatusMapperTool: React.FC<JiraStatusMapperToolProps> = ({ opti
 
   const handleUpdate = useCallback(
     async (value: string, { rowIndex }: CustomCellRendererProps) => {
-      const boardNames = getColumnDataObject(configuredData, JiraStatusMapperToolFields.ColumnName);
+      const columnNames = getColumnDataObject(configuredData, JiraStatusMapperToolFields.ColumnName);
+      const boardId = board.value;
       const payload: JiraStatusMapperToolUpdatePayload = {
         sprintometerStatus: value,
+        columnName: columnNames[rowIndex],
       };
 
-      const boardId = board.value;
-      const boardName = encodeURIComponent(boardNames[rowIndex]);
-      return customUpdateRequest(payload, `${boardId}/${boardName}`);
+      return updateRequest(payload, boardId);
     },
-    [configuredData, customUpdateRequest, board.value]
+    [configuredData, updateRequest, board.value]
   );
 
   return (

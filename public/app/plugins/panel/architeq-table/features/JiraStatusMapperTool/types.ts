@@ -12,4 +12,5 @@ export type BoardOption = {
 
 export interface JiraStatusMapperToolUpdatePayload {
   sprintometerStatus: string;
+  columnName: string;
 }
