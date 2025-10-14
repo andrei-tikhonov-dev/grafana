@@ -50,7 +50,7 @@ const selectedValuesContainerStyles = css`
 
 const badgeWrapperStyles = css`
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
 `;
 
@@ -232,6 +232,10 @@ export const UiMultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProp
     },
     ref
   ) => {
+    const valuesForBadges = React.useMemo(
+      () => defaultValue.filter((value) => options.some((option) => option.value === value)),
+      [defaultValue, options]
+    );
     const [selectedValues, setSelectedValues] = React.useState<string[]>(defaultValue);
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
 
@@ -289,10 +293,10 @@ export const UiMultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProp
             className={cx(triggerButtonStyles, className)}
             variant="outline"
           >
-            {selectedValues.length > 0 ? (
+            {valuesForBadges.length > 0 ? (
               <div className={selectedValuesContainerStyles}>
                 <div className={badgeWrapperStyles}>
-                  {selectedValues.slice(0, maxCount).map((value) => {
+                  {valuesForBadges.slice(0, maxCount).map((value) => {
                     const option = options.find((o) => o.value === value);
                     const IconComponent = option?.icon;
                     return (
@@ -311,9 +315,9 @@ export const UiMultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProp
                       </Badge>
                     );
                   })}
-                  {selectedValues.length > maxCount && (
+                  {valuesForBadges.length > maxCount && (
                     <Badge className={cx(badgeStyles, extraBadgeStyles)}>
-                      {`+ ${selectedValues.length - maxCount} more`}
+                      {`+ ${valuesForBadges.length - maxCount} more`}
                       <button
                         className={badgeCloseButtonStyles}
                         onClick={(event) => {

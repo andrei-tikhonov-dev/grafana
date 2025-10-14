@@ -1,22 +1,16 @@
-export interface SankeyOptions {
-  monochrome: boolean;
-  color: string;
-  textColor: string;
-  nodeColor: string;
-  nodeWidth: number;
-  nodePadding: number;
-  iteration: number;
+import { IssueMapOptionsNS } from '../../types';
+
+export type SankeyOptions = IssueMapOptionsNS['sankey'];
+
+export interface IssueMapCustomData {
   valueField: string;
-  labelSize: number;
-  dataDelimiter: string;
-  baseUrl: string;
-  hiddenFields: string[];
-  filterFields: string[];
-  fieldsOrder: string[];
-  initialFilters: string;
+  ai: {
+    title: string;
+    content: string;
+  };
 }
 
-export interface PluginDataPath {
+export interface MPluginDataPath {
   source: number;
   target: number;
   value: number;
@@ -28,29 +22,29 @@ export interface PluginDataPath {
   rowId: number;
 }
 
-export interface PluginDataNode {
+export interface MPluginDataNode {
   name: string;
   id: string;
   columnId: number;
   tooltip: string;
   columnName: string;
   rowIds: number[];
-  link: string;
+  link?: string;
 }
 
-export interface Col0 {
+export interface MCol0 {
   name: any;
   index: number;
   color: any;
 }
 
-export interface ColumnData {
+export interface MColumnData {
   id: string;
   name: string;
   show: boolean;
 }
 
-export interface Row {
+export interface MRow {
   name: string;
   display: string;
 }

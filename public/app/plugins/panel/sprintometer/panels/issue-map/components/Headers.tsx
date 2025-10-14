@@ -1,66 +1,43 @@
-import * as d3 from 'd3';
-import React, { useEffect } from 'react';
+import React from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
+import { DraggableHeaderText } from './DraggableHeaderText';
 
 interface HeaderProps {
-  headerData: any;
-  width: any;
-  id: any;
-  topMargin: number;
-  textColor: string;
+  headerData: string[];
+  width: number;
+  className?: string;
+  moveHeader: (dragIndex: number, hoverIndex: number) => void;
 }
 
-export const Headers: React.FC<HeaderProps> = ({ headerData, width, id, topMargin, textColor }) => {
-  useEffect(() => {
-    //clear old headers
-    d3.select('#' + id)
-      .selectAll('.header-text')
-      .remove();
+export const Headers: React.FC<HeaderProps> = ({ headerData, width, className, moveHeader }) => {
+  const colWidth = width / (headerData.length - 2);
 
-    const head = d3
-      .select('#' + id)
-      .append('g')
-      .attr('id', `${id} header`);
-    const MARGIN = { top: topMargin, right: 20, bottom: 50, left: 20 };
-
-    const translateY = MARGIN.top / 2;
-
-    // Add left and right axis labels
-    head
-      .append('text')
-      .attr('class', 'header-text')
-      .attr('transform', 'translate(' + MARGIN.left + ',' + translateY + ')') // above left axis
-      .attr('font-size', '14pt')
-      .attr('font-weight', '500')
-      .attr('text-anchor', 'start')
-      .text(headerData[0])
-      .attr('fill', textColor);
-
-    head
-      .append('text')
-      .attr('class', 'header-text')
-      .attr('transform', 'translate(' + (width + MARGIN.left) + ',' + translateY + ')') // above right axis
-      .attr('font-size', '14pt')
-      .attr('font-weight', '500')
-      .attr('text-anchor', 'end')
-      .text(headerData[headerData.length - 2]) // last one is value label
-      .attr('fill', textColor);
-
-    if (headerData.length > 3) {
-      const colWidth = width / (headerData.length - 2);
-      for (let i = 1; i < headerData.length - 2; i++) {
-        let translateX = colWidth * i + MARGIN.left;
-        head
-          .append('text')
-          .attr('class', 'header-text')
-          .attr('transform', `translate(${translateX},${translateY})`)
-          .attr('font-size', '14pt')
-          .attr('font-weight', '500')
-          .attr('text-anchor', 'middle')
-          .text(headerData[i])
-          .attr('fill', textColor);
-      }
+  const getHeaderConfig = (index: number) => {
+    if (index === 0) {
+      return { translateX: 10, textAlign: 'left' as const };
     }
-  });
+    if (index === headerData.length - 2) {
+      return { translateX: width, textAlign: 'right' as const };
+    }
+    return { translateX: colWidth * index, textAlign: 'center' as const };
+  };
 
-  return null;
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <div style={{ pointerEvents: 'none' }} className={className}>
+        {headerData.slice(0, -1).map((header, index) => {
+          const { translateX, textAlign } = getHeaderConfig(index);
+          return (
+            <div key={`header-${index}`} style={{ pointerEvents: 'auto' }}>
+              <DraggableHeaderText index={index} left={translateX} textAlign={textAlign} moveHeader={moveHeader}>
+                {header}
+              </DraggableHeaderText>
+            </div>
+          );
+        })}
+      </div>
+    </DndProvider>
+  );
 };

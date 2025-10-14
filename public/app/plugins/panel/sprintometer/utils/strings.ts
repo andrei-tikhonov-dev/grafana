@@ -9,3 +9,9 @@ export function findNormalizedString<T extends string>(array: readonly T[], sear
 
   return found ?? defaultValue;
 }
+export function abbreviate(str: string): string {
+  return str
+    ?.split(' ')
+    .map((w) => w[0].toUpperCase())
+    .join('');
+}

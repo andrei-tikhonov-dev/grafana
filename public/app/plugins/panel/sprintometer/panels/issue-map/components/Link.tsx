@@ -1,9 +1,8 @@
 import { SankeyLink } from 'd3-sankey';
-import React, { useRef } from 'react';
+import React from 'react';
 
+import { CursorTooltip } from '../../../components/shadcn/tooltip';
 import { createD3Link } from '../utils/utils';
-
-import { useTooltip } from './TooltipContext';
 
 interface PathProps {
   data: SankeyLink<any, any>;
@@ -14,32 +13,32 @@ interface PathProps {
 const padding = 5;
 
 export const Link: React.FC<PathProps> = ({ data, opacity, onHighlight }) => {
-  const { showTooltip, hideTooltip } = useTooltip();
-  const pathRef = useRef<SVGPathElement | null>(null);
-  const handlePathMouseOver = function () {
-    showTooltip(data.tooltip);
+  const handleMouseEnter = () => {
     onHighlight([data.rowId]);
   };
 
-  const handleMouseOut = () => {
-    hideTooltip();
+  const handleMouseLeave = () => {
     onHighlight([]);
   };
 
   const width = data.width > 0 ? Math.max(data.width - padding, 1) : 0;
 
   return (
-    <path
-      ref={pathRef}
-      onMouseOver={handlePathMouseOver}
-      onMouseOut={handleMouseOut}
-      d={createD3Link(data)}
-      fill="none"
-      stroke={data.color}
-      strokeOpacity={0.8}
-      opacity={opacity}
-      strokeWidth={width}
-      display={data.displayValue}
-    />
+    <CursorTooltip content={data.tooltip} asSvg>
+      <path
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        d={createD3Link(data)}
+        fill="none"
+        stroke={data.color}
+        strokeOpacity={0.8}
+        opacity={opacity}
+        strokeWidth={width}
+        display={data.displayValue}
+        style={{
+          transition: 'opacity 0.3s ease-in-out',
+        }}
+      />
+    </CursorTooltip>
   );
 };

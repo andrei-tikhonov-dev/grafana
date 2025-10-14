@@ -1,16 +1,17 @@
 import { SankeyNode } from 'd3-sankey';
 import React from 'react';
 
+import { theme3 } from '../../../theme/theme';
+
 import { useSankeyContext } from './SankeyContext';
 
 interface NumberProps {
   data: SankeyNode<any, any>;
-  textColor: string;
   labelSize: number;
   graphWidth: number;
 }
 
-export const ValueLabel: React.FC<NumberProps> = ({ data, textColor, labelSize, graphWidth }) => {
+export const ValueLabel: React.FC<NumberProps> = ({ data, labelSize, graphWidth }) => {
   let { x0, x1, y1, value } = data;
   const { unitLabel } = useSankeyContext();
   const fontSize = `${labelSize}px`;
@@ -29,7 +30,7 @@ export const ValueLabel: React.FC<NumberProps> = ({ data, textColor, labelSize, 
     <text
       x={x}
       y={y1 + 20}
-      fill={textColor}
+      fill={theme3.tailwind.colorGray700}
       style={{
         alignmentBaseline: 'middle',
         fontSize: fontSize,

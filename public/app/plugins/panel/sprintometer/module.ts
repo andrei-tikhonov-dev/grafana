@@ -1,6 +1,7 @@
 import { PanelPlugin } from '@grafana/data';
 
 import { Panel } from './Panel';
+import { PANELS_REGISTRY } from './registry';
 import { TPanelOptions, EPanelType } from './types';
 
 export const getPanelTypeOptions = async () => {
@@ -11,16 +12,17 @@ export const getPanelTypeOptions = async () => {
     { label: 'Cumulative flow diagram', value: EPanelType.CumulativeFlowDiagram },
     { label: 'Incoming dependencies', value: EPanelType.IncomingDependencies },
     { label: 'Outgoing dependencies', value: EPanelType.OutgoingDependencies },
-    { label: 'Similar issues', value: EPanelType.SimilarTasks },
+    { label: 'Similar issues', value: EPanelType.SimilarIssues },
     { label: 'Planner board', value: EPanelType.PlannerBoard },
     { label: 'Roadmap', value: EPanelType.Roadmap },
     { label: 'Components library', value: EPanelType.ComponentsLibrary },
     { label: 'Issue map', value: EPanelType.IssueMap },
+    { label: 'AI', value: EPanelType.AI },
   ]);
 };
 
 export const plugin = new PanelPlugin<TPanelOptions>(Panel).setPanelOptions((builder) => {
-  return builder
+  builder
     .addSelect({
       category: ['Sprintometer Configuration'],
       path: 'panelType',
@@ -40,4 +42,14 @@ export const plugin = new PanelPlugin<TPanelOptions>(Panel).setPanelOptions((bui
       defaultValue: '{}',
       showIf: () => false,
     });
+
+  for (const [_, descriptor] of Object.entries(PANELS_REGISTRY) as Array<
+    [EPanelType, (typeof PANELS_REGISTRY)[EPanelType]]
+  >) {
+    if (descriptor.registerOptions) {
+      descriptor.registerOptions(builder);
+    }
+  }
+
+  return builder;
 });

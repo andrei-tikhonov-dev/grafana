@@ -1,14 +1,9 @@
 import { DataFrame, DataFrameView, Field, getFieldDisplayName } from '@grafana/data';
 
 import { COLOR_ARRAY } from '../constants';
-import { Col0, ColumnData, PluginDataPath, PluginDataNode, Row, SankeyOptions } from '../types';
+import { MCol0, MColumnData, MPluginDataPath, MPluginDataNode, MRow } from '../types';
 
-export type ParseDataOptions = Pick<SankeyOptions, 'valueField' | 'dataDelimiter' | 'baseUrl'>;
-export function parseData(
-  data: DataFrame,
-  columnsControl: ColumnData[],
-  { valueField, dataDelimiter, baseUrl }: ParseDataOptions
-) {
+export function parseData(data: DataFrame, columnsControl: MColumnData[], { valueField }: { valueField: string }) {
   const columnsOrder = columnsControl.map((column) => column.name);
   const series = sortDataFrameFields(data, columnsOrder);
   const seriesFields = series.fields;
@@ -24,9 +19,7 @@ export function parseData(
     seriesFields,
     numFields,
     hiddenColumns,
-    dataDelimiter,
     valueFieldData,
-    baseUrl,
   });
 
   return {
@@ -58,7 +51,7 @@ function sortDataFrameFields(dataFrame: DataFrame, columnNames: string[]): DataF
   };
 }
 
-function getDataPathsWithTooltips(pluginDataLinks: PluginDataPath[], rows: Row[]): PluginDataPath[] {
+function getDataPathsWithTooltips(pluginDataLinks: MPluginDataPath[], rows: MRow[]): MPluginDataPath[] {
   return pluginDataLinks.map((link) => {
     const row = rows.find((row) => row.name === link.id);
     if (row) {
@@ -91,22 +84,18 @@ function processFrame({
   seriesFields,
   numFields,
   hiddenColumns,
-  dataDelimiter,
   valueFieldData,
-  baseUrl,
 }: {
   frame: DataFrameView;
   seriesFields: Field[];
   numFields: number;
   hiddenColumns: string[];
-  dataDelimiter?: string;
   valueFieldData?: Field;
-  baseUrl?: string;
 }) {
-  const pluginDataPaths: PluginDataPath[] = [];
-  const pluginDataNodes: PluginDataNode[] = [];
-  const col0: Col0[] = [];
-  const rows: Row[] = [];
+  const pluginDataPaths: MPluginDataPath[] = [];
+  const pluginDataNodes: MPluginDataNode[] = [];
+  const col0: MCol0[] = [];
+  const rows: MRow[] = [];
 
   frame.forEach((row, rowId) => {
     const currentLink: number[] = [];
@@ -121,12 +110,12 @@ function processFrame({
         continue;
       }
 
-      const { name, tooltip, link } = parseNodeValue(value, baseUrl, dataDelimiter);
+      const { name, tooltip, link } = parseNodeValue(value);
 
       let index = findNodeIndex(pluginDataNodes, name, columnId);
 
       if (index === -1) {
-        const node: PluginDataNode = {
+        const node: MPluginDataNode = {
           name,
           id: name,
           rowIds: [rowId],
@@ -163,26 +152,21 @@ function processFrame({
   return { pluginDataPaths, pluginDataNodes, rows };
 }
 
-type NodeValueDataType = { name: string; tooltip: string; link: string };
+type NodeValueDataType = { name: string; tooltip: string; link?: string };
 
-function parseNodeValue(nodeValue: string | NodeValueDataType, baseUrl = '', delimiter = ''): NodeValueDataType {
+function parseNodeValue(nodeValue: string | NodeValueDataType): NodeValueDataType {
   if (typeof nodeValue === 'object') {
-    return { ...nodeValue, link: nodeValue.link ? `${baseUrl}${nodeValue.link}` : '' };
+    return { ...nodeValue, link: nodeValue.link };
   }
 
-  const parts = nodeValue.split(delimiter);
-  const name = parts[0];
-  const tooltip = parts.length > 1 ? parts[1] : name;
-  const link = parts.length > 2 ? `${baseUrl}${parts[2]}` : '';
-
-  return { name, tooltip, link };
+  return { name: nodeValue, tooltip: nodeValue };
 }
 
-function findNodeIndex(pluginDataNodes: PluginDataNode[], nodeValue: string, columnId: number): number {
+function findNodeIndex(pluginDataNodes: MPluginDataNode[], nodeValue: string, columnId: number): number {
   return pluginDataNodes.findIndex((e) => e.name === nodeValue && e.columnId === columnId);
 }
 
-function addNode(pluginDataNodes: PluginDataNode[], node: PluginDataNode): number {
+function addNode(pluginDataNodes: MPluginDataNode[], node: MPluginDataNode): number {
   return pluginDataNodes.push(node) - 1;
 }
 
@@ -195,11 +179,11 @@ function findRowColor(col0: any[], currentLink: number[]): any {
 }
 
 function buildRowDisplay(
-  pluginDataNodes: PluginDataNode[],
+  pluginDataNodes: MPluginDataNode[],
   currentLink: number[],
   valueField: Field,
   value: any,
-  pluginDataPaths: PluginDataPath[],
+  pluginDataPaths: MPluginDataPath[],
   rowId: number,
   rowColor: any
 ): string {

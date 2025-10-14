@@ -1,8 +1,7 @@
 import { css } from '@emotion/css';
 import React from 'react';
 
-import { SelectableValue } from '@grafana/data';
-import { MultiSelect, useStyles2 } from '@grafana/ui';
+import { UiMultiSelect } from '../../../components/ui';
 
 const getStyles = () => ({
   container: css`
@@ -23,23 +22,21 @@ export const FilterMultiSelect: React.FC<FilterMultiSelectProps> = ({
   placeholder,
   onChange,
 }) => {
-  const styles = useStyles2(getStyles);
+  const styles = getStyles();
 
-  const handleChange = (selected: Array<SelectableValue<string>>) => {
-    onChange(selected.map((item) => item.value ?? ''));
-  };
+  const multiselectOptions = options.map((value) => ({
+    label: value,
+    value: value,
+  }));
 
   return (
-    <div className={styles.container}>
-      <MultiSelect
-        options={options.map((value) => ({ label: value, value }))}
-        value={selectedValues ? selectedValues.map((value) => ({ label: value, value })) : []}
-        onChange={handleChange}
-        placeholder={placeholder}
-        closeMenuOnSelect={false}
-        isClearable
-        isSearchable
-      />
-    </div>
+    <UiMultiSelect
+      className={styles.container}
+      maxCount={2}
+      options={multiselectOptions}
+      defaultValue={selectedValues}
+      onValueChange={onChange}
+      placeholder={placeholder || 'Select options'}
+    />
   );
 };

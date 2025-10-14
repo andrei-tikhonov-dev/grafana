@@ -2,8 +2,8 @@ import React, { useMemo, useState } from 'react';
 
 import { DataFrame } from '@grafana/data';
 
+import { UiHorizontalGroup } from '../../../components/ui';
 import { FilterMultiSelect } from '../components/FilterMultiSelect';
-import { FiltersContainer } from '../components/FiltersContainer';
 import { filterData, getAvailableFilterOptions, getFilterOptions, getInitialSelectedOptions } from '../utils/utils';
 
 type UseFiltersOptions = {
@@ -53,7 +53,7 @@ export function useFiltersComponent({ dataFrame, filterFields, initialFilters, o
     );
   });
 
-  const filtersComponent = filterFields.length > 0 ? <FiltersContainer>{filterComponents}</FiltersContainer> : null;
+  const filtersComponent = filterFields.length > 0 ? <UiHorizontalGroup>{filterComponents}</UiHorizontalGroup> : null;
 
   return {
     filtersComponent,

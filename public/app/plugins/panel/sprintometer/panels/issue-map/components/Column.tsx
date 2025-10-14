@@ -1,63 +1,78 @@
 import { css } from '@emotion/css';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React from 'react';
-import { useDrag, useDrop } from 'react-dnd';
 
-import { ToolbarButton } from '@grafana/ui';
-
-const ITEM_TYPE = 'COLUMN';
+import { UiButton, UiSwitch } from '../../../components/ui';
+import { theme3 } from '../../../theme/theme';
 
 interface ColumnProps {
   id: string;
   name: string;
   index: number;
   show: boolean;
-  moveColumn: (dragIndex: number, hoverIndex: number) => void;
-  onClick: (id: string) => void;
+  onToggle: (id: string) => void;
+  onMoveLeft: (index: number) => void;
+  onMoveRight: (index: number) => void;
+  isFirst: boolean;
+  isLast: boolean;
 }
 
-export const Column: React.FC<ColumnProps> = ({ id, name, index, moveColumn, show, onClick }) => {
-  const ref = React.useRef<HTMLDivElement>(null);
+const containerStyles = css`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid ${theme3.shadcn.input};
+  border-radius: ${theme3.tailwind.radiusSm};
+  background-color: ${theme3.shadcn.background};
+  box-shadow: ${theme3.tailwind.shadowXs};
+`;
 
-  const [, drop] = useDrop({
-    accept: ITEM_TYPE,
-    hover(item: { index: number }) {
-      if (!ref.current) {
-        return;
-      }
-      const dragIndex = item.index;
-      const hoverIndex = index;
+const arrowButtonStyles = css`
+  padding: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+`;
 
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-
-      moveColumn(dragIndex, hoverIndex);
-      item.index = hoverIndex;
-    },
-  });
-
-  const [{ isDragging }, drag] = useDrag({
-    type: ITEM_TYPE,
-    item: { id, index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-
-  drag(drop(ref));
-
-  const draggableStyle = css`
-    opacity: ${isDragging ? 0.5 : 1};
-    & svg {
-      cursor: move !important;
-    }
-  `;
-
+export const Column: React.FC<ColumnProps> = ({
+  id,
+  name,
+  index,
+  show,
+  onToggle,
+  onMoveLeft,
+  onMoveRight,
+  isFirst,
+  isLast,
+}) => {
   return (
-    <div ref={ref} className={draggableStyle}>
-      <ToolbarButton variant={show ? 'active' : 'canvas'} icon="draggabledots" onClick={() => onClick(id)}>
-        {name}
-      </ToolbarButton>
+    <div className={containerStyles}>
+      {!isFirst && (
+        <UiButton
+          variant="ghost"
+          size="sm"
+          className={arrowButtonStyles}
+          onClick={() => onMoveLeft(index)}
+          aria-label="Переместить влево"
+        >
+          <ChevronLeft size={16} />
+        </UiButton>
+      )}
+
+      <UiSwitch id={name} label={name} checked={show} onCheckedChange={() => onToggle(id)} />
+
+      {!isLast && (
+        <UiButton
+          variant="ghost"
+          size="sm"
+          className={arrowButtonStyles}
+          onClick={() => onMoveRight(index)}
+          aria-label="Переместить вправо"
+        >
+          <ChevronRight size={16} />
+        </UiButton>
+      )}
     </div>
   );
 };

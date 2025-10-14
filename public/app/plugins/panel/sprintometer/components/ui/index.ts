@@ -22,9 +22,13 @@ export { UiAvatarGroup } from './avatar-group/UiAvatarGroup';
 export { UiColorDotBadge } from './badge/UiColorDotBadge';
 export { UiColorBadge } from './badge/UiColorBadge';
 export { UiJiraStatusBadge } from './badge/UiJiraStatusBadge';
+export { UiPeriodBadge } from './badge/UiPeriodBadge';
 export { UiFiltersContainer } from './filter-container/UiFiltersContainer';
 export { UiSwitch } from './switch/UiSwitch';
 export { UiColorDot } from './color-dot/UiColorDot';
+export { UiZoom } from './zoom/UiZoom';
+export { UiVerticalGroup } from './group/UiVerticalGroup';
+export { UiHorizontalGroup } from './group/UiHorizontalGroup';
 
 export {
   UiCardAction,

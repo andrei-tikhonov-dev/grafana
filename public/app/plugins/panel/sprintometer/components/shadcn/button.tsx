@@ -68,12 +68,12 @@ const variantStyles = {
     }
   `,
   outline: css`
-    border-color: ${theme3.custom.colorSecondary};
+    border: 1px solid ${theme3.shadcn.input};
     background-color: ${theme3.shadcn.background};
     box-shadow: ${theme3.tailwind.shadowXs};
 
     &:hover:not(:disabled) {
-      background-color: color-mix(in srgb, ${theme3.custom.colorSecondary} 10%, white 90%);
+      background-color: ${theme3.shadcn.accent};
       color: ${theme3.shadcn.accentForeground};
     }
   `,

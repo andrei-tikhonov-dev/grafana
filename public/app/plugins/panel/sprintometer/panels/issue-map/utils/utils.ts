@@ -2,9 +2,9 @@ import * as d3Sankey from 'd3-sankey';
 
 import { DataFrame, Field } from '@grafana/data';
 
-import { MARGIN } from '../constants';
+import { DOUBLE_HEADER_HEIGHT, DRAGGABLE_HEADERS_HEIGHT, SINGLE_HEADER_HEIGHT } from '../constants';
 
-export function getContainerSize({
+export function getSankeySize({
   width,
   height,
   nodeWidth,
@@ -23,16 +23,14 @@ export function getContainerSize({
   const minHeight = rowsNumber * nodePadding * 1.5;
 
   return {
-    containerHeight: Math.max(minHeight, height - MARGIN.bottom),
-    containerWidth: Math.max(minWidth, width - MARGIN.right),
+    sankeyHeight: Math.max(minHeight, height - 180),
+    sankeyWidth: Math.max(minWidth, width),
   };
 }
 
-export function abbreviate(str: string): string {
-  return str
-    ?.split(' ')
-    .map((w) => w[0].toUpperCase())
-    .join('');
+export function getScrollAreaHeigh(panelHeight: number, hasFilters = false): number {
+  const headerHeight = hasFilters ? DOUBLE_HEADER_HEIGHT : SINGLE_HEADER_HEIGHT;
+  return panelHeight - headerHeight - DRAGGABLE_HEADERS_HEIGHT;
 }
 
 const d3Link = d3Sankey.sankeyLinkHorizontal();
@@ -67,7 +65,7 @@ export function filterData(data: DataFrame, selectedOptions: Record<string, stri
         break;
       }
 
-      const cellValue = field.values.get(rowIndex);
+      const cellValue = field.values[rowIndex];
       const cellName = typeof cellValue === 'string' ? cellValue : cellValue?.name;
 
       if (!cellName || !allowedValues.includes(cellName)) {

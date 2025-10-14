@@ -1,4 +1,4 @@
-import { PanelData } from '@grafana/data';
+import { DataFrame, PanelData } from '@grafana/data';
 import { locationService } from '@grafana/runtime';
 
 export const setVariable = async (variableName: string, value: string) => {
@@ -11,13 +11,22 @@ export const setVariables = async (variables: Record<string, string>) => {
   await locationService.partial(updatedVariables);
 };
 
-export function getGrafanaCustomData<T>(data: PanelData, initialData?: T): T {
-  if (!data || !data.series || data.series.length === 0) {
-    console.error('No custom meta data');
+export function getGrafanaCustomData<T>(data: PanelData, initialData: T): T {
+  const dataFrame = getGrafanaFirstSeries(data);
 
-    return initialData || ({} as T);
+  if (!dataFrame || !dataFrame.meta?.custom) {
+    console.error('No meta data');
+
+    return initialData;
   }
-
-  const dataFrame = data.series[0];
   return dataFrame.meta?.custom as T;
+}
+
+export function getGrafanaFirstSeries(data: PanelData): DataFrame | null {
+  if (!data || !data.series || data.series.length === 0) {
+    console.error('No data');
+
+    return null;
+  }
+  return data.series[0];
 }

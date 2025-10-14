@@ -65,11 +65,13 @@ export const UiZeroState: React.FC<UiZeroStateProps> = ({ className, link, title
         <UiTitle>{title}</UiTitle>
         <UiText className={styles.description}>{description}</UiText>
       </div>
-      <div>
-        <UiButton variant="secondary" asChild>
-          <a href={link.url}>{link.text}</a>
-        </UiButton>
-      </div>
+      {link && (
+        <div>
+          <UiButton variant="secondary" asChild>
+            <a href={link.url}>{link.text}</a>
+          </UiButton>
+        </div>
+      )}
     </div>
   );
 };

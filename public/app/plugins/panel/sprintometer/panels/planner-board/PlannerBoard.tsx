@@ -5,7 +5,6 @@ import { PanelProps } from '@grafana/data';
 
 import { ScrollArea } from '../../components/shadcn/scroll-area';
 import { UiPanelTitle } from '../../components/ui';
-import { UiZeroState } from '../../components/ui/zero-state/UiZeroState';
 import { useColor } from '../../hooks/useColor';
 import { usePluginState } from '../../hooks/usePluginState';
 import { TPanelOptions } from '../../types';
@@ -40,7 +39,7 @@ const initialFilterState: MFilterState = {
 
 export const PlannerBoard: React.FC<Props> = ({ width, height, data, options, onOptionsChange }) => {
   const getColor = useColor();
-  const { zeroState, phases, teams } = getGrafanaCustomData<MPlannerBoardCustom>(data, initialData);
+  const { phases, teams } = getGrafanaCustomData<MPlannerBoardCustom>(data, initialData);
   const [filterState, setFilterState] = usePluginState<MFilterState>(options, onOptionsChange, initialFilterState);
   const { teams: filteredTeams, phases: filteredPhases } = filterData({ teams, phases, filters: filterState });
 
@@ -54,10 +53,6 @@ export const PlannerBoard: React.FC<Props> = ({ width, height, data, options, on
   const tableData = convertToTableFormat({ phases: filteredPhases, teams: filteredTeams });
   const totalIssues = countTotalIssues(phases);
   const filteredIssues = countTotalIssues(filteredPhases);
-
-  if (zeroState) {
-    return <UiZeroState {...zeroState} />;
-  }
 
   return (
     <ScrollArea

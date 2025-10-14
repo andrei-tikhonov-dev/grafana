@@ -8,7 +8,6 @@ import {
   TPeriod,
   TSprintometerStatus,
   TUser,
-  TZeroState,
   TUrl,
   TJiraStatus,
 } from '../../types';
@@ -16,7 +15,6 @@ import {
 export interface MPlannerBoardCustom extends Record<string, any> {
   teams: MTeam[];
   phases: MPhase[];
-  zeroState?: TZeroState;
 }
 
 export interface MTeam {

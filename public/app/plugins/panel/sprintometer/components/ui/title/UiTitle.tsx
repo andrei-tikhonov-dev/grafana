@@ -5,13 +5,17 @@ import { theme } from '../../../theme';
 
 export interface TitleProps extends React.ComponentProps<'div'> {}
 
-const styles = {
-  title: css`
-    font-size: ${theme.typography.h4.fontSize};
-    font-weight: ${theme.typography.h4.fontWeight};
-  `,
-};
+const titleStyles = css`
+  font-size: ${theme.typography.h4.fontSize};
+  font-weight: ${theme.typography.h4.fontWeight};
+`;
 
-export const UiTitle: React.FC<TitleProps> = ({ children, className }) => {
-  return <div className={cx(styles.title, className)}>{children}</div>;
-};
+export const UiTitle = React.forwardRef<HTMLDivElement, TitleProps>(({ children, className, ...rest }, ref) => {
+  return (
+    <div ref={ref} className={cx(titleStyles, className)} {...rest}>
+      {children}
+    </div>
+  );
+});
+
+UiTitle.displayName = 'UiTitle';

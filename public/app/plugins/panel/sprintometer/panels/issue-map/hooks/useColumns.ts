@@ -32,26 +32,41 @@ export function useColumns({ fields = [], valueField, initialOrder, initialHidde
     setColumns(newColumns);
   }, [fields, valueField, initialOrder, initialHidden]);
 
-  const moveColumn = (dragIndex: number, hoverIndex: number) => {
-    const newColumns = Array.from(columns);
-    const [movedColumn] = newColumns.splice(dragIndex, 1);
-    newColumns.splice(hoverIndex, 0, movedColumn);
-    onChange(
-      'fieldsOrder',
-      newColumns.map((column) => column.name)
-    );
-    setColumns(newColumns);
-  };
+  const moveColumn = React.useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      setColumns((prevColumns) => {
+        const newColumns = Array.from(prevColumns);
+        const [movedColumn] = newColumns.splice(dragIndex, 1);
+        newColumns.splice(hoverIndex, 0, movedColumn);
 
-  const toggleColumn = (columnId: string) => {
-    const newColumns = columns.map((column) => (column.id === columnId ? { ...column, show: !column.show } : column));
-    onChange(
-      'hiddenFields',
-      newColumns.filter((column) => !column.show).map((column) => column.name)
-    );
+        onChange(
+          'fieldsOrder',
+          newColumns.map((column) => column.name)
+        );
 
-    setColumns(newColumns);
-  };
+        return newColumns;
+      });
+    },
+    [onChange]
+  );
+
+  const toggleColumn = React.useCallback(
+    (columnId: string) => {
+      setColumns((prevColumns) => {
+        const newColumns = prevColumns.map((column) =>
+          column.id === columnId ? { ...column, show: !column.show } : column
+        );
+
+        onChange(
+          'hiddenFields',
+          newColumns.filter((column) => !column.show).map((column) => column.name)
+        );
+
+        return newColumns;
+      });
+    },
+    [onChange]
+  );
 
   return { columns, moveColumn, toggleColumn };
 }

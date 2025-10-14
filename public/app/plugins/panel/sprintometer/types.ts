@@ -18,10 +18,26 @@ export enum EColumnType {
 
 export type TColumnSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
 
-export interface TPanelOptions {
+export interface BasePanelOptions {
   panelType: EPanelType;
-  savedState: string;
+  savedState: string; // JSON-string
 }
+
+export interface BurndownOptionsNS {
+  burndown?: {};
+}
+
+export interface HeaderOptionsNS {
+  header?: {};
+}
+
+export interface IssueMapOptionsNS {
+  sankey: {
+    filterFields: string[];
+  };
+}
+
+export type TPanelOptions = BasePanelOptions & BurndownOptionsNS & HeaderOptionsNS & IssueMapOptionsNS;
 
 export const enum EPanelType {
   BurndownChart = 'BurndownChart',
@@ -32,9 +48,10 @@ export const enum EPanelType {
   IncomingDependencies = 'IncomingDependencies',
   OutgoingDependencies = 'OutgoingDependencies',
   PlannerBoard = 'PlannerBoard',
-  SimilarTasks = 'SimilarTasks',
+  SimilarIssues = 'SimilarIssues',
   Roadmap = 'Roadmap',
   IssueMap = 'IssueMap',
+  AI = 'AI',
 }
 
 export interface TTable<Data, InnerData = unknown> {
@@ -157,7 +174,11 @@ export interface TRequestInfo extends Record<string, any> {}
 export interface TZeroState {
   title: string;
   description: string;
-  link: TLink;
+  link?: TLink;
 }
 
 export type TId = number;
+
+export interface BaseCustomData extends Record<string, any> {
+  zeroState?: TZeroState;
+}

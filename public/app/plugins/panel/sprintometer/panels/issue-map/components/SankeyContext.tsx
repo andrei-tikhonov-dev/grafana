@@ -23,6 +23,6 @@ interface SankeyProviderProps {
   children: React.ReactNode;
 }
 
-export const SankeyProvider: React.FC<SankeyProviderProps> = ({ panelWidth, panelHeight, unitLabel, children }) => {
+export const IssueMapProvider: React.FC<SankeyProviderProps> = ({ panelWidth, panelHeight, unitLabel, children }) => {
   return <SankeyContext.Provider value={{ panelWidth, panelHeight, unitLabel }}>{children}</SankeyContext.Provider>;
 };
