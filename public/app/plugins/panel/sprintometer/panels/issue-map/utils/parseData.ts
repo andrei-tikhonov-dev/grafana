@@ -10,7 +10,7 @@ export function parseData(data: DataFrame, columnsControl: MColumnData[], { valu
   const numFields = seriesFields.length - 1;
   const hiddenColumns = columnsControl.filter((column) => !column.show).map((column) => column.name);
   const columnNames = getColumnNames(seriesFields);
-  const headerData = filterDisplayNames(columnNames, hiddenColumns);
+  const headerData = columnNames.map((name) => ({ name, show: !hiddenColumns.includes(name) }));
   const valueFieldData = findValueField(data, valueField);
   const frame = new DataFrameView(series);
 
@@ -63,10 +63,6 @@ function getDataPathsWithTooltips(pluginDataLinks: MPluginDataPath[], rows: MRow
 
 function getColumnNames(fields: Field[]): string[] {
   return fields.map((field) => getFieldDisplayName(field));
-}
-
-function filterDisplayNames(displayNames: string[], hiddenColumns: string[]): string[] {
-  return displayNames.filter((name) => !hiddenColumns.includes(name));
 }
 
 function findValueField(data: DataFrame, valueFieldOption: any): Field | undefined {

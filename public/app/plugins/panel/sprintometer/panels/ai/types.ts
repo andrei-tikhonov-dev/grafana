@@ -1,7 +1,6 @@
+import { TAiData } from '../../types';
+
 export interface AICustomData {
   title: string;
-  ai: {
-    title: string;
-    content: string;
-  };
+  ai: TAiData;
 }

@@ -6,10 +6,10 @@ import { usePluginState } from '../../../hooks/usePluginState';
 import { useZoom } from '../../../hooks/useZoom';
 import { getGrafanaCustomData } from '../../../utils/grafana';
 import { IssueMapProps } from '../IssueMap';
-import { DEFAULT_OPTIONS, DRAGGABLE_HEADERS_HEIGHT, LABEL_SIZE_CONSTRAINTS } from '../constants';
+import { DEFAULT_OPTIONS, LABEL_SIZE_CONSTRAINTS } from '../constants';
 import { useColumns } from '../hooks/useColumns';
 import { useFiltersComponent } from '../hooks/useFiltersComponent';
-import { IssueMapCustomData } from '../types';
+import { MIssueMapCustomData } from '../types';
 import { parseData } from '../utils/parseData';
 import { clampValue, getSankeySize, getScrollAreaHeigh } from '../utils/utils';
 
@@ -39,12 +39,6 @@ const useIssueMapStyles = (width: number, height: number, sankeyWidth: number, h
       headerContainer: css`
         width: ${sankeyWidth}px;
         overflow: hidden;
-      `,
-      draggableHeader: css`
-        padding: 20px;
-        width: ${sankeyWidth}px;
-        overflow: hidden;
-        height: ${DRAGGABLE_HEADERS_HEIGHT}px;
       `,
       scrollArea: css`
         height: ${getScrollAreaHeigh(height, hasFilters)}px;
@@ -88,7 +82,7 @@ const useSankeyDimensions = (
   );
 };
 
-const initialData: IssueMapCustomData = {
+const initialData: MIssueMapCustomData = {
   ai: {
     title: '',
     content: '',
@@ -98,9 +92,9 @@ const initialData: IssueMapCustomData = {
 
 export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsChange, data, width, height, id }) => {
   const series = data?.series[0];
-  const issueMapOptions = options.sankey;
+  const issueMapOptions = options.sankey || {};
   const { filterFields = [] } = issueMapOptions;
-  const { valueField } = getGrafanaCustomData<IssueMapCustomData>(data, initialData);
+  const { valueField, ai } = getGrafanaCustomData<MIssueMapCustomData>(data, initialData);
 
   const nodeWidth = DEFAULT_OPTIONS.NODE_WIDTH;
   const nodePadding = DEFAULT_OPTIONS.NODE_PADDING;
@@ -156,7 +150,7 @@ export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsC
     nodeWidth,
     nodePadding,
     rowsNumber,
-    headerData.length
+    headerData.filter((h) => h.show).length
   );
 
   const zoomedSankeyHeight = useMemo(() => applyZoom(sankeyHeight), [applyZoom, sankeyHeight]);
@@ -174,6 +168,7 @@ export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsC
     <div className={styles.panel}>
       <div className={styles.headerContainer}>
         <HeaderSection
+          ai={ai}
           filtersComponent={filtersComponent}
           columns={columns}
           moveColumn={moveColumn}
@@ -181,7 +176,6 @@ export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsC
           zoomComponent={zoomComponent}
           headerData={headerData}
           sankeyWidth={sankeyWidth}
-          draggableHeaderStyles={styles.draggableHeader}
         />
       </div>
 

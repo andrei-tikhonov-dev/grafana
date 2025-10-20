@@ -1,9 +1,9 @@
 import { css, cx } from '@emotion/css';
 import React, { useMemo } from 'react';
 
-import { PanelProps, SelectableValue } from '@grafana/data';
-import { MultiSelect } from '@grafana/ui';
+import { PanelProps } from '@grafana/data';
 
+import { UiHorizontalGroup, UiMultiSelect, UiSwitch } from '../../components/ui';
 import { useEcharts } from '../../hooks/useEcharts';
 import { usePluginState } from '../../hooks/usePluginState';
 import { theme } from '../../theme';
@@ -18,9 +18,10 @@ interface CumulativeFlowDiagramProps extends PanelProps<TPanelOptions> {}
 
 const styles = {
   wrapper: css`
-    overflow: hidden;
+    overflow: auto;
   `,
   container: css`
+    height: 100%;
     padding: 10px;
     flex: 1 1 auto;
     font-family: ${theme.typography.fontFamily};
@@ -32,19 +33,14 @@ const styles = {
   content: css`
     flex: 1 1 auto;
   `,
-  filters: css`
-    flex: 0 0 auto;
-    display: flex;
-    gap: 10px;
-  `,
   summaryContainer: css`
     flex: 0 0 auto;
     display: flex;
     gap: 10px;
     width: 100%;
   `,
-  input: css`
-    width: 300px;
+  issueTypesSelect: css`
+    width: auto;
   `,
 };
 
@@ -58,6 +54,7 @@ const initialData: MData = {
 interface CumulativeFlowDiagramState {
   selectedIssues: string[];
   selectedStatuses: Record<string, boolean>;
+  isStacked: boolean;
 }
 
 export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
@@ -70,10 +67,11 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
   const initialState: CumulativeFlowDiagramState = {
     selectedIssues: [],
     selectedStatuses: {},
+    isStacked: false,
   };
 
   const [state, setState] = usePluginState<CumulativeFlowDiagramState>(options, onOptionsChange, initialState);
-  const { selectedIssues, selectedStatuses } = state;
+  const { selectedIssues, selectedStatuses, isStacked } = state;
 
   const customData = getGrafanaCustomData<MData>(panelData, initialData);
 
@@ -95,8 +93,9 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
         periods,
         currentPeriod,
         selected: selectedStatuses,
+        isStacked,
       }),
-    [filteredData, currentPeriod, periods, selectedStatuses]
+    [filteredData, currentPeriod, periods, selectedStatuses, isStacked]
   );
 
   const handleStatusesChange = ({ selected }: { selected: Record<string, boolean> }) => {
@@ -108,11 +107,17 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
 
   const chartRef = useEcharts({ width, height, option, onLegendSelectChanged: handleStatusesChange });
 
-  const handleIssuesChange = (values: Array<SelectableValue<string>>) => {
-    const stringValues = values.map((v) => v.value!);
+  const handleIssuesChange = (values: string[]) => {
     setState((prevState) => ({
       ...prevState,
-      selectedIssues: stringValues,
+      selectedIssues: values,
+    }));
+  };
+
+  const handleStackedChange = (checked: boolean) => {
+    setState((prevState) => ({
+      ...prevState,
+      isStacked: checked,
     }));
   };
 
@@ -126,24 +131,17 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
         `
       )}
     >
-      <div
-        className={cx(
-          styles.container,
-          css`
-            height: ${height}px;
-          `
-        )}
-      >
-        <div className={styles.filters}>
-          <div className={styles.input}>
-            <MultiSelect
-              options={issueOptions}
-              value={issueOptions.filter((option: SelectableValue<string>) => selectedIssues.includes(option.value!))}
-              onChange={handleIssuesChange}
-              placeholder={PLACEHOLDER_SELECT_ISSUE}
-            />
-          </div>
-        </div>
+      <div className={styles.container}>
+        <UiHorizontalGroup justify="start">
+          <UiMultiSelect
+            options={issueOptions}
+            defaultValue={selectedIssues}
+            onValueChange={handleIssuesChange}
+            placeholder={PLACEHOLDER_SELECT_ISSUE}
+            className={styles.issueTypesSelect}
+          />
+          <UiSwitch id="stack-switch" label="Stacked" checked={isStacked} onCheckedChange={handleStackedChange} />
+        </UiHorizontalGroup>
 
         <div ref={chartRef} className={styles.content} />
       </div>

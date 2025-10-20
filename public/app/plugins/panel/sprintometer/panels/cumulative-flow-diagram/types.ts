@@ -1,5 +1,3 @@
-import { SelectableValue } from '@grafana/data';
-
 export interface MData {
   periodType: MPeriod;
   currentPeriod: string;
@@ -25,8 +23,7 @@ export type MAggregatedData = {
 export interface MPreparedData {
   periodsData: MPeriodData[];
   currentPeriod: string;
-  issueOptions: Array<SelectableValue<string>>;
-  statusOptions: Array<SelectableValue<string>>;
+  issueOptions: Array<{ label: string; value: string }>;
   periodType: MPeriod;
   data: MAggregatedData;
 }

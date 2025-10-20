@@ -2,6 +2,7 @@ import * as echarts from 'echarts';
 import { MarkArea2DDataItemOption } from 'echarts/types/src/component/marker/MarkAreaModel';
 
 import { theme } from '../../theme';
+import { aggregateValues } from '../../utils/arrays';
 import { formatDate } from '../../utils/dateTime';
 import { getCurrentPeriodSeries } from '../../utils/echarts';
 import { capitalize } from '../../utils/helpers';
@@ -184,23 +185,6 @@ export const filterBurndownChartData = ({
 
   return { actual, ideal, days, nonWorkingDays };
 };
-
-function aggregateValues(arrays: number[][]): number[] {
-  if (arrays.length === 0) {
-    return [];
-  }
-
-  const maxLength = Math.max(...arrays.map((arr) => arr.length));
-  const result = Array(maxLength).fill(0);
-
-  arrays.forEach((array) => {
-    array.forEach((value, index) => {
-      result[index] += value;
-    });
-  });
-
-  return result;
-}
 
 function formatTooltip(
   params: Array<{ axisValue: string; axisValueLabel: string }>,

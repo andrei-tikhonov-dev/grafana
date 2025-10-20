@@ -1,11 +1,12 @@
 import { css, cx } from '@emotion/css';
+import { Sparkles } from 'lucide-react';
 import React, { useState } from 'react';
 
 import { Drawer } from '@grafana/ui';
 
-import { UiButton } from '../../../components/ui';
+import { UiButton } from '../index';
 
-import { Markdown } from './Markdown';
+import { UiAiMarkdown } from './UiAiMarkdown';
 
 interface Props {
   title: string;
@@ -21,7 +22,7 @@ const styles = {
   buttonWrapper: css``,
 };
 
-export const MarkdownViewer: React.FC<Props> = ({ title, content, label, className }) => {
+export const UiAiViewer: React.FC<Props> = ({ title, content, label, className }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const openDrawer = () => setIsDrawerOpen(true);
@@ -31,6 +32,7 @@ export const MarkdownViewer: React.FC<Props> = ({ title, content, label, classNa
     <>
       <div className={cx(styles.buttonWrapper, className)}>
         <UiButton onClick={openDrawer} variant="default">
+          <Sparkles />
           {label}
         </UiButton>
       </div>
@@ -38,7 +40,7 @@ export const MarkdownViewer: React.FC<Props> = ({ title, content, label, classNa
       {isDrawerOpen && (
         <Drawer title={title} onClose={closeDrawer}>
           <div className={styles.drawer}>
-            <Markdown content={content} />
+            <UiAiMarkdown content={content} />
           </div>
         </Drawer>
       )}

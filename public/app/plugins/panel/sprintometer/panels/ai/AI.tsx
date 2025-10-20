@@ -3,12 +3,11 @@ import React from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { UiPanelTitle } from '../../components/ui';
+import { UiPanelTitle, UiAiViewer } from '../../components/ui';
 import { theme3 } from '../../theme/theme';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
-import { MarkdownViewer } from './components/MarkdownViewer';
 import { AICustomData } from './types';
 
 interface Props extends PanelProps<TPanelOptions> {}
@@ -21,7 +20,6 @@ const styles = {
     gap: ${theme3.tailwind.spacing2};
     padding: 10px;
   `,
-  button: css``,
   title: css``,
 };
 
@@ -48,11 +46,7 @@ export const AI: React.FC<Props> = ({ width, height, data }) => {
     >
       <UiPanelTitle>{title}</UiPanelTitle>
 
-      {ai && (
-        <div className={styles.button}>
-          <MarkdownViewer label="View AI analysis" content={ai.content} title={ai.title} />
-        </div>
-      )}
+      {ai && <UiAiViewer label="View AI analysis" content={ai.content} title={ai.title} />}
     </div>
   );
 };

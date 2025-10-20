@@ -30,6 +30,8 @@ export { UiZoom } from './zoom/UiZoom';
 export { UiVerticalGroup } from './group/UiVerticalGroup';
 export { UiHorizontalGroup } from './group/UiHorizontalGroup';
 
+export { UiAiViewer } from './ai-viewer/UiAiViewer';
+
 export {
   UiCardAction,
   UiCardContent,

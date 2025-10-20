@@ -7,7 +7,6 @@ const containerStyles = css`
   max-width: 350px;
 `;
 
-// Список спринтов от нового к старому
 const sprintList = [
   {
     value: 'sprint-23',
@@ -169,7 +168,6 @@ const piList = [
   },
 ].reverse();
 
-// Список без периодов (оригинальные данные)
 const sprintListWithoutPeriods = [
   { value: 'sprint-23', label: 'Sprint 23' },
   { value: 'sprint-22', label: 'Sprint 22' },

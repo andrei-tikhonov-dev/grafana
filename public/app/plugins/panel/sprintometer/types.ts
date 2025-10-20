@@ -18,26 +18,26 @@ export enum EColumnType {
 
 export type TColumnSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
 
-export interface BasePanelOptions {
+export interface TBasePanelOptions {
   panelType: EPanelType;
   savedState: string; // JSON-string
 }
 
-export interface BurndownOptionsNS {
+export interface TBurndownOptionsNS {
   burndown?: {};
 }
 
-export interface HeaderOptionsNS {
+export interface THeaderOptionsNS {
   header?: {};
 }
 
-export interface IssueMapOptionsNS {
+export interface TIssueMapOptionsNS {
   sankey: {
     filterFields: string[];
   };
 }
 
-export type TPanelOptions = BasePanelOptions & BurndownOptionsNS & HeaderOptionsNS & IssueMapOptionsNS;
+export type TPanelOptions = TBasePanelOptions & TBurndownOptionsNS & THeaderOptionsNS & TIssueMapOptionsNS;
 
 export const enum EPanelType {
   BurndownChart = 'BurndownChart',
@@ -181,4 +181,9 @@ export type TId = number;
 
 export interface BaseCustomData extends Record<string, any> {
   zeroState?: TZeroState;
+}
+
+export interface TAiData {
+  title: string;
+  content: string;
 }

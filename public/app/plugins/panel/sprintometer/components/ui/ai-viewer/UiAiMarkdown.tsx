@@ -7,7 +7,7 @@ type Props = {
   className?: string;
 };
 
-export const Markdown: React.FC<Props> = React.memo(({ content, className }) => {
+export const UiAiMarkdown: React.FC<Props> = React.memo(({ content, className }) => {
   return (
     <div className={className}>
       <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
@@ -15,4 +15,4 @@ export const Markdown: React.FC<Props> = React.memo(({ content, className }) => 
   );
 });
 
-Markdown.displayName = 'Markdown';
+UiAiMarkdown.displayName = 'Markdown';

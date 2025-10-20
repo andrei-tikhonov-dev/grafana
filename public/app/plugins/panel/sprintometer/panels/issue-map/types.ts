@@ -1,13 +1,8 @@
-import { IssueMapOptionsNS } from '../../types';
+import { TAiData } from '../../types';
 
-export type SankeyOptions = IssueMapOptionsNS['sankey'];
-
-export interface IssueMapCustomData {
+export interface MIssueMapCustomData {
   valueField: string;
-  ai: {
-    title: string;
-    content: string;
-  };
+  ai: TAiData;
 }
 
 export interface MPluginDataPath {

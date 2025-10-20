@@ -1,8 +1,7 @@
 import * as echarts from 'echarts';
 
-import { SelectableValue } from '@grafana/data';
-
 import { theme } from '../../theme';
+import { aggregateValues } from '../../utils/arrays';
 import { formatDate } from '../../utils/dateTime';
 import { getCurrentPeriodSeries } from '../../utils/echarts';
 
@@ -26,15 +25,12 @@ export function prepareData({ periods, issueTypes, currentPeriod, periodType }: 
     value: name,
   }));
 
-  const valueOptions: Array<SelectableValue<string>> = [];
-
   return {
     currentPeriod: periodType === 'date' ? formatDate(currentPeriod) : currentPeriod,
     data: transformStructuredDataToAggregated(issueTypes),
     periodType,
     periodsData: periods,
     issueOptions,
-    statusOptions: valueOptions,
   };
 }
 
@@ -62,11 +58,12 @@ export const filterCumulativeFlowDiagramData = ({
     return { filteredData: [], periods: periods };
   }
 
-  const firstIssueKey = keysToUse[0];
-  const dataKeys = Object.keys(data.issuesAmount[firstIssueKey]);
+  const dataKeys = Array.from(new Set(keysToUse.flatMap((name) => Object.keys(data.issuesAmount[name]))));
 
   const filteredData = dataKeys.map((dataKey) => {
-    const dataArrays = keysToUse.map((name) => data.issuesAmount[name][dataKey]);
+    const dataArrays = keysToUse
+      .filter((name) => data.issuesAmount[name][dataKey]) // фильтруем только те, у которых есть этот dataKey
+      .map((name) => data.issuesAmount[name][dataKey]);
 
     const aggregatedData = dataArrays.length === 1 ? dataArrays[0] : aggregateValues(dataArrays);
 
@@ -79,28 +76,12 @@ export const filterCumulativeFlowDiagramData = ({
   return { filteredData, periods: periods };
 };
 
-function aggregateValues(arrays: number[][]): number[] {
-  if (arrays.length === 0) {
-    return [];
-  }
-
-  const maxLength = Math.max(...arrays.map((arr) => arr.length));
-  const result = Array(maxLength).fill(0);
-
-  arrays.forEach((array) => {
-    array.forEach((value, index) => {
-      result[index] += value;
-    });
-  });
-
-  return result;
-}
-
-const formatSeries = (data: number[], name: string): any => {
+const formatSeries = (data: number[], name: string, isStacked: boolean): any => {
   return {
     name,
     data,
     type: 'line',
+    ...(isStacked && { stack: 'Total' }),
     smooth: true,
     areaStyle: {
       opacity: 0.8,
@@ -116,6 +97,7 @@ interface DiagramOptions {
   periods: string[];
   currentPeriod: string;
   selected: Record<string, boolean>;
+  isStacked: boolean;
 }
 
 export const getCumulativeFlowDiagramOptions = ({
@@ -123,6 +105,7 @@ export const getCumulativeFlowDiagramOptions = ({
   periods,
   currentPeriod,
   selected,
+  isStacked,
 }: DiagramOptions): echarts.EChartsOption => {
   return {
     backgroundColor: 'transparent',
@@ -176,7 +159,7 @@ export const getCumulativeFlowDiagramOptions = ({
       },
     },
     series: [
-      ...data.map(({ data: values, name }) => formatSeries(values, name)),
+      ...data.map(({ data: values, name }) => formatSeries(values, name, isStacked)),
       getCurrentPeriodSeries(currentPeriod),
     ],
   };

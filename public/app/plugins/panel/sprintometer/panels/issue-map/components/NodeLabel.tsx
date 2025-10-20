@@ -13,20 +13,32 @@ interface NodeLabelProps {
 }
 
 export const NodeLabel: React.FC<NodeLabelProps> = ({ name, x, y, x0, labelSize, link }) => {
+  const wrapperStyle = css`
+    display: flex;
+    justify-content: ${x0 === 0 ? 'flex-start' : 'flex-end'};
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  `;
+
   const textStyle = css`
     color: ${theme3.tailwind.colorGray900};
     font-size: ${labelSize}px;
     user-select: none;
     white-space: nowrap;
-    text-align: ${x0 === 0 ? 'left' : 'right'};
-    width: 100%;
     line-height: ${labelSize}px;
+    display: inline-block;
+    pointer-events: auto;
   `;
 
   const linkStyle = css`
     text-decoration: underline;
     ${textStyle};
-    display: block;
+  `;
+
+  const foreignObjectStyle = css`
+    overflow: visible;
+    pointer-events: none;
   `;
 
   return (
@@ -35,15 +47,17 @@ export const NodeLabel: React.FC<NodeLabelProps> = ({ name, x, y, x0, labelSize,
       y={y - labelSize / 2}
       width={200}
       height={labelSize + 4}
-      style={{ overflow: 'visible' }}
+      className={foreignObjectStyle}
     >
-      {link ? (
-        <a href={link} target="_blank" rel="noopener noreferrer" className={linkStyle}>
-          {name}
-        </a>
-      ) : (
-        <div className={textStyle}>{name}</div>
-      )}
+      <div className={wrapperStyle}>
+        {link ? (
+          <a href={link} target="_blank" rel="noopener noreferrer" className={linkStyle}>
+            {name}
+          </a>
+        ) : (
+          <span className={textStyle}>{name}</span>
+        )}
+      </div>
     </foreignObject>
   );
 };
