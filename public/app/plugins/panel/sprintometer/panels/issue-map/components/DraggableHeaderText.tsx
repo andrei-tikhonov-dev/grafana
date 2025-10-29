@@ -2,8 +2,7 @@ import { GripVertical } from 'lucide-react';
 import React, { useRef, useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
-import { UiHorizontalGroup, UiTitle } from '../../../components/ui';
-import { theme3 } from '../../../theme/theme';
+import { UiHorizontalGroup, UiTypography } from '../../../components/ui';
 
 const HEADER_ITEM_TYPE = 'HEADER';
 
@@ -71,7 +70,7 @@ export const DraggableHeaderText: React.FC<DraggableHeaderTextProps> = ({
   drag(drop(ref));
 
   return (
-    <UiTitle
+    <div
       ref={ref}
       style={{
         position: 'absolute',
@@ -80,9 +79,6 @@ export const DraggableHeaderText: React.FC<DraggableHeaderTextProps> = ({
         cursor: 'grab',
         opacity: isDragging ? 0.5 : 1,
         userSelect: 'none',
-        fontSize: '14pt',
-        fontWeight: 500,
-        color: theme3.tailwind.colorGray700,
         whiteSpace: 'nowrap',
         zIndex: 10,
         transition: 'opacity 0.2s ease',
@@ -93,10 +89,12 @@ export const DraggableHeaderText: React.FC<DraggableHeaderTextProps> = ({
         }
       }}
     >
-      <UiHorizontalGroup>
+      <UiHorizontalGroup gap="xs">
         <GripVertical />
-        {children}
+        <UiTypography variant="title" as="span">
+          {children}
+        </UiTypography>
       </UiHorizontalGroup>
-    </UiTitle>
+    </div>
   );
 };

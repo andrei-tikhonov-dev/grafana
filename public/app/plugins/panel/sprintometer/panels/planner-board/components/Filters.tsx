@@ -1,4 +1,3 @@
-import { css, cx } from '@emotion/css';
 import * as React from 'react';
 
 import { UiFiltersContainer, UiSwitch } from '../../../components/ui';
@@ -16,8 +15,6 @@ interface FiltersProps {
   filteredIssues: number;
 }
 
-const containerStyles = css``;
-
 const defaultFilter: MFilterState = {
   selectedTeams: [],
   hasProblems: false,
@@ -32,7 +29,6 @@ export function Filters({
   defaultFilterState,
   totalIssues,
   filteredIssues,
-  ...props
 }: FiltersProps) {
   const [filterState, setFilterState] = React.useState<MFilterState>({
     ...defaultFilter,
@@ -48,7 +44,6 @@ export function Filters({
     [filterState, onFilterChange]
   );
 
-  // Обработчики изменений
   const handleTeamsChange = React.useCallback(
     (selectedTeamIds: TId[]) => {
       updateFilter({ selectedTeams: selectedTeamIds });
@@ -66,12 +61,11 @@ export function Filters({
   return (
     <UiFiltersContainer
       suffix={
-        <div>
+        <>
           Showing {filteredIssues} of {totalIssues} issues
-        </div>
+        </>
       }
-      className={cx(containerStyles, className)}
-      {...props}
+      className={className}
     >
       <TeamsSelect
         teams={teamOptions}

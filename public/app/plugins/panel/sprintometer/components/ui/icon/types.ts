@@ -6,6 +6,7 @@ type IconSize = 'sm' | 'md' | 'lg';
 
 export interface IconProps extends React.SVGProps<SVGSVGElement> {
   name: IconName;
+  className?: string;
   size?: IconSize;
 }
 

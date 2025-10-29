@@ -1,7 +1,7 @@
 import { css, cx } from '@emotion/css';
 import React from 'react';
 
-import { theme } from '../../../theme';
+import { theme3 } from '../../../theme';
 
 export interface TextProps {
   children?: React.ReactNode;
@@ -11,8 +11,7 @@ export interface TextProps {
 
 const styles = {
   link: css`
-    color: ${theme.colors.semantic.link};
-    overflow: hidden;
+    color: ${theme3.custom.colorLink};
   `,
 };
 

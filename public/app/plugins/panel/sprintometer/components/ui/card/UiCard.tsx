@@ -1,15 +1,15 @@
 import { css, cx } from '@emotion/css';
 import React from 'react';
 
-import { theme } from '../../../theme';
+import { theme3, roundedBordersStyles } from '../../../theme';
 
 export interface CardProps extends React.ComponentProps<'div'> {}
 
 const styles = {
   container: css`
-    background-color: ${theme.colors.semantic.background};
-    border: 1px solid ${theme.colors.semantic.border};
-    padding: 16px;
+    background-color: ${theme3.custom.colorCard};
+    padding: ${theme3.tailwind.spacing4};
+    ${roundedBordersStyles}
   `,
 };
 

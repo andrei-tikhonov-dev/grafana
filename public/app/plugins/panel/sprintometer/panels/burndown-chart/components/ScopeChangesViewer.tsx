@@ -1,11 +1,12 @@
 import { css } from '@emotion/css';
+import { MinusSquare, PlusSquare, CircleOff, Shuffle } from 'lucide-react';
 import React, { useState } from 'react';
 
-import { Button, Drawer } from '@grafana/ui';
+import { Drawer } from '@grafana/ui';
 
-import { UiIcon, UiLink } from '../../../components/ui';
-import { theme } from '../../../theme';
-import { formatDate } from '../../../utils/dateTime';
+import { UiButton, UiCard, UiHorizontalGroup, UiLink, UiTypography, UiVerticalGroup } from '../../../components/ui';
+import { theme3 } from '../../../theme';
+import { formatFullDate } from '../../../utils/dateTime';
 import { toObjectKey } from '../../../utils/helpers';
 import { MDayData } from '../types';
 
@@ -13,81 +14,26 @@ interface Props {
   daysData: MDayData[];
 }
 
-const styles = {
-  drawer: css`
-    padding: 20px;
-  `,
-  dateHeader: css`
-    font-size: ${theme.typography.h4.fontSize};
-    font-weight: ${theme.typography.h4.fontWeight};
-    margin: 20px 0 12px;
-    border-bottom: 1px solid ${theme.colors.border.weak};
-    padding-bottom: 8px;
-  `,
-  changesList: css`
-    margin-bottom: 16px;
-  `,
-  changeItem: css`
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-  `,
-  status: css`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 18px;
-    height: 18px;
-    margin-right: 8px;
-  `,
-  statusAdded: css`
-    background-color: #feedcc;
-    color: #b57215;
-  `,
-  statusRemoved: css`
-    background-color: #f7ced3;
-    color: #b12650;
-  `,
-  statusOther: css`
-    background-color: #dacefe;
-    color: #391ab3;
-  `,
-  separator: css`
-    margin: 0 8px;
-    color: ${theme.colors.border.medium};
-  `,
-  summary: css`
-    flex: 1;
-    word-break: break-word;
-  `,
-  noChanges: css`
-    color: ${theme.colors.semantic.textLite};
-    font-style: italic;
-    margin-top: 20px;
-  `,
-  buttonWrapper: css``,
-};
-
 const StatusIcon = ({ status }: { status: string }) => {
   switch (status) {
     case 'added':
       return (
-        <span className={`${styles.status} ${styles.statusAdded}`}>
-          <UiIcon name="Add2" />
-        </span>
+        <PlusSquare
+          className={css`
+            color: ${theme3.custom.colorPrimary};
+          `}
+        />
       );
     case 'removed':
       return (
-        <span className={`${styles.status} ${styles.statusRemoved}`}>
-          <UiIcon name="FolderClose" />
-        </span>
+        <MinusSquare
+          className={css`
+            color: ${theme3.custom.colorSecondary};
+          `}
+        />
       );
     default:
-      return (
-        <span className={`${styles.status} ${styles.statusOther}`}>
-          <UiIcon name="CheckCircle" />
-        </span>
-      );
+      return <CircleOff />;
   }
 };
 
@@ -106,31 +52,46 @@ export const ScopeChangesViewer: React.FC<Props> = ({ daysData }) => {
 
   return (
     <>
-      <div className={styles.buttonWrapper}>
-        <Button onClick={openDrawer} variant="secondary" icon="exchange-alt">
-          Scope changes ({totalChanges})
-        </Button>
-      </div>
+      <UiButton onClick={openDrawer}>
+        <Shuffle />
+        Scope changes ({totalChanges})
+      </UiButton>
 
       {isDrawerOpen && (
         <Drawer title="Sprint scope changes" subtitle={`Total changes: ${totalChanges}`} onClose={closeDrawer}>
-          <div className={styles.drawer}>
+          <UiVerticalGroup
+            gap="md"
+            align="start"
+            className={css`
+              padding: ${theme3.tailwind.spacing4};
+            `}
+          >
             {daysWithChanges.map((day) => (
-              <div key={day.date}>
-                <h3 className={styles.dateHeader}>{formatDate(day.date)}</h3>
-                <div className={styles.changesList}>
-                  {day.scopeChanges.map((change, index) => (
-                    <div key={`${change.issueKey}-${index}`} className={styles.changeItem}>
-                      <StatusIcon status={toObjectKey(change.status)} />
-                      <UiLink url={change.url}>{change.issueKey}</UiLink>
-                      <span className={styles.separator}>-</span>
-                      <span className={styles.summary}>{change.summary}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <UiCard
+                key={day.date}
+                className={css`
+                  width: 100%;
+                `}
+              >
+                <UiVerticalGroup align="start" gap="sm" key={day.date}>
+                  <UiTypography variant="h4">{formatFullDate(day.date)}</UiTypography>
+                  <UiVerticalGroup align="start" gap="sm">
+                    {day.scopeChanges.map((change, index) => (
+                      <UiTypography key={`${change.issueKey}-${index}`}>
+                        <UiVerticalGroup align="start" gap="xs">
+                          <UiHorizontalGroup gap="sm">
+                            <StatusIcon status={toObjectKey(change.status)} />
+                            <UiLink url={change.url}>{change.issueKey}</UiLink>
+                          </UiHorizontalGroup>
+                          {change.summary}
+                        </UiVerticalGroup>
+                      </UiTypography>
+                    ))}
+                  </UiVerticalGroup>
+                </UiVerticalGroup>
+              </UiCard>
             ))}
-          </div>
+          </UiVerticalGroup>
         </Drawer>
       )}
     </>

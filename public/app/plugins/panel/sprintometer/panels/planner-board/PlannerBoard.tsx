@@ -1,10 +1,10 @@
-import { css, cx } from '@emotion/css';
+import { css } from '@emotion/css';
 import React from 'react';
 
 import { PanelProps } from '@grafana/data';
 
 import { ScrollArea } from '../../components/shadcn/scroll-area';
-import { UiPanelTitle } from '../../components/ui';
+import { UiPanelContainer } from '../../components/ui/panel-container/PanelContainer';
 import { useColor } from '../../hooks/useColor';
 import { usePluginState } from '../../hooks/usePluginState';
 import { TPanelOptions } from '../../types';
@@ -17,13 +17,7 @@ import { convertToTableFormat, countTotalIssues, filterData } from './utils';
 
 interface Props extends PanelProps<TPanelOptions> {}
 
-const styles = {
-  wrapper: css`
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-  `,
-};
+const HEADER_HEIGHT = 102;
 
 const initialData: MPlannerBoardCustom = {
   teams: [],
@@ -55,16 +49,7 @@ export const PlannerBoard: React.FC<Props> = ({ width, height, data, options, on
   const filteredIssues = countTotalIssues(filteredPhases);
 
   return (
-    <ScrollArea
-      className={cx(
-        styles.wrapper,
-        css`
-          width: ${width}px;
-          height: ${height}px;
-        `
-      )}
-    >
-      <UiPanelTitle>Planner board</UiPanelTitle>
+    <UiPanelContainer width={width} height={height} title="Planner board">
       <Filters
         teamOptions={teamOptions}
         onFilterChange={setFilterState}
@@ -72,7 +57,14 @@ export const PlannerBoard: React.FC<Props> = ({ width, height, data, options, on
         totalIssues={totalIssues}
         filteredIssues={filteredIssues}
       />
-      <DataTable {...tableData} width={width} />
-    </ScrollArea>
+      <ScrollArea
+        className={css`
+          width: ${width}px;
+          height: ${height - HEADER_HEIGHT}px;
+        `}
+      >
+        <DataTable {...tableData} width={width} />
+      </ScrollArea>
+    </UiPanelContainer>
   );
 };

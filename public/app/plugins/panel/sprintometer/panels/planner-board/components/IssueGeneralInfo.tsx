@@ -2,9 +2,9 @@ import { css, cx } from '@emotion/css';
 import { Zap, Target, AlertCircle, User, Calendar, Users, CalendarArrowUp } from 'lucide-react';
 import * as React from 'react';
 
-import { UiIcon, UiAvatar, UiJiraStatusBadge, UiTitle } from '../../../components/ui';
+import { UiIcon, UiAvatar, UiJiraStatusBadge, UiTypography } from '../../../components/ui';
 import { UiJiraPriorityIcon } from '../../../components/ui/icon/UiJiraPriorityIcon';
-import { theme3 } from '../../../theme/theme';
+import { theme3 } from '../../../theme';
 import { formatFullDate } from '../../../utils/dateTime';
 import { MIssue } from '../types';
 
@@ -46,7 +46,7 @@ export function IssueGeneralInfo({ issue, className }: IssueGeneralInfoProps) {
     <div className={cx(sectionStyles, className)}>
       <div className={sectionHeaderStyles}>
         <UiIcon name="Info" size="md" />
-        <UiTitle>General information</UiTitle>
+        <UiTypography variant="title">General information</UiTypography>
       </div>
 
       <div className={infoGridStyles}>

@@ -2,6 +2,8 @@ import { css } from '@emotion/css';
 import React, { useMemo, useCallback } from 'react';
 
 import { ScrollArea, ScrollBar } from '../../../components/shadcn/scroll-area';
+import { UiAiViewer, UiFiltersContainer, UiVerticalGroup } from '../../../components/ui';
+import { UiPanelContainer } from '../../../components/ui/panel-container/PanelContainer';
 import { usePluginState } from '../../../hooks/usePluginState';
 import { useZoom } from '../../../hooks/useZoom';
 import { getGrafanaCustomData } from '../../../utils/grafana';
@@ -13,7 +15,8 @@ import { MIssueMapCustomData } from '../types';
 import { parseData } from '../utils/parseData';
 import { clampValue, getSankeySize, getScrollAreaHeigh } from '../utils/utils';
 
-import { HeaderSection } from './HeaderSection';
+import { ColumnsControl } from './ColumnsControl';
+import { Headers } from './Headers';
 import { SankeyContent } from './SankeyContent';
 
 interface IssueMapState {
@@ -165,19 +168,18 @@ export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsC
   const styles = useIssueMapStyles(width, height, sankeyWidth, hasFilters);
 
   return (
-    <div className={styles.panel}>
-      <div className={styles.headerContainer}>
-        <HeaderSection
-          ai={ai}
-          filtersComponent={filtersComponent}
-          columns={columns}
-          moveColumn={moveColumn}
-          toggleColumn={toggleColumn}
-          zoomComponent={zoomComponent}
-          headerData={headerData}
-          sankeyWidth={sankeyWidth}
-        />
-      </div>
+    <UiPanelContainer width={width} height={height} title="Issue map">
+      <UiVerticalGroup align="stretch" gap="sm">
+        <UiFiltersContainer
+          suffix={ai && <UiAiViewer label="View AI analysis" content={ai.content} title={ai.title} />}
+        >
+          {filtersComponent}
+        </UiFiltersContainer>
+        <UiFiltersContainer suffix={zoomComponent}>
+          <ColumnsControl columns={columns} moveColumn={moveColumn} toggleColumn={toggleColumn} />
+        </UiFiltersContainer>
+      </UiVerticalGroup>
+      <Headers headerData={headerData} width={sankeyWidth} moveHeader={moveColumn} />
 
       <ScrollArea className={styles.scrollArea}>
         <SankeyContent
@@ -192,7 +194,7 @@ export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsC
         />
         <ScrollBar orientation="vertical" />
       </ScrollArea>
-    </div>
+    </UiPanelContainer>
   );
 };
 

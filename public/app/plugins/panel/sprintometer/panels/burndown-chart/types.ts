@@ -1,4 +1,4 @@
-import { SelectableValue } from '@grafana/data';
+import { TAiData } from '../../types';
 
 export interface MBurndownCustomData {
   currentDate: string;
@@ -8,6 +8,7 @@ export interface MBurndownCustomData {
     [EValueMode.StoryPoints]: MSummary;
     [EValueMode.IssuesAmount]: MSummary;
   };
+  ai?: TAiData;
 }
 
 export enum EValueMode {
@@ -55,8 +56,8 @@ export type MTotalScopeChanges = Record<string, number>;
 export interface MPreparedData {
   daysData: MDayData[];
   data: MAggregatedData;
-  issueOptions: Array<SelectableValue<string>>;
-  valueOptions: Array<SelectableValue<string>>;
+  issueOptions: Array<{ label: string; value: string }>;
+  valueOptions: Array<{ label: string; value: string }>;
   currentDay: string;
   scopeChanges: MScopeChanges;
   totalScopeChanges: MTotalScopeChanges;

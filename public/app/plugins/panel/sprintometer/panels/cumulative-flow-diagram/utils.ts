@@ -5,7 +5,16 @@ import { aggregateValues } from '../../utils/arrays';
 import { formatDate } from '../../utils/dateTime';
 import { getCurrentPeriodSeries } from '../../utils/echarts';
 
-import { MAggregatedData, MFilteredData, MData, MPeriodData, MPreparedData, MStructuredData, MPeriod } from './types';
+import {
+  MAggregatedData,
+  MFilteredData,
+  MData,
+  MPeriodData,
+  MPreparedData,
+  MStructuredData,
+  MPeriod,
+  EPeriod,
+} from './types';
 
 const transformStructuredDataToAggregated = (data: MStructuredData[]): MAggregatedData => {
   const result: MAggregatedData = {
@@ -26,7 +35,7 @@ export function prepareData({ periods, issueTypes, currentPeriod, periodType }: 
   }));
 
   return {
-    currentPeriod: periodType === 'date' ? formatDate(currentPeriod) : currentPeriod,
+    currentPeriod: periodType === EPeriod.Date ? formatDate(currentPeriod) : currentPeriod,
     data: transformStructuredDataToAggregated(issueTypes),
     periodType,
     periodsData: periods,
@@ -128,7 +137,7 @@ export const getCumulativeFlowDiagramOptions = ({
     },
     grid: {
       top: 20,
-      left: 20,
+      left: 10,
       right: 20,
       bottom: 40,
       containLabel: true,

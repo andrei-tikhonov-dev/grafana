@@ -1,7 +1,7 @@
 import { css, cx } from '@emotion/css';
 import * as React from 'react';
 
-import { theme3 } from '../../theme/theme';
+import { theme3, roundedBordersStyles } from '../../theme';
 
 const cardStyles = css`
   background: ${theme3.shadcn.card};
@@ -9,11 +9,10 @@ const cardStyles = css`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  border-radius: ${theme3.tailwind.radiusSm};
-  border: 1px solid ${theme3.shadcn.border};
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
   box-shadow: ${theme3.tailwind.shadowSm};
+  ${roundedBordersStyles}
 `;
 
 const cardHeaderStyles = css`

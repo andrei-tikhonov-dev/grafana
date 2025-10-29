@@ -3,7 +3,7 @@ import React from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { UiIcon, UiPanelTitle, UiText } from '../../components/ui';
+import { UiIcon, UiText, UiTypography } from '../../components/ui';
 import { UiZeroState } from '../../components/ui/zero-state/UiZeroState';
 import { theme } from '../../theme';
 import { TPanelOptions } from '../../types';
@@ -59,7 +59,7 @@ export const Header: React.FC<Props> = ({ width, height, data }) => {
         `
       )}
     >
-      <UiPanelTitle>Current sprint</UiPanelTitle>
+      <UiTypography variant="panelTitle">Current sprint</UiTypography>
       <div className={styles.headerInfo}>
         <UiText className={styles.headerInfoItem}>
           <UiIcon name="Group" />

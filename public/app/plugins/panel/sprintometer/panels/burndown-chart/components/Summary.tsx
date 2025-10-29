@@ -1,9 +1,9 @@
 import { css } from '@emotion/css';
 import React from 'react';
 
-import { UiIcon } from '../../../components/ui';
+import { UiHorizontalGroup, UiIcon, UiTypography, UiVerticalGroup } from '../../../components/ui';
 import { IconName } from '../../../components/ui/icon/types';
-import { theme } from '../../../theme';
+import { roundedBordersStyles, theme3 } from '../../../theme';
 import { MSummary } from '../types';
 
 interface Props {
@@ -15,69 +15,31 @@ interface Props {
 const styles = {
   card: css`
     flex: 1 1 auto;
-    border: 1px solid ${theme.colors.border.weak};
-    border-radius: ${theme.shape.radius.default};
     padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  `,
-  header: css`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  `,
-  title: css`
-    font-size: ${theme.typography.h4.fontSize};
-    font-weight: ${theme.typography.h4.fontWeight};
-    margin: 0;
-  `,
-  percentage: css`
-    font-size: ${theme.typography.h4.fontSize};
-    font-weight: ${theme.typography.h4.fontWeight};
+    ${roundedBordersStyles}
   `,
   progressBarContainer: css`
     width: 100%;
     height: 8px;
-    background-color: ${theme.colors.border.weak};
-    border-radius: ${theme.shape.radius.default};
+    background-color: ${theme3.shadcn.border};
+    border-radius: ${theme3.tailwind.radiusSm};
   `,
   progressBar: css`
     height: 100%;
-    border-radius: ${theme.shape.radius.default};
+    border-radius: ${theme3.tailwind.radiusSm};
   `,
   statsContainer: css`
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
     max-width: 75%;
-  `,
-  statColumn: css`
-    display: flex;
-    align-items: baseline;
-  `,
-  statLabel: css`
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: ${theme.typography.body.fontSize};
-    font-weight: ${theme.typography.body.fontWeight};
-    color: ${theme.colors.semantic.textLite};
-  `,
-  statValue: css`
-    font-size: ${theme.typography.h4.fontSize};
-    font-weight: ${theme.typography.h4.fontWeight};
-    padding-left: 8px;
   `,
   icons: {
     check: css`
-      color: ${theme.colors.semantic.success};
+      color: ${theme3.tailwind.colorGreen600};
     `,
     clock: css`
-      color: ${theme.colors.semantic.textLite};
+      color: ${theme3.shadcn.mutedForeground};
     `,
     target: css`
-      color: ${theme.colors.semantic.info};
+      color: ${theme3.tailwind.colorBlue600};
     `,
   },
 };
@@ -104,29 +66,42 @@ export const Summary: React.FC<Props> = ({ name, summary, color }) => {
   ];
 
   return (
-    <div className={styles.card}>
-      <div className={styles.header}>
-        <h2 className={styles.title}>{name}</h2>
-        <div className={styles.percentage}>{percentage}%</div>
-      </div>
+    <UiVerticalGroup align="start" className={styles.card}>
+      <UiHorizontalGroup
+        justify="space-between"
+        className={css`
+          width: 100%;
+        `}
+      >
+        <UiTypography variant="title" as="span">
+          {name}
+        </UiTypography>
+        <UiTypography variant="title" as="span">
+          {percentage}%
+        </UiTypography>
+      </UiHorizontalGroup>
 
       <div className={styles.progressBarContainer}>
         <div className={styles.progressBar} style={{ width: `${percentage}%`, backgroundColor: color }} />
       </div>
 
-      <div className={styles.statsContainer}>
+      <UiHorizontalGroup justify="space-between" gap="lg">
         {stats.map(({ icon, label, value }) => (
-          <div key={label} className={styles.statColumn}>
-            <div className={styles.statLabel}>
-              <span className={icon.style}>
-                <UiIcon name={icon.name as IconName} />
-              </span>
-              {label}:
-            </div>
-            <div className={styles.statValue}>{value}</div>
-          </div>
+          <UiHorizontalGroup key={label}>
+            <UiHorizontalGroup gap="xs">
+              <UiIcon className={icon.style} name={icon.name as IconName} />
+              <UiHorizontalGroup gap="xs" align="baseline">
+                <UiTypography as="span" variant="body" color="light">
+                  {label}:
+                </UiTypography>
+                <UiTypography as="span" variant="h4">
+                  {value}
+                </UiTypography>
+              </UiHorizontalGroup>
+            </UiHorizontalGroup>
+          </UiHorizontalGroup>
         ))}
-      </div>
-    </div>
+      </UiHorizontalGroup>
+    </UiVerticalGroup>
   );
 };

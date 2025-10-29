@@ -133,8 +133,15 @@ export interface TJiraIssueType {
 export enum ESprintometerStatus {
   Default = 'Default',
   OnTrack = 'OnTrack',
-  NeedAttention = 'NeedAttention',
-  Warning = 'Warning',
+  NeedsAttention = 'NeedsAttention',
+  HighRisk = 'HighRisk',
+}
+
+export interface MSprintometerStatusData {
+  status: ESprintometerStatus;
+  name: string; // Display name for the status (e.g., "On track", "Needs attention")
+  summary: string; // Brief status description for preview or tooltip
+  details: string; // Detailed description in Markdown format with recommendations
 }
 
 export type TSprintometerStatus = ESprintometerStatus | string;

@@ -1,7 +1,7 @@
 import { css, cx } from '@emotion/css';
 import React from 'react';
 
-import { UiCard, UiText, UiTitle } from '../../../components/ui';
+import { UiCard, UiText, UiTypography } from '../../../components/ui';
 import { theme2 } from '../../../theme/theme';
 import { TDate } from '../../../types';
 import { TimelineInterface } from '../types';
@@ -86,7 +86,7 @@ export const Timeline: React.FC<Props> = ({ weeks, currentDate }) => {
   return (
     <UiCard className={cx(styles.container)}>
       <div className={styles.content}>
-        <UiTitle>Sprint timeline</UiTitle>
+        <UiTypography variant="title">Sprint timeline</UiTypography>
         <div className={styles.timeline}>
           {weeks.map((week, weekIndex) => (
             <div key={weekIndex} className={cx(styles.week)}>
@@ -104,7 +104,7 @@ export const Timeline: React.FC<Props> = ({ weeks, currentDate }) => {
       </div>
 
       <div className={styles.content}>
-        <UiTitle>Events</UiTitle>
+        <UiTypography variant="title">Events</UiTypography>
         <div className={styles.eventsWrapper}>
           <div className={styles.eventsContainer}>
             <UiText>Today</UiText>

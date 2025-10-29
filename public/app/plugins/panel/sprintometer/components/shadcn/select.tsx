@@ -2,6 +2,7 @@ import { css, cx } from '@emotion/css';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import * as React from 'react';
 
+import { roundedBordersStyles } from '../../theme';
 import { theme2 } from '../../theme/theme';
 import { UiIcon } from '../ui';
 
@@ -33,14 +34,13 @@ const selectTriggerBase = css`
   align-items: center;
   justify-content: space-between;
   gap: ${theme2.spacing.sm};
-  border-radius: ${theme2.radii.md};
-  border: 1px solid ${theme2.colors.border.default};
   background-color: transparent;
   padding: ${theme2.spacing.sm} ${theme2.spacing.md};
   font-size: ${theme2.typography.fontSize.md};
   line-height: ${theme2.typography.lineHeight.normal};
   white-space: nowrap;
   box-shadow: ${theme2.shadows.xs};
+  ${roundedBordersStyles}
 
   ${baseTransition}
   ${focusRing}

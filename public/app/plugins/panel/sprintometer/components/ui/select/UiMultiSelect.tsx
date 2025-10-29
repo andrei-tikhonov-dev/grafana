@@ -1,7 +1,7 @@
 import { css, cx } from '@emotion/css';
 import * as React from 'react';
 
-import { theme3 } from '../../../theme/theme';
+import { theme3, roundedBordersStyles } from '../../../theme';
 import { Badge } from '../../shadcn/badge';
 import { Button } from '../../shadcn/button';
 import {
@@ -24,13 +24,12 @@ const badgeStyles = css`
 
 const triggerButtonStyles = css`
   display: flex;
-  width: 100%;
   min-height: 40px;
   height: auto;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid ${theme3.shadcn.border};
   padding: ${theme3.tailwind.spacing};
+  ${roundedBordersStyles}
 
   &:hover {
     background-color: ${theme3.shadcn.background} !important;

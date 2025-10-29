@@ -4,18 +4,13 @@ import * as React from 'react';
 
 import { ScrollArea, ScrollBar } from '../../../components/shadcn/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/shadcn/table';
-import { theme3 } from '../../../theme/theme';
+import { bordersStyles, theme3 } from '../../../theme';
 import { customTheme } from '../custom-theme';
 import { MTableData } from '../types';
 
 const getWrapperStyles = (width: number) => css`
-  padding: calc(${theme3.tailwind.spacing} * 4) calc(${theme3.tailwind.spacing} * 8)
-    calc(${theme3.tailwind.spacing} * 4) 0;
+  padding: ${theme3.tailwind.spacing4} ${theme3.tailwind.spacing} ${theme3.tailwind.spacing4} 0;
   width: ${width}px;
-`;
-
-const tableStyles = css`
-  border: 1px solid ${theme3.shadcn.border};
 `;
 
 const tableBodyStyles = css`
@@ -26,7 +21,7 @@ const tableBodyStyles = css`
 
 const tableCellStyles = css`
   vertical-align: top;
-  border-right: 1px solid ${theme3.shadcn.border};
+  border-right: ${theme3.custom.border};
 
   &:last-child {
     border-right: none;
@@ -34,7 +29,7 @@ const tableCellStyles = css`
 `;
 
 const tableHeadStyles = css`
-  border-right: 1px solid ${theme3.shadcn.border};
+  border-right: ${theme3.custom.border};
 
   &:last-child {
     border-right: none;
@@ -52,7 +47,7 @@ export function DataTable({ columns, data, width }: Props) {
 
   return (
     <ScrollArea className={getWrapperStyles(width)}>
-      <Table className={tableStyles}>
+      <Table className={bordersStyles}>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

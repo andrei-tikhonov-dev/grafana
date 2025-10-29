@@ -1,7 +1,7 @@
 export const DEFAULT_UNITS = 'SP';
-export const DRAGGABLE_HEADERS_HEIGHT = 60;
-export const DOUBLE_HEADER_HEIGHT = 87;
-export const SINGLE_HEADER_HEIGHT = 40;
+export const DRAGGABLE_HEADERS_HEIGHT = 30;
+export const DOUBLE_HEADER_HEIGHT = 170;
+export const SINGLE_HEADER_HEIGHT = 170;
 export const LAYOUT_ITERATIONS = 7;
 export const LABEL_SIZE_CONSTRAINTS = {
   MIN: 12,

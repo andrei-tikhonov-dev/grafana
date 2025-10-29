@@ -1,10 +1,10 @@
-import { css, cx } from '@emotion/css';
+import { css } from '@emotion/css';
 import React from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { UiPanelTitle, UiText, UiExpandableTable } from '../../components/ui';
-import { theme } from '../../theme';
+import { UiExpandableTable, UiTypography } from '../../components/ui';
+import { UiPanelContainer } from '../../components/ui/panel-container/PanelContainer';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
@@ -13,31 +13,8 @@ import { MData } from './types';
 interface IncomingDependenciesProps extends PanelProps<TPanelOptions> {}
 
 const styles = {
-  wrapper: css`
-    padding: 10px;
-    font-family: ${theme.typography.fontFamily};
-    display: flex;
-    flex-direction: column;
-  `,
   content: css`
-    flex: 1 1 auto;
-    padding-right: 16px;
-    padding-top: 16px;
     overflow-y: auto;
-  `,
-  header: css`
-    flex: 0 0 auto;
-    display: flex;
-    gap: 10px;
-  `,
-  summaryContainer: css`
-    flex: 0 0 auto;
-    display: flex;
-    gap: 10px;
-    width: 100%;
-  `,
-  select: css`
-    width: 200px;
   `,
 };
 
@@ -53,17 +30,8 @@ export const IncomingDependencies: React.FC<IncomingDependenciesProps> = ({ widt
   const initialExpandedRows = data.reduce((acc, row) => ({ ...acc, [row.id]: row.hasChanges }), {});
 
   return (
-    <div
-      className={cx(
-        styles.wrapper,
-        css`
-          width: ${width}px;
-          height: ${height}px;
-        `
-      )}
-    >
-      <UiPanelTitle>Incoming dependencies</UiPanelTitle>
-      <UiText>Issues that depend on other teams ({total})</UiText>
+    <UiPanelContainer width={width} height={height} title="Incoming dependencies">
+      <UiTypography color="light">Issues that depend on other teams ({total})</UiTypography>
 
       <div className={styles.content}>
         <UiExpandableTable
@@ -73,6 +41,6 @@ export const IncomingDependencies: React.FC<IncomingDependenciesProps> = ({ widt
           initialExpandedRows={initialExpandedRows}
         />
       </div>
-    </div>
+    </UiPanelContainer>
   );
 };

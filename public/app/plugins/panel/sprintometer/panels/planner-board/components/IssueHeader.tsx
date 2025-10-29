@@ -1,8 +1,8 @@
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import * as React from 'react';
 
-import { UiJiraTypeIcon, UiLink, UiTitle } from '../../../components/ui';
-import { theme3 } from '../../../theme/theme';
+import { UiJiraTypeIcon, UiLink, UiTypography } from '../../../components/ui';
+import { theme3 } from '../../../theme';
 import { MIssue } from '../types';
 
 interface IssueHeaderProps {
@@ -29,13 +29,15 @@ const titleStyles = css`
 
 export function IssueHeader({ issue, className }: IssueHeaderProps) {
   return (
-    <div className={headerStyles}>
+    <div className={cx(headerStyles, className)}>
       <div className={issueKeyStyles}>
         <UiJiraTypeIcon type={issue.issueType.type} name={issue.issueType.name} />
         <UiLink url={issue.url}>{issue.issueKey}</UiLink>
       </div>
 
-      <UiTitle className={titleStyles}>{issue.summary}</UiTitle>
+      <UiTypography variant="title" className={titleStyles}>
+        {issue.summary}
+      </UiTypography>
     </div>
   );
 }

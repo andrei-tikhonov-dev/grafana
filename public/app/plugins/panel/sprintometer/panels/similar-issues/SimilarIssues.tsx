@@ -3,7 +3,7 @@ import React from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { UiPanelTitle, UiText, UiExpandableTable, renderCellContent } from '../../components/ui';
+import { UiText, UiExpandableTable, renderCellContent, UiTypography } from '../../components/ui';
 import { theme } from '../../theme';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -60,7 +60,7 @@ export const SimilarIssues: React.FC<Props> = ({ width, height, data }) => {
         `
       )}
     >
-      <UiPanelTitle>Similar issues</UiPanelTitle>
+      <UiTypography variant="panelTitle">Similar issues</UiTypography>
       <UiText>
         AI-powered suggestions of issues from across the organization that are similar to your team&apos;s work
       </UiText>

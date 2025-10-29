@@ -11,13 +11,13 @@ export const customTheme = {
 export const cardColors = {
   [ESprintometerStatus.Default]: customTheme.pbColorCardDefault,
   [ESprintometerStatus.OnTrack]: customTheme.pbColorCardDefault,
-  [ESprintometerStatus.NeedAttention]: customTheme.pbColorCardNeedAttention,
-  [ESprintometerStatus.Warning]: customTheme.pbColorCardWarning,
+  [ESprintometerStatus.NeedsAttention]: customTheme.pbColorCardNeedAttention,
+  [ESprintometerStatus.HighRisk]: customTheme.pbColorCardWarning,
 };
 
 export const aiInsightsColors = {
   [ESprintometerStatus.Default]: customTheme.pbColorCardDefault,
   [ESprintometerStatus.OnTrack]: customTheme.pbColorCardOnTrack,
-  [ESprintometerStatus.NeedAttention]: customTheme.pbColorCardNeedAttention,
-  [ESprintometerStatus.Warning]: customTheme.pbColorCardWarning,
+  [ESprintometerStatus.NeedsAttention]: customTheme.pbColorCardNeedAttention,
+  [ESprintometerStatus.HighRisk]: customTheme.pbColorCardWarning,
 };

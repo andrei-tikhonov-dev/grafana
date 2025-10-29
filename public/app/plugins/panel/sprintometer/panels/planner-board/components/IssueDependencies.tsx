@@ -1,8 +1,8 @@
 import { css } from '@emotion/css';
 import * as React from 'react';
 
-import { UiIcon, UiTitle } from '../../../components/ui';
-import { theme3 } from '../../../theme/theme';
+import { UiIcon, UiTypography } from '../../../components/ui';
+import { theme3 } from '../../../theme';
 import { MIssue } from '../types';
 
 import { IssueCard } from './IssueCard';
@@ -14,37 +14,37 @@ interface IssueDependenciesProps {
 }
 
 const sectionStyles = css`
-  margin-bottom: calc(${theme3.tailwind.spacing} * 2);
+  margin-bottom: ${theme3.tailwind.spacing2};
 `;
 
 const sectionHeaderStyles = css`
   display: flex;
   align-items: center;
-  gap: calc(${theme3.tailwind.spacing} * 2);
+  gap: ${theme3.tailwind.spacing2};
   font-size: ${theme3.tailwind.textBase};
   font-weight: ${theme3.tailwind.fontWeightSemibold};
   color: ${theme3.shadcn.foreground};
-  margin-bottom: calc(${theme3.tailwind.spacing} * 2);
+  margin-bottom: ${theme3.tailwind.spacing2};
 `;
 
 const dependencyContainerStyles = css`
-  margin-top: calc(${theme3.tailwind.spacing} * 2);
+  margin-top: ${theme3.tailwind.spacing2};
   display: flex;
   flex-direction: column;
-  gap: calc(${theme3.tailwind.spacing} * 2);
+  gap: ${theme3.tailwind.spacing2};
 `;
 
 const dependencyHeaderStyles = css`
   font-size: ${theme3.tailwind.textSm};
   font-weight: ${theme3.tailwind.fontWeightMedium};
   color: ${theme3.shadcn.foreground};
-  margin-top: calc(${theme3.tailwind.spacing} * 2);
+  margin-top: ${theme3.tailwind.spacing2};
 `;
 
 const artGroupContainerStyles = css`
   display: flex;
   flex-direction: column;
-  gap: calc(${theme3.tailwind.spacing} * 2);
+  gap: ${theme3.tailwind.spacing2};
 `;
 
 export function IssueDependencies({ issue, className }: IssueDependenciesProps) {
@@ -81,7 +81,9 @@ export function IssueDependencies({ issue, className }: IssueDependenciesProps) 
     <div className={sectionStyles}>
       <div className={sectionHeaderStyles}>
         <UiIcon name="AccountTree" size="md" />
-        <UiTitle>Dependencies ({issue.dependencies.length})</UiTitle>
+        <UiTypography variant="title" as="span">
+          Dependencies ({issue.dependencies.length})
+        </UiTypography>
       </div>
 
       {internalDependencies.length > 0 && (

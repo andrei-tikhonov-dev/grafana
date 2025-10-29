@@ -1,8 +1,8 @@
 import { css } from '@emotion/css';
 import * as React from 'react';
 
-import { UiIcon, UiTitle } from '../../../components/ui';
-import { theme3 } from '../../../theme/theme';
+import { UiIcon, UiTypography } from '../../../components/ui';
+import { theme3 } from '../../../theme';
 import { MIssue } from '../types';
 
 import { IssueCard } from './IssueCard';
@@ -34,7 +34,7 @@ const childrenContainerStyles = css`
   gap: calc(${theme3.tailwind.spacing} * 2);
 `;
 
-export function IssueChildren({ issue, className }: IssueChildrenProps) {
+export function IssueChildren({ issue }: IssueChildrenProps) {
   if (!issue.children || issue.children.length === 0) {
     return null;
   }
@@ -43,7 +43,9 @@ export function IssueChildren({ issue, className }: IssueChildrenProps) {
     <div className={sectionStyles}>
       <div className={sectionHeaderStyles}>
         <UiIcon name="FormatListBulleted" size="md" />
-        <UiTitle>Children ({issue.children.length})</UiTitle>
+        <UiTypography variant="title" as="span">
+          Children ({issue.children.length})
+        </UiTypography>
       </div>
 
       <div className={childrenContainerStyles}>

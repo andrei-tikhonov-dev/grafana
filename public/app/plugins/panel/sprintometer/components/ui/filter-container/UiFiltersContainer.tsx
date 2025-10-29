@@ -1,30 +1,17 @@
-import { css, cx } from '@emotion/css';
 import * as React from 'react';
 
-import { theme3 } from '../../../theme/theme';
+import { UiHorizontalGroup } from '../group/UiHorizontalGroup';
 
 interface UiFiltersContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   suffix?: React.ReactNode;
 }
 
-export function UiFiltersContainer({ children, suffix, className, ...props }: UiFiltersContainerProps) {
-  const containerStyles = css`
-    display: flex;
-    align-items: center;
-    gap: calc(${theme3.tailwind.spacing} * 8);
-    padding: calc(${theme3.tailwind.spacing} * 8) calc(${theme3.tailwind.spacing} * 8)
-      calc(${theme3.tailwind.spacing} * 4) 0;
-  `;
-
-  const suffixStyles = css`
-    margin-left: auto;
-  `;
-
+export function UiFiltersContainer({ children, suffix, className }: UiFiltersContainerProps) {
   return (
-    <div className={cx(containerStyles, className)} {...props}>
-      {children}
-      {suffix && <div className={suffixStyles}>{suffix}</div>}
-    </div>
+    <UiHorizontalGroup justify="space-between" className={className}>
+      <UiHorizontalGroup>{children}</UiHorizontalGroup>
+      <UiHorizontalGroup>{suffix}</UiHorizontalGroup>
+    </UiHorizontalGroup>
   );
 }

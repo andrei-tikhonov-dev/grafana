@@ -1,3 +1,4 @@
+export * from './styles';
 export const theme = {
   name: 'Light',
   isDark: false,
@@ -236,3 +237,5 @@ export const theme = {
   },
   flags: {},
 };
+
+export { theme3 } from './theme';

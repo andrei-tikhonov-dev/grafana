@@ -20,7 +20,7 @@ export const Headers: React.FC<HeaderProps> = ({ headerData, width, className, m
 
   const getHeaderConfig = (visibleIndex: number) => {
     if (visibleIndex === 0) {
-      return { translateX: 10, textAlign: 'left' as const };
+      return { translateX: 0, textAlign: 'left' as const };
     }
     if (visibleIndex === visibleHeaders.length - 1) {
       return { translateX: width, textAlign: 'right' as const };
@@ -29,11 +29,11 @@ export const Headers: React.FC<HeaderProps> = ({ headerData, width, className, m
   };
 
   const draggableHeaderStyles = css`
-    padding: 18px;
     width: ${width}px;
     overflow: hidden;
     position: relative;
-    height: ${DRAGGABLE_HEADERS_HEIGHT}px;
+    padding: 0;
+    min-height: ${DRAGGABLE_HEADERS_HEIGHT}px;
   `;
 
   return (

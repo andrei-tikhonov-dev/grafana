@@ -108,8 +108,8 @@ export function filterData({ teams, phases, filters }: { teams: MTeam[]; phases:
         issues: item.issues.filter(
           (issue) =>
             issue.sprintometerData &&
-            (issue.sprintometerData.status === ESprintometerStatus.NeedAttention ||
-              issue.sprintometerData.status === ESprintometerStatus.Warning)
+            (issue.sprintometerData.status === ESprintometerStatus.NeedsAttention ||
+              issue.sprintometerData.status === ESprintometerStatus.HighRisk)
         ),
       })),
     }));

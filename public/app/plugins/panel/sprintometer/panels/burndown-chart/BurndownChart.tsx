@@ -1,19 +1,26 @@
-import { css, cx } from '@emotion/css';
+import { css } from '@emotion/css';
 import React, { useMemo } from 'react';
 
-import { PanelProps, SelectableValue } from '@grafana/data';
-import { MultiSelect, Select, Switch } from '@grafana/ui';
+import { PanelProps } from '@grafana/data';
 
-import { UiEllipsis } from '../../components/ui';
+import {
+  UiAiViewer,
+  UiFiltersContainer,
+  UiHorizontalGroup,
+  UiMultiSelect,
+  UiSelect,
+  UiSwitch,
+} from '../../components/ui';
+import { UiPanelContainer } from '../../components/ui/panel-container/PanelContainer';
 import { useEcharts } from '../../hooks/useEcharts';
 import { usePluginState } from '../../hooks/usePluginState';
-import { theme } from '../../theme';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
 import { ScopeChangesViewer } from './components/ScopeChangesViewer';
 import { Summary } from './components/Summary';
 import {
+  CHECKBOX_NON_WORKING_DAYS,
   ISSUES_AMOUNT_COLOR,
   LABEL_ISSUES_AMOUNT,
   LABEL_STORY_POINTS,
@@ -25,44 +32,6 @@ import { MBurndownCustomData, EValueMode } from './types';
 import { filterBurndownChartData, getChartOptions, prepareData } from './utils';
 
 interface BurndownChartProps extends PanelProps<TPanelOptions> {}
-
-const styles = {
-  wrapper: css`
-    overflow: hidden;
-  `,
-  container: css`
-    padding: 10px;
-    flex: 1 1 auto;
-    font-family: ${theme.typography.fontFamily};
-    gap: 20px;
-    display: flex;
-    flex-direction: column;
-    min-width: 998px;
-  `,
-  content: css`
-    flex: 1 1 auto;
-  `,
-  filters: css`
-    flex: 0 0 auto;
-    display: flex;
-    gap: 10px;
-  `,
-  summaryContainer: css`
-    flex: 0 0 auto;
-    display: flex;
-    gap: 10px;
-    width: 100%;
-  `,
-  input: css`
-    width: 300px;
-  `,
-  switchContainer: css`
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  `,
-};
 
 const initialData: MBurndownCustomData = {
   currentDate: '',
@@ -96,11 +65,20 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
   const [state, setState] = usePluginState<BurndownChartState>(options, onOptionsChange, initialState);
   const { valueMode, selectedIssues, showNonWorkingDays } = state;
 
-  const customData = getGrafanaCustomData<MBurndownCustomData>(panelData, initialData);
+  const { ai, ...customData } = getGrafanaCustomData<MBurndownCustomData>(panelData, initialData);
 
   const { summary, daysData, currentDay, issueOptions, valueOptions, data, scopeChanges } = useMemo(() => {
     return prepareData(customData);
   }, [customData]);
+
+  const uiSelectGroups = useMemo(() => {
+    return [
+      {
+        label: 'Value Mode',
+        options: valueOptions,
+      },
+    ];
+  }, [valueOptions]);
 
   const { actual, ideal, days, nonWorkingDays } = filterBurndownChartData({
     data,
@@ -126,80 +104,68 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
 
   const chartRef = useEcharts({ width, height, option });
 
-  const handleValueModeChange = (value: SelectableValue<string>) => {
+  const handleValueModeChange = (value: string) => {
     setState((prevState) => ({
       ...prevState,
-      valueMode: value.value as EValueMode,
+      valueMode: value as EValueMode,
     }));
   };
 
-  const handleIssuesChange = (values: Array<SelectableValue<string>>) => {
-    const stringValues = values.map((v) => v.value!);
+  const handleIssuesChange = (values: string[]) => {
     setState((prevState) => ({
       ...prevState,
-      selectedIssues: stringValues,
+      selectedIssues: values,
     }));
   };
 
-  const handleShowNonWorkingDaysChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const target = event.target as HTMLInputElement;
+  const handleShowNonWorkingDaysChange = (checked: boolean) => {
     setState((prevState) => ({
       ...prevState,
-      showNonWorkingDays: target.checked,
+      showNonWorkingDays: checked,
     }));
   };
 
   return (
-    <div
-      className={cx(
-        styles.wrapper,
-        css`
-          width: ${width}px;
-          height: ${height}px;
-        `
-      )}
-    >
-      <div
-        className={cx(
-          styles.container,
-          css`
-            height: ${height}px;
-          `
-        )}
-      >
-        <div className={styles.filters}>
-          <div className={styles.input}>
-            <Select
-              options={valueOptions}
-              value={valueMode}
-              onChange={handleValueModeChange}
-              placeholder={PLACEHOLDER_SELECT_VALUE}
-            />
-          </div>
-          <div className={styles.input}>
-            <MultiSelect
-              options={issueOptions}
-              value={issueOptions.filter((option: SelectableValue<string>) => selectedIssues.includes(option.value!))}
-              onChange={handleIssuesChange}
-              placeholder={PLACEHOLDER_SELECT_ISSUE}
-            />
-          </div>
-          <div className={styles.input}>
+    <UiPanelContainer width={width} height={height} title="Burndown chart">
+      <UiFiltersContainer
+        suffix={
+          <>
             <ScopeChangesViewer daysData={daysData} />
-          </div>
-          <div className={styles.switchContainer}>
-            <UiEllipsis>Show non-working days</UiEllipsis>
-            <Switch value={showNonWorkingDays} onChange={handleShowNonWorkingDaysChange} />
-          </div>
-        </div>
+            {ai && <UiAiViewer label="View AI analysis" content={ai.content} title={ai.title} />}
+          </>
+        }
+      >
+        <UiSelect
+          groups={uiSelectGroups}
+          value={valueMode}
+          onValueChange={handleValueModeChange}
+          placeholder={PLACEHOLDER_SELECT_VALUE}
+        />
+        <UiMultiSelect
+          options={issueOptions}
+          defaultValue={selectedIssues}
+          onValueChange={handleIssuesChange}
+          placeholder={PLACEHOLDER_SELECT_ISSUE}
+        />
+        <UiSwitch
+          label={CHECKBOX_NON_WORKING_DAYS}
+          id="weekends"
+          checked={showNonWorkingDays}
+          onCheckedChange={handleShowNonWorkingDaysChange}
+        />
+      </UiFiltersContainer>
 
-        <div ref={chartRef} className={styles.content} />
+      <div
+        ref={chartRef}
+        className={css`
+          flex: 1 1 auto;
+        `}
+      />
 
-        <div className={styles.summaryContainer}>
-          <Summary name={LABEL_STORY_POINTS} summary={summary.storyPoints} color={STORY_POINTS_COLOR} />
-          <Summary name={LABEL_ISSUES_AMOUNT} summary={summary.issuesAmount} color={ISSUES_AMOUNT_COLOR} />
-        </div>
-      </div>
-    </div>
+      <UiHorizontalGroup>
+        <Summary name={LABEL_STORY_POINTS} summary={summary.storyPoints} color={STORY_POINTS_COLOR} />
+        <Summary name={LABEL_ISSUES_AMOUNT} summary={summary.issuesAmount} color={ISSUES_AMOUNT_COLOR} />
+      </UiHorizontalGroup>
+    </UiPanelContainer>
   );
 };

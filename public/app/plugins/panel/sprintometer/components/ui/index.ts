@@ -1,5 +1,4 @@
-export { UiPanelTitle } from './panel-title/UiPanelTitle';
-export { UiTitle } from './title/UiTitle';
+export { UiTypography } from './typography/UiTypography';
 export { UiText } from './text/UiText';
 export { UiIcon } from './icon/UiIcon';
 export { UiJiraTypeIcon } from './icon/UiJiraTypeIcon';

@@ -1,8 +1,8 @@
-import { MData } from '../types';
+import { EPeriod, MData } from '../types';
 
 export const cfdData: MData = {
   currentPeriod: '2025-04-13T00:00:00Z',
-  periodType: 'date',
+  periodType: EPeriod.Date,
   periods: [
     { value: '2025-04-02T00:00:00Z' },
     { value: '2025-04-03T00:00:00Z' },

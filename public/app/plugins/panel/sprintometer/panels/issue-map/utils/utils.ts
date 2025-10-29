@@ -24,7 +24,7 @@ export function getSankeySize({
 
   return {
     sankeyHeight: Math.max(minHeight, height - 180),
-    sankeyWidth: Math.max(minWidth, width),
+    sankeyWidth: Math.max(minWidth, width - 20),
   };
 }
 
@@ -103,24 +103,18 @@ export function getInitialSelectedOptions(
   initialFilters?: Record<string, string[]>
 ) {
   if (!initialFilters) {
-    return filterFields.reduce(
-      (acc, field) => {
-        acc[field] = [];
-        return acc;
-      },
-      {} as Record<string, string[]>
-    );
+    return filterFields.reduce((acc, field) => {
+      acc[field] = [];
+      return acc;
+    }, {} as Record<string, string[]>);
   }
 
-  return filterFields.reduce(
-    (acc, field) => {
-      const availableOptions = availableFilterOptions[field] || [];
-      const initialSelectedOptions = initialFilters[field] || [];
+  return filterFields.reduce((acc, field) => {
+    const availableOptions = availableFilterOptions[field] || [];
+    const initialSelectedOptions = initialFilters[field] || [];
 
-      acc[field] = initialSelectedOptions.filter((option) => availableOptions.includes(option));
+    acc[field] = initialSelectedOptions.filter((option) => availableOptions.includes(option));
 
-      return acc;
-    },
-    {} as Record<string, string[]>
-  );
+    return acc;
+  }, {} as Record<string, string[]>);
 }

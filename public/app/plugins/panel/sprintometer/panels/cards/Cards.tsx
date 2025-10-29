@@ -3,7 +3,7 @@ import React from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { UiPanelTitle } from '../../components/ui';
+import { UiTypography } from '../../components/ui';
 import { theme } from '../../theme';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -41,7 +41,7 @@ export const Cards: React.FC<Props> = ({ width, height, data }) => {
         `
       )}
     >
-      <UiPanelTitle>Current sprint</UiPanelTitle>
+      <UiTypography variant="panelTitle">Current sprint</UiTypography>
       <div className={styles.content}></div>
     </div>
   );

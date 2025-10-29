@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from '../../components/shadcn/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '../../components/shadcn/popover';
-import { UiButton, UiPanelTitle, UiSelect } from '../../components/ui';
+import { UiButton, UiSelect, UiTypography } from '../../components/ui';
 import { theme } from '../../theme';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -69,7 +69,7 @@ export const ComponentsLibrary: React.FC<Props> = ({ width, height, data }) => {
         `
       )}
     >
-      <UiPanelTitle>Component library</UiPanelTitle>
+      <UiTypography variant="panelTitle">Component library</UiTypography>
       <CommandExample />
       <div className={styles.content}>
         <div className={styles.test}>

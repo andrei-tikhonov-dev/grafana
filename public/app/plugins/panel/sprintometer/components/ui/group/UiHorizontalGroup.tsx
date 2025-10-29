@@ -1,7 +1,7 @@
 import { css, cx } from '@emotion/css';
 import * as React from 'react';
 
-import { theme3 } from '../../../theme/theme';
+import { theme3 } from '../../../theme';
 
 type AlignItems = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
 type JustifyContent = 'start' | 'center' | 'end' | 'space-between' | 'space-around' | 'space-evenly';
@@ -11,7 +11,7 @@ const gapValues: Record<Gap, string> = {
   xs: theme3.tailwind.spacing,
   sm: theme3.tailwind.spacing2,
   md: theme3.tailwind.spacing4,
-  lg: theme3.tailwind.spacing,
+  lg: theme3.tailwind.spacing8,
 };
 interface UiHorizontalGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   align?: AlignItems;

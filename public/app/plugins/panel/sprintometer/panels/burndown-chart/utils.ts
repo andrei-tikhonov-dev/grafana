@@ -256,8 +256,8 @@ export const getChartOptions = ({
       },
     },
     grid: {
-      top: 20,
-      left: 20,
+      top: 10,
+      left: 0,
       right: 20,
       bottom: 40,
       containLabel: true,
