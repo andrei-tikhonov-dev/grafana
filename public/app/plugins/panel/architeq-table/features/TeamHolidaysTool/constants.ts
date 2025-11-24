@@ -2,6 +2,7 @@ export const enum TeamHolidaysToolFields {
   HolidayDescription = 'Description',
   HolidayDate = 'Date',
   TypeOfHoliday = 'Type',
+  Global = 'Global',
   Id = 'Id',
 }
 

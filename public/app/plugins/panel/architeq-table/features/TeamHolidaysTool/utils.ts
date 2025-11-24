@@ -29,6 +29,7 @@ export function configTeamHolidaysToolData({
 
   const fieldConfigs = [
     { fields: [TeamHolidaysToolFields.HolidayDescription], config: getFieldConfig(Cells.Input, { ...options }) },
+    { fields: [TeamHolidaysToolFields.Global], config: getFieldConfig(Cells.Checkbox, { ...options }) },
     { fields: [TeamHolidaysToolFields.HolidayDate], config: getFieldConfig(Cells.Date, { ...options }) },
     { fields: [TeamHolidaysToolFields.TypeOfHoliday], config: getFieldConfig(Cells.Select, { ...typeFieldOptions }) },
   ];
