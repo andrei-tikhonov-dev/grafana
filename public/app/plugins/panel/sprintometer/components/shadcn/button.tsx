@@ -2,7 +2,7 @@ import { css, cx } from '@emotion/css';
 import { Slot } from '@radix-ui/react-slot';
 import * as React from 'react';
 
-import { theme3 } from '../../theme/theme';
+import { theme3 } from '../../theme';
 
 const baseButtonStyles = css`
   display: inline-flex;

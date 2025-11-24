@@ -30,6 +30,8 @@ export { UiVerticalGroup } from './group/UiVerticalGroup';
 export { UiHorizontalGroup } from './group/UiHorizontalGroup';
 
 export { UiAiViewer } from './ai-viewer/UiAiViewer';
+export { UiMarkdown } from './markdown/UiMarkdown';
+export { UiBreadcrumbs } from './breadcrumbs/UiBreadcrumbs';
 
 export {
   UiCardAction,

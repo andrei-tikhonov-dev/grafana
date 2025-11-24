@@ -3,79 +3,122 @@ import React from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { UiIcon, UiText, UiTypography } from '../../components/ui';
-import { UiZeroState } from '../../components/ui/zero-state/UiZeroState';
-import { theme } from '../../theme';
+import { Separator } from '../../components/shadcn/separator';
+import {
+  UiAiViewer,
+  UiBreadcrumbs,
+  UiCard,
+  UiHorizontalGroup,
+  UiTypography,
+  UiVerticalGroup,
+} from '../../components/ui';
+import { panelContainerStyles } from '../../theme';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
+import { DashboardInfo } from './components/DashboardInfo';
+import { EventsGroup } from './components/EventsGroup';
+import { IntervalSelector } from './components/IntervalSelector';
+import { OrganizationUnit } from './components/OrganizationUnit';
+import { Progress } from './components/Progress';
+import { StatusCard } from './components/StatusCard';
 import { Timeline } from './components/Timeline';
-import { sprintTimeline } from './mocks/timeline';
-import { HeaderCustomDataInterface } from './types';
+import { UpdateButton } from './components/UpdateButton';
+import { MHeaderCustomData } from './types';
 
 interface Props extends PanelProps<TPanelOptions> {}
 
-const styles = {
-  wrapper: css`
-    padding: 10px;
-    font-family: ${theme.typography.fontFamily};
-    display: flex;
-    flex-direction: column;
-  `,
-  content: css`
-    flex: 1 1 auto;
-    padding-right: 16px;
-    padding-top: 16px;
-    overflow-y: auto;
-  `,
-  headerInfo: css`
-    display: flex;
-    gap: 24px;
-  `,
-  headerInfoItem: css`
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  `,
+const initialData: MHeaderCustomData = {
+  title: '',
 };
 
-const initialData: HeaderCustomDataInterface = {};
+const containerStyles = (height: number) => css`
+  height: ${height}px;
+  overflow-y: auto;
+`;
 
-export const Header: React.FC<Props> = ({ width, height, data }) => {
-  const { zeroState, ...customData } = getGrafanaCustomData<HeaderCustomDataInterface>(data, initialData);
-  console.log(customData);
+const titleStyles = css`
+  margin: 0;
+`;
 
-  if (zeroState) {
-    return <UiZeroState {...zeroState} />;
-  }
+const eventsContainerStyles = css`
+  width: 100%;
+`;
+
+/**
+ * Header panel component.
+ * Displays dashboard information, status, metrics, and timeline.
+ */
+export const Header: React.FC<Props> = ({ height, data }) => {
+  const {
+    title,
+    ai,
+    status,
+    breadcrumbs,
+    update,
+    info,
+    organizationUnit,
+    progress,
+    interval,
+    timeline,
+    eventsUpcoming,
+    eventsToday,
+  } = getGrafanaCustomData<MHeaderCustomData>(data, initialData);
+
+  const hasActions = update || ai;
+  const hasMetrics = interval || progress || organizationUnit;
+  const hasEvents = eventsToday || eventsUpcoming;
+  const hasTimelineSection = timeline || hasEvents;
 
   return (
-    <div
-      className={cx(
-        styles.wrapper,
-        css`
-          width: ${width}px;
-          height: ${height}px;
-        `
+    <UiVerticalGroup align="stretch" className={cx(panelContainerStyles, containerStyles(height))}>
+      {breadcrumbs && (
+        <>
+          <UiBreadcrumbs items={breadcrumbs} />
+          <Separator />
+        </>
       )}
-    >
-      <UiTypography variant="panelTitle">Current sprint</UiTypography>
-      <div className={styles.headerInfo}>
-        <UiText className={styles.headerInfoItem}>
-          <UiIcon name="Group" />
-          <strong>Team:</strong>
-          <span>KIB</span>
-        </UiText>
-        <UiText className={styles.headerInfoItem}>
-          <UiIcon name="CalendarMonth" />
-          <strong>Period:</strong>
-          <span>2 Apr - 14 Apr, 2025</span>
-        </UiText>
-      </div>
 
-      <div className={styles.content}>
-        <Timeline weeks={sprintTimeline.weeks} currentDate={sprintTimeline.currentDate} />
-      </div>
-    </div>
+      <UiHorizontalGroup justify="space-between">
+        <UiHorizontalGroup align="center">
+          <UiTypography className={titleStyles} variant="dashboardTitle">
+            {title}
+          </UiTypography>
+          {info && <DashboardInfo {...info} />}
+        </UiHorizontalGroup>
+
+        {hasActions && (
+          <UiHorizontalGroup>
+            {update && <UpdateButton {...update} />}
+            {ai && <UiAiViewer {...ai} label="AI insights" />}
+          </UiHorizontalGroup>
+        )}
+      </UiHorizontalGroup>
+
+      {status && <StatusCard {...status} />}
+
+      {hasMetrics && (
+        <UiHorizontalGroup gap="lg" justify="start" align="center">
+          {interval && <IntervalSelector {...interval} />}
+          {progress && <Progress {...progress} />}
+          {organizationUnit && <OrganizationUnit {...organizationUnit} />}
+        </UiHorizontalGroup>
+      )}
+
+      {hasTimelineSection && (
+        <UiCard>
+          <UiVerticalGroup align="start" gap="lg">
+            {timeline && <Timeline days={timeline} />}
+
+            {hasEvents && (
+              <UiHorizontalGroup justify="space-between" align="start" gap="lg" className={eventsContainerStyles}>
+                {eventsToday && <EventsGroup title="What's happening today" events={eventsToday} />}
+                {eventsUpcoming && <EventsGroup title="Coming up" events={eventsUpcoming} />}
+              </UiHorizontalGroup>
+            )}
+          </UiVerticalGroup>
+        </UiCard>
+      )}
+    </UiVerticalGroup>
   );
 };

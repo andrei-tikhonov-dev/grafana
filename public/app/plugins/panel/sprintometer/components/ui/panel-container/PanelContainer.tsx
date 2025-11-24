@@ -20,7 +20,9 @@ export const UiPanelContainer: React.FC<UiPanelContainerProps> = ({ title, heigh
         panelContainerStyles,
         css`
           height: ${height}px;
-          min-width: 998px;
+          overflow-x: auto;
+          overflow-y: hidden;
+          position: relative;
         `
       )}
     >

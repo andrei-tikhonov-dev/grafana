@@ -1,3 +1,4 @@
+import { css, cx } from '@emotion/css';
 import React from 'react';
 
 import {
@@ -42,7 +43,14 @@ export const UiSelect: React.FC<UiSelectProps> = ({
 }) => {
   return (
     <Select value={value} onValueChange={onValueChange} disabled={disabled}>
-      <SelectTrigger className={className}>
+      <SelectTrigger
+        className={cx(
+          css`
+            min-height: 40px;
+          `,
+          className
+        )}
+      >
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>

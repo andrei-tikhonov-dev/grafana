@@ -1,17 +1,15 @@
 import { css, cx } from '@emotion/css';
 import { Slot } from '@radix-ui/react-slot';
+import { ChevronRight, MoreHorizontal } from 'lucide-react';
 import * as React from 'react';
 
-import { theme2 } from '../../theme/theme';
-import { UiIcon } from '../ui';
+import { theme3, typographyStyles } from '../../theme';
 
 const breadcrumbListStyles = css`
-  color: ${theme2.colors.text.secondary};
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-  font-size: ${theme2.typography.fontSize.sm};
+  gap: ${theme3.tailwind.spacing2};
   word-break: break-word;
   list-style: none;
   margin: 0;
@@ -21,21 +19,21 @@ const breadcrumbListStyles = css`
 const breadcrumbItemStyles = css`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: ${theme3.tailwind.spacing};
 `;
 
 const breadcrumbLinkStyles = css`
-  color: ${theme2.colors.text.secondary};
-  transition: color ${theme2.transitions.duration.normal};
-
+  transition: color ${theme3.custom.transitionDurationNormal};
+  color: ${theme3.custom.colorFontLight};
   &:hover {
-    color: ${theme2.colors.text.primary};
+    color: ${theme3.custom.colorFont};
   }
+
+  ${typographyStyles.body}
 `;
 
 const breadcrumbPageStyles = css`
-  color: ${theme2.colors.text.primary};
-  font-weight: ${theme2.typography.fontWeight.regular};
+  ${typographyStyles.body}
 `;
 
 const breadcrumbSeparatorStyles = css`
@@ -117,7 +115,7 @@ function BreadcrumbSeparator({ children, className, ...props }: React.ComponentP
       className={cx(breadcrumbSeparatorStyles, className)}
       {...props}
     >
-      {children ?? <UiIcon name="KeyboardArrowRight" />}
+      {children ?? <ChevronRight />}
     </li>
   );
 }
@@ -131,7 +129,7 @@ function BreadcrumbEllipsis({ className, ...props }: React.ComponentProps<'span'
       className={cx(breadcrumbEllipsisStyles, className)}
       {...props}
     >
-      <UiIcon name="MoreHoriz" className={ellipsisIconStyles} />
+      <MoreHorizontal className={ellipsisIconStyles} />
       <span className={srOnlyStyles}>More</span>
     </span>
   );

@@ -27,8 +27,9 @@ import { DatePickerExample } from './Demo/DatePickerExample';
 import { ExampleCombobox } from './Demo/ExampleCombobox';
 import { FancyMultiSelect } from './Demo/FancyMultiSelect';
 import { FormExample } from './Demo/FormExample';
+import { HoverCardExamples } from './Demo/HoverCardExamples';
 import { MultiSelectTest } from './Demo/MultiSelectTest';
-import { SprintPeriodSelectTest } from './Demo/SprintPeriodSelectTest';
+import { UiPeriodSelectTestPage } from './Demo/SprintPeriodSelectTest';
 import { SwitchDemo } from './Demo/SwitchDemo';
 import { jiraStatusGroups } from './Demo/selectData';
 import { ComponentsLibraryCustomDataInterface } from './types';
@@ -73,36 +74,32 @@ export const ComponentsLibrary: React.FC<Props> = ({ width, height, data }) => {
       <CommandExample />
       <div className={styles.content}>
         <div className={styles.test}>
-          <SprintPeriodSelectTest />
+          <HoverCardExamples />
         </div>
-
+        <div className={styles.test}>
+          <UiPeriodSelectTestPage />
+        </div>
         <div className={styles.test}>
           <BreadcrumbExample />
         </div>
-
         <div className={styles.test}>
           <UiButtonShowcase />
         </div>
-
         <div className={styles.test}>
           <DatePickerDemo />
         </div>
-
         <div className={styles.test}>
           <DatePickerExample />
         </div>
-
         <div className={styles.test}>
           <SwitchDemo />
         </div>
         <div className={styles.test}>
           <MultiSelectTest />
         </div>
-
         <div className={styles.test}>
           <FancyMultiSelect />
         </div>
-
         <div className={styles.test}>
           <UiSelect
             groups={jiraStatusGroups}
@@ -111,7 +108,6 @@ export const ComponentsLibrary: React.FC<Props> = ({ width, height, data }) => {
             placeholder="Select Jira status"
           />
         </div>
-
         <div className={styles.test}>
           <Popover>
             <PopoverTrigger asChild>
@@ -120,7 +116,6 @@ export const ComponentsLibrary: React.FC<Props> = ({ width, height, data }) => {
             <PopoverContent>Place content for the popover here.</PopoverContent>
           </Popover>
         </div>
-
         <div className={styles.test}>
           <Dialog>
             <DialogTrigger asChild>
@@ -137,20 +132,16 @@ export const ComponentsLibrary: React.FC<Props> = ({ width, height, data }) => {
             </DialogContent>
           </Dialog>
         </div>
-
         <div className={styles.test}>
           <ExampleCombobox />
         </div>
-
         <div className={styles.test}>
           <CalendarExample />
         </div>
-
         <div className={styles.test} style={{ display: 'flex', gap: '8px' }}>
           <Badge variant="default">Default</Badge>
           <Badge variant="destructive">Destructive</Badge>
         </div>
-
         <div className={styles.test}>
           <FormExample />
         </div>

@@ -89,9 +89,9 @@ export const DraggableHeaderText: React.FC<DraggableHeaderTextProps> = ({
         }
       }}
     >
-      <UiHorizontalGroup gap="xs">
-        <GripVertical />
-        <UiTypography variant="title" as="span">
+      <UiHorizontalGroup gap="none">
+        <GripVertical size={16} />
+        <UiTypography variant="h5" as="span">
           {children}
         </UiTypography>
       </UiHorizontalGroup>

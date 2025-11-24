@@ -3,7 +3,7 @@ import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 
-import { theme3 } from '../../theme/theme';
+import { typographyStyles, theme3 } from '../../theme';
 
 const fadeIn = keyframes`
   from {
@@ -83,15 +83,13 @@ const baseTooltipContentStyles = css`
   z-index: ${theme3.custom.zIndexTooltip};
   width: fit-content;
   border-radius: ${theme3.tailwind.radiusMd};
-  padding: ${parseFloat(theme3.tailwind.spacing) * 1.5}rem ${parseFloat(theme3.tailwind.spacing) * 3}rem;
-  font-size: ${theme3.tailwind.textXs};
-  line-height: ${theme3.tailwind.textXsLineHeight};
+  padding: ${theme3.tailwind.spacing2} ${theme3.tailwind.spacing4};
   text-wrap: balance;
+  ${typographyStyles.bodySmall}
 `;
 
 const tooltipContentStyles = css`
   ${baseTooltipContentStyles};
-  transform-origin: var(--radix-tooltip-content-transform-origin);
 
   animation: ${fadeIn} 150ms ease-out, ${zoomIn} 150ms ease-out;
 

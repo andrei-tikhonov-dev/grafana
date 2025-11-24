@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React from 'react';
 
 import { UiButton, UiSwitch } from '../../../components/ui';
-import { theme3 } from '../../../theme/theme';
+import { theme3 } from '../../../theme';
 
 interface ColumnProps {
   id: string;

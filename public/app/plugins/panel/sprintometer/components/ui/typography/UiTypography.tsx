@@ -20,7 +20,15 @@ type TypographyVariant =
   | 'code'
   | 'bodySmall';
 
-type TypographyColor = 'default' | 'light' | 'primary' | 'secondary';
+type TypographyColor =
+  | 'inherit'
+  | 'default'
+  | 'light'
+  | 'primary'
+  | 'secondary'
+  | 'onTrack'
+  | 'needsAttention'
+  | 'highRisk';
 
 type TypographyTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span' | 'div' | 'code';
 
@@ -43,6 +51,9 @@ const defaultTagMap: Record<TypographyVariant, TypographyTag> = {
 };
 
 const colorStyles: Record<TypographyColor, string> = {
+  inherit: css`
+    color: inherit;
+  `,
   default: css`
     color: ${theme3.custom.colorFont};
   `,
@@ -54,6 +65,15 @@ const colorStyles: Record<TypographyColor, string> = {
   `,
   secondary: css`
     color: ${theme3.custom.colorSecondary};
+  `,
+  onTrack: css`
+    color: ${theme3.custom.colorStatusOnTrack};
+  `,
+  needsAttention: css`
+    color: ${theme3.custom.colorStatusNeedsAttention};
+  `,
+  highRisk: css`
+    color: ${theme3.custom.colorStatusHighRisk};
   `,
 };
 

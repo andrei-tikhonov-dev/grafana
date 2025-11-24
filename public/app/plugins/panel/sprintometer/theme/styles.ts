@@ -110,5 +110,37 @@ export const roundedBordersStyles = css`
 
 export const panelContainerStyles = css`
   padding: 10px;
-  min-width: 998px;
 `;
+
+const statusBaseStyles = css`
+  border-width: 1px;
+  border-style: solid;
+  border-radius: ${theme3.tailwind.radiusSm};
+`;
+
+export const statusStyles = {
+  default: css`
+    color: ${theme3.custom.colorStatusDefault};
+    background-color: ${theme3.custom.colorStatusDefaultBackground};
+    border-color: ${theme3.custom.colorStatusDefaultBorder};
+    ${statusBaseStyles}
+  `,
+  onTrack: css`
+    color: ${theme3.custom.colorStatusOnTrack};
+    background-color: ${theme3.custom.colorStatusOnTrackBackground};
+    border-color: ${theme3.custom.colorStatusOnTrackBorder};
+    ${statusBaseStyles}
+  `,
+  needsAttention: css`
+    color: ${theme3.custom.colorStatusNeedsAttention};
+    background-color: ${theme3.custom.colorStatusNeedsAttentionBackground};
+    border-color: ${theme3.custom.colorStatusNeedsAttentionBorder};
+    ${statusBaseStyles}
+  `,
+  highRisk: css`
+    color: ${theme3.custom.colorStatusHighRisk};
+    background-color: ${theme3.custom.colorStatusHighRiskBackground};
+    border-color: ${theme3.custom.colorStatusHighRiskBorder};
+    ${statusBaseStyles}
+  `,
+};

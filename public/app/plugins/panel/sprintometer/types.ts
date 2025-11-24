@@ -106,20 +106,6 @@ export enum EJiraStatus {
   Done = 'done',
 }
 
-export enum EDashboardStatus {
-  Complete = 'Complete',
-  Good = 'Good',
-  OnTrack = 'OnTrack',
-  Warning = 'Warning',
-  Blocked = 'Blocked',
-  Critical = 'Critical',
-  ReadyForReview = 'ReadyForReview',
-  UnderControl = 'UnderControl',
-  MonitorClosely = 'MonitorClosely',
-  ExceededResources = 'ExceededResources',
-  PlentyResources = 'PlentyResources',
-}
-
 export interface TJiraStatus {
   type: EJiraStatus;
   name: string;
@@ -139,18 +125,22 @@ export enum ESprintometerStatus {
 
 export interface MSprintometerStatusData {
   status: ESprintometerStatus;
-  name: string; // Display name for the status (e.g., "On track", "Needs attention")
-  summary: string; // Brief status description for preview or tooltip
-  details: string; // Detailed description in Markdown format with recommendations
+  /** Display name for the status (e.g., "On track", "Needs attention") */
+  name: string;
+  /** Brief status description for preview or tooltip */
+  summary: string;
+  /** Detailed description in Markdown format with recommendations */
+  details: string;
 }
 
 export type TSprintometerStatus = ESprintometerStatus | string;
 
-export type TDashboardStatus = keyof typeof EDashboardStatus;
-
 export type TUrl = string;
 
-// example: 2025-05-20T15:30:00Z
+/**
+ * @example
+ * 2025-05-20T15:30:00Z
+ */
 export type TDate = string;
 
 export interface TLink {
@@ -194,3 +184,10 @@ export interface TAiData {
   title: string;
   content: string;
 }
+
+export interface TBreadcrumbItem {
+  url?: string;
+  label: string;
+}
+
+export type TPeriodVariant = 'range' | 'single';

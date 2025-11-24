@@ -5,8 +5,7 @@ import React, { useState } from 'react';
 import { Drawer } from '@grafana/ui';
 
 import { UiButton } from '../index';
-
-import { UiAiMarkdown } from './UiAiMarkdown';
+import { UiMarkdown } from '../markdown/UiMarkdown';
 
 interface Props {
   title: string;
@@ -40,7 +39,7 @@ export const UiAiViewer: React.FC<Props> = ({ title, content, label, className }
       {isDrawerOpen && (
         <Drawer title={title} onClose={closeDrawer}>
           <div className={styles.drawer}>
-            <UiAiMarkdown content={content} />
+            <UiMarkdown content={content} />
           </div>
         </Drawer>
       )}

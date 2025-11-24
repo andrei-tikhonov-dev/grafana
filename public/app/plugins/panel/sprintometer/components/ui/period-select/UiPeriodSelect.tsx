@@ -1,97 +1,50 @@
 import { css, cx } from '@emotion/css';
 import * as React from 'react';
 
-import { theme3 } from '../../../theme/theme';
-import { TPeriod } from '../../../types';
+import { theme3 } from '../../../theme';
+import { TPeriod, TPeriodVariant } from '../../../types';
 import { formatFullDate, formatFullPeriod } from '../../../utils/dateTime';
-import { Button } from '../../shadcn/button';
 import { Popover, PopoverContent, PopoverTrigger } from '../../shadcn/popover';
-import { Separator } from '../../shadcn/separator';
-import { UiButton, UiEllipsis, UiIcon, UiPeriodBadge } from '../index';
+import { ScrollArea } from '../../shadcn/scroll-area';
+import { UiButton, UiEllipsis, UiHorizontalGroup, UiTypography, UiVerticalGroup } from '../index';
+import { Calendar, ChevronDown } from 'lucide-react';
 
 const styles = {
   triggerButton: css`
-    display: flex;
     min-height: 40px;
     height: auto;
-    align-items: center;
-    justify-content: space-between;
-    border: 1px solid ${theme3.shadcn.border};
-    padding: ${theme3.tailwind.spacing} ${theme3.tailwind.spacing} ${theme3.tailwind.spacing}
-      ${theme3.tailwind.spacing4};
+    padding: ${theme3.tailwind.spacing} ${theme3.tailwind.spacing4};
     max-width: ${theme3.tailwind.container2xl};
-
-    &:hover {
-      background-color: ${theme3.shadcn.background} !important;
-    }
-
-    & svg {
-      pointer-events: auto;
-    }
   `,
 
-  selectedValuesContainer: css`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: auto;
-    overflow: hidden;
-  `,
-
-  outputWrapper: css`
-    display: flex;
-    gap: ${theme3.tailwind.spacing2};
-    align-items: center;
-    width: auto;
-    overflow: hidden;
-  `,
-
-  actionIconsContainer: css`
+  displayContainer: css`
+    min-height: 40px;
+    height: auto;
+    padding: ${theme3.tailwind.spacing} ${theme3.tailwind.spacing4};
+    max-width: ${theme3.tailwind.container2xl};
     display: flex;
     align-items: center;
-    justify-content: space-between;
-  `,
-
-  clearIcon: css`
-    margin: 0 8px;
-    cursor: pointer;
-    color: ${theme3.shadcn.mutedForeground};
-  `,
-
-  chevronIcon: css`
-    margin: 0 8px;
-    cursor: pointer;
-    color: ${theme3.shadcn.mutedForeground};
-  `,
-
-  separator: css`
-    display: flex;
-    min-height: 24px;
-    height: 100%;
-  `,
-
-  placeholderContainer: css`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    margin: 0 auto;
-  `,
-
-  placeholderText: css`
-    font-size: ${theme3.tailwind.textSm};
-    color: ${theme3.shadcn.mutedForeground};
-    margin: 0 12px;
   `,
 
   popoverContent: css`
-    width: 55rem;
+    width: ${theme3.tailwind.container4xl};
+    padding: 0;
+  `,
+
+  popoverContentSingle: css`
+    width: ${theme3.tailwind.containerLg};
     padding: 0;
   `,
 
   columnsContainer: css`
     display: flex;
-    height: 25rem;
+    height: ${theme3.tailwind.containerSm};
+    overflow: hidden;
+  `,
+
+  singleColumnContainer: css`
+    display: flex;
+    height: ${theme3.tailwind.containerSm};
     overflow: hidden;
   `,
 
@@ -99,17 +52,31 @@ const styles = {
     flex: 1;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid ${theme3.shadcn.border};
+    height: 100%;
+    padding-bottom: 60px;
+    gap: ${theme3.tailwind.spacing};
+    border-right: ${theme3.custom.border};
 
     &:last-child {
       border-right: none;
     }
   `,
 
+  fullColumn: css`
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-bottom: 60px;
+    gap: ${theme3.tailwind.spacing};
+  `,
+
   presetColumn: css`
     flex: 0.6;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    gap: ${theme3.tailwind.spacing};
     border-right: 1px solid ${theme3.shadcn.border};
 
     &:last-child {
@@ -119,53 +86,30 @@ const styles = {
 
   columnHeader: css`
     padding: 12px;
-    font-weight: 600;
     border-bottom: 1px solid ${theme3.shadcn.border};
-    font-size: ${theme3.tailwind.textSm};
-    color: ${theme3.shadcn.mutedForeground};
     text-align: center;
     flex-shrink: 0;
   `,
 
-  columnContent: css`
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: ${theme3.tailwind.spacing};
-    overflow-y: auto;
+  scrollContent: css`
     padding: 4px 0;
   `,
 
-  optionItem: css`
-    display: flex;
-    flex-direction: column;
-    gap: ${theme3.tailwind.spacing2};
-    cursor: pointer;
-    margin: 0 4px;
-    border-radius: 4px;
-    padding: 8px 12px;
-    font-size: ${theme3.tailwind.textSm};
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-      background-color: ${theme3.shadcn.accent};
-      color: ${theme3.shadcn.accentForeground};
-    }
+  scrollArea: css`
+    flex: 1;
+    height: 100%;
   `,
 
-  presetItem: css`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
+  button: css`
+    flex: 1;
+  `,
+
+  optionItem: css`
     cursor: pointer;
     margin: 0 4px;
-    border-radius: 4px;
-    padding: 12px 8px;
-    font-size: ${theme3.tailwind.textSm};
+    border-radius: ${theme3.tailwind.radiusSm};
+    padding: ${theme3.tailwind.spacing2};
     transition: all 0.2s ease-in-out;
-    text-align: center;
 
     &:hover {
       background-color: ${theme3.shadcn.accent};
@@ -193,44 +137,20 @@ const styles = {
     }
   `,
 
-  disabledOptionItem: css`
-    text-decoration: line-through;
-    cursor: not-allowed;
-    margin: 0 4px;
-    border-radius: 4px;
-    padding: 8px 12px;
-    font-size: ${theme3.tailwind.textSm};
-    background-color: ${theme3.shadcn.muted};
-    color: ${theme3.shadcn.mutedForeground};
-    opacity: 0.5;
-
-    &:hover {
-      background-color: ${theme3.shadcn.muted};
-      color: ${theme3.shadcn.mutedForeground};
-    }
-  `,
-
   actionButtonsContainer: css`
-    display: flex;
     padding: ${theme3.tailwind.spacing2};
-    gap: ${theme3.tailwind.spacing4};
-    align-items: center;
-    justify-content: space-between;
     border-top: 1px solid ${theme3.shadcn.border};
-  `,
-
-  applyButton: css`
-    flex: 1;
-  `,
-
-  closeButton: css`
-    flex: 1;
   `,
 };
 
-type ColumnType = 'start' | 'end';
+const overflowHiddenStyles = css`
+  overflow: hidden;
+`;
 
-interface PeriodSelectOption {
+type ColumnType = 'start' | 'end';
+type PeriodSelectVariant = TPeriodVariant; // 'range' | 'single';
+
+export interface PeriodSelectOption {
   label: string;
   value: string;
   period?: TPeriod;
@@ -246,30 +166,50 @@ interface PeriodSelectState {
   endValue: string | null;
   tempStartValue: string | null;
   tempEndValue: string | null;
+  selectedValue: string | null;
+  tempSelectedValue: string | null;
   isPopoverOpen: boolean;
 }
 
 interface UsePeriodSelectProps {
+  variant: PeriodSelectVariant;
   options: PeriodSelectOption[];
-  defaultValue?: string[];
-  onValueChange: (value: string[]) => void;
+  defaultValue?: string | string[];
+  onValueChange?: (value: string | string[]) => void;
   presets?: number[];
 }
 
 interface TriggerContentProps {
+  variant: PeriodSelectVariant;
   startValue: string | null;
   endValue: string | null;
+  selectedValue: string | null;
   placeholder: string;
   getOptionLabel: (value: string) => string;
   formatOverallPeriod: (startValue: string, endValue: string) => string | null;
-  onClearAll: () => void;
+  formatSinglePeriod: (value: string) => string | null;
+  showChevron?: boolean;
+}
+
+interface DisplayContentProps {
+  variant: PeriodSelectVariant;
+  startValue: string | null;
+  endValue: string | null;
+  selectedValue: string | null;
+  placeholder: string;
+  getOptionLabel: (value: string) => string;
+  formatOverallPeriod: (startValue: string, endValue: string) => string | null;
+  formatSinglePeriod: (value: string) => string | null;
+  className?: string;
 }
 
 interface OptionListProps {
+  variant: PeriodSelectVariant;
   options: PeriodSelectOption[];
   tempStartValue: string | null;
   tempEndValue: string | null;
-  onSelectOption: (value: string, columnType: ColumnType) => void;
+  tempSelectedValue: string | null;
+  onSelectOption: (value: string, columnType?: ColumnType) => void;
   onSelectPreset: (count: number | 'all') => void;
   onApply: () => void;
   onCancel: () => void;
@@ -279,23 +219,42 @@ interface OptionListProps {
   presets: number[];
 }
 
-interface PeriodSelectProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface PeriodSelectProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'defaultValue'> {
+  variant?: PeriodSelectVariant;
+  disabled?: boolean;
   options: PeriodSelectOption[];
-  onValueChange: (value: string[]) => void;
-  defaultValue?: string[];
+  onValueChange?: (value: string | string[]) => void;
+  defaultValue?: string | string[];
   placeholder?: string;
   modalPopover?: boolean;
-  asChild?: boolean;
   presets?: number[];
 }
 
-const createInitialState = (defaultValue: string[]): PeriodSelectState => ({
-  startValue: defaultValue[0] || null,
-  endValue: defaultValue[1] || null,
-  tempStartValue: defaultValue[0] || null,
-  tempEndValue: defaultValue[1] || null,
-  isPopoverOpen: false,
-});
+const createInitialState = (variant: PeriodSelectVariant, defaultValue: string | string[]): PeriodSelectState => {
+  if (variant === 'single') {
+    const value = typeof defaultValue === 'string' ? defaultValue : defaultValue[0] || null;
+    return {
+      startValue: null,
+      endValue: null,
+      tempStartValue: null,
+      tempEndValue: null,
+      selectedValue: value,
+      tempSelectedValue: value,
+      isPopoverOpen: false,
+    };
+  }
+
+  const valueArray = Array.isArray(defaultValue) ? defaultValue : [defaultValue];
+  return {
+    startValue: valueArray[0] || null,
+    endValue: valueArray[1] || null,
+    tempStartValue: valueArray[0] || null,
+    tempEndValue: valueArray[1] || null,
+    selectedValue: null,
+    tempSelectedValue: null,
+    isPopoverOpen: false,
+  };
+};
 
 const filterNonEmpty = <T,>(array: Array<T | null | undefined>): T[] => array.filter((item): item is T => item != null);
 
@@ -313,8 +272,14 @@ const createPresetOptions = (presets: number[]): PresetOption[] => {
   return presetOptions;
 };
 
-const usePeriodSelect = ({ options, defaultValue = [], onValueChange, presets = [3, 5, 10] }: UsePeriodSelectProps) => {
-  const [state, setState] = React.useState<PeriodSelectState>(() => createInitialState(defaultValue));
+const usePeriodSelect = ({
+  variant,
+  options,
+  defaultValue = [],
+  onValueChange,
+  presets = [3, 5, 10],
+}: UsePeriodSelectProps) => {
+  const [state, setState] = React.useState<PeriodSelectState>(() => createInitialState(variant, defaultValue));
 
   const optionUtils = React.useMemo(() => {
     const getOptionLabel = (value: string): string => options.find((option) => option.value === value)?.label || value;
@@ -329,6 +294,10 @@ const usePeriodSelect = ({ options, defaultValue = [], onValueChange, presets = 
 
   const isOptionDisabled = React.useCallback(
     (optionValue: string, columnType: ColumnType): boolean => {
+      if (variant === 'single') {
+        return false;
+      }
+
       const optionIndex = optionUtils.getOptionIndex(optionValue);
 
       if (columnType === 'start' && state.tempEndValue) {
@@ -343,12 +312,12 @@ const usePeriodSelect = ({ options, defaultValue = [], onValueChange, presets = 
 
       return false;
     },
-    [state.tempStartValue, state.tempEndValue, optionUtils]
+    [variant, state.tempStartValue, state.tempEndValue, optionUtils]
   );
 
   const isOptionInRange = React.useCallback(
     (optionValue: string): boolean => {
-      if (!state.tempStartValue || !state.tempEndValue) {
+      if (variant === 'single' || !state.tempStartValue || !state.tempEndValue) {
         return false;
       }
 
@@ -358,7 +327,7 @@ const usePeriodSelect = ({ options, defaultValue = [], onValueChange, presets = 
 
       return optionIndex >= startIndex && optionIndex <= endIndex;
     },
-    [state.tempStartValue, state.tempEndValue, optionUtils]
+    [variant, state.tempStartValue, state.tempEndValue, optionUtils]
   );
 
   const formatOverallPeriod = React.useCallback(
@@ -377,12 +346,37 @@ const usePeriodSelect = ({ options, defaultValue = [], onValueChange, presets = 
     [optionUtils]
   );
 
+  const formatSinglePeriod = React.useCallback(
+    (value: string): string | null => {
+      const option = optionUtils.getOption(value);
+
+      if (option?.period) {
+        return formatFullPeriod(option.period);
+      }
+
+      return null;
+    },
+    [optionUtils]
+  );
+
   const formatPeriod = React.useCallback((period: TPeriod): string => {
     return formatFullPeriod(period);
   }, []);
 
   const selectOption = React.useCallback(
-    (optionValue: string, columnType: ColumnType): void => {
+    (optionValue: string, columnType?: ColumnType): void => {
+      if (variant === 'single') {
+        setState((prev) => ({
+          ...prev,
+          tempSelectedValue: optionValue === prev.tempSelectedValue ? null : optionValue,
+        }));
+        return;
+      }
+
+      if (!columnType) {
+        return;
+      }
+
       if (isOptionDisabled(optionValue, columnType)) {
         return;
       }
@@ -399,7 +393,7 @@ const usePeriodSelect = ({ options, defaultValue = [], onValueChange, presets = 
         return { ...prev, ...updates };
       });
     },
-    [isOptionDisabled]
+    [variant, isOptionDisabled]
   );
 
   const selectPreset = React.useCallback(
@@ -431,6 +425,21 @@ const usePeriodSelect = ({ options, defaultValue = [], onValueChange, presets = 
 
   const applySelection = React.useCallback((): void => {
     setState((prev) => {
+      if (variant === 'single') {
+        const finalValue = prev.tempSelectedValue || options[0]?.value || null;
+        if (onValueChange && finalValue) {
+          onValueChange(finalValue);
+        }
+
+        return {
+          ...prev,
+          selectedValue: finalValue,
+          tempSelectedValue: finalValue,
+          isPopoverOpen: false,
+        };
+      }
+
+      // range variant
       let finalStartValue = prev.tempStartValue;
       let finalEndValue = prev.tempEndValue;
 
@@ -441,7 +450,9 @@ const usePeriodSelect = ({ options, defaultValue = [], onValueChange, presets = 
       }
 
       const newSelectedValues = filterNonEmpty([finalStartValue, finalEndValue]);
-      onValueChange(newSelectedValues);
+      if (onValueChange) {
+        onValueChange(newSelectedValues);
+      }
 
       return {
         ...prev,
@@ -452,48 +463,47 @@ const usePeriodSelect = ({ options, defaultValue = [], onValueChange, presets = 
         isPopoverOpen: false,
       };
     });
-  }, [onValueChange, options]);
-
-  const clearAll = React.useCallback((): void => {
-    setState((prev) => ({
-      ...prev,
-      startValue: null,
-      endValue: null,
-      tempStartValue: null,
-      tempEndValue: null,
-    }));
-    onValueChange([]);
-  }, [onValueChange]);
+  }, [variant, onValueChange, options]);
 
   const togglePopover = React.useCallback((): void => {
     setState((prev) => ({ ...prev, isPopoverOpen: !prev.isPopoverOpen }));
   }, []);
 
-  const setPopoverOpen = React.useCallback((open: boolean): void => {
-    setState((prev) => {
-      if (open) {
-        return {
-          ...prev,
-          isPopoverOpen: open,
-          tempStartValue: prev.startValue,
-          tempEndValue: prev.endValue,
-        };
-      }
-      return { ...prev, isPopoverOpen: open };
-    });
-  }, []);
+  const setPopoverOpen = React.useCallback(
+    (open: boolean): void => {
+      setState((prev) => {
+        if (open) {
+          if (variant === 'single') {
+            return {
+              ...prev,
+              isPopoverOpen: open,
+              tempSelectedValue: prev.selectedValue,
+            };
+          }
+          return {
+            ...prev,
+            isPopoverOpen: open,
+            tempStartValue: prev.startValue,
+            tempEndValue: prev.endValue,
+          };
+        }
+        return { ...prev, isPopoverOpen: open };
+      });
+    },
+    [variant]
+  );
 
   return {
     state,
     selectOption,
     selectPreset,
     applySelection,
-    clearAll,
     togglePopover,
     setPopoverOpen,
     isOptionDisabled,
     isOptionInRange,
     formatOverallPeriod,
+    formatSinglePeriod,
     formatPeriod,
     presets,
     ...optionUtils,
@@ -501,20 +511,128 @@ const usePeriodSelect = ({ options, defaultValue = [], onValueChange, presets = 
 };
 
 const TriggerContent: React.FC<TriggerContentProps> = React.memo(
-  ({ startValue, endValue, placeholder, getOptionLabel, formatOverallPeriod, onClearAll }) => {
-    const handleClearClick = React.useCallback(
-      (event: React.MouseEvent) => {
-        event.stopPropagation();
-        onClearAll();
-      },
-      [onClearAll]
+  ({
+    variant,
+    startValue,
+    endValue,
+    selectedValue,
+    placeholder,
+    getOptionLabel,
+    formatOverallPeriod,
+    formatSinglePeriod,
+    showChevron = true,
+  }) => {
+    if (variant === 'single') {
+      if (!selectedValue) {
+        return (
+          <UiHorizontalGroup justify="space-between" gap="md">
+            <UiTypography as="span" variant="body" color="light">
+              {placeholder}
+            </UiTypography>
+            {showChevron && <ChevronDown />}
+          </UiHorizontalGroup>
+        );
+      }
+
+      const singlePeriod = formatSinglePeriod(selectedValue);
+
+      return (
+        <UiHorizontalGroup justify="space-between" gap="md" className={overflowHiddenStyles}>
+          <UiHorizontalGroup align="center" gap="sm" className={overflowHiddenStyles}>
+            <Calendar size={16} />
+            <UiTypography as="span" variant="bodyBold">
+              {singlePeriod}
+            </UiTypography>
+            <UiTypography as="div" variant="bodyBold" color="light" className={overflowHiddenStyles}>
+              <UiEllipsis as="span">[{getOptionLabel(selectedValue)}]</UiEllipsis>
+            </UiTypography>
+          </UiHorizontalGroup>
+          {showChevron && <ChevronDown />}
+        </UiHorizontalGroup>
+      );
+    }
+
+    // range variant
+    if (!startValue && !endValue) {
+      return (
+        <UiHorizontalGroup justify="space-between" gap="md">
+          <UiTypography as="span" variant="body" color="light">
+            {placeholder}
+          </UiTypography>
+          {showChevron && <ChevronDown />}
+        </UiHorizontalGroup>
+      );
+    }
+
+    const overallPeriod = startValue && endValue ? formatOverallPeriod(startValue, endValue) : null;
+
+    return (
+      <UiHorizontalGroup justify="space-between" gap="md" className={overflowHiddenStyles}>
+        <UiHorizontalGroup align="center" gap="sm" className={overflowHiddenStyles}>
+          <Calendar size={16} />
+          <UiTypography as="span" variant="bodyBold">
+            {overallPeriod}
+          </UiTypography>
+          <UiTypography as="div" variant="bodyBold" color="light" className={overflowHiddenStyles}>
+            <UiEllipsis as="span">
+              [{getOptionLabel(startValue!)} - {getOptionLabel(endValue!)}]
+            </UiEllipsis>
+          </UiTypography>
+        </UiHorizontalGroup>
+        {showChevron && <ChevronDown />}
+      </UiHorizontalGroup>
     );
+  }
+);
+
+TriggerContent.displayName = 'TriggerContent';
+
+const DisplayContent: React.FC<DisplayContentProps> = React.memo(
+  ({
+    variant,
+    startValue,
+    endValue,
+    selectedValue,
+    placeholder,
+    getOptionLabel,
+    formatOverallPeriod,
+    formatSinglePeriod,
+    className,
+  }) => {
+    if (variant === 'single') {
+      if (!selectedValue) {
+        return (
+          <div className={cx(styles.displayContainer, className)}>
+            <UiTypography as="span" variant="body" color="light">
+              {placeholder}
+            </UiTypography>
+          </div>
+        );
+      }
+
+      const singlePeriod = formatSinglePeriod(selectedValue);
+
+      return (
+        <div className={cx(styles.displayContainer, className)}>
+          <UiHorizontalGroup align="center" gap="sm" className={overflowHiddenStyles}>
+            <Calendar size={16} />
+            <UiTypography as="span" variant="bodyBold">
+              {singlePeriod}
+            </UiTypography>
+            <UiTypography as="div" variant="bodyBold" color="light" className={overflowHiddenStyles}>
+              <UiEllipsis as="span">[{getOptionLabel(selectedValue)}]</UiEllipsis>
+            </UiTypography>
+          </UiHorizontalGroup>
+        </div>
+      );
+    }
 
     if (!startValue && !endValue) {
       return (
-        <div className={styles.placeholderContainer}>
-          <span className={styles.placeholderText}>{placeholder}</span>
-          <UiIcon name="KeyboardArrowDown" className={styles.chevronIcon} />
+        <div className={cx(styles.displayContainer, className)}>
+          <UiTypography as="span" variant="body" color="light">
+            {placeholder}
+          </UiTypography>
         </div>
       );
     }
@@ -522,36 +640,32 @@ const TriggerContent: React.FC<TriggerContentProps> = React.memo(
     const overallPeriod = startValue && endValue ? formatOverallPeriod(startValue, endValue) : null;
 
     return (
-      <div className={styles.selectedValuesContainer}>
-        <div className={styles.outputWrapper}>
-          {overallPeriod && <UiPeriodBadge>{overallPeriod}</UiPeriodBadge>}
-          <UiEllipsis>
-            {getOptionLabel(startValue!)} - {getOptionLabel(endValue!)}
-          </UiEllipsis>
-        </div>
-        <div className={styles.actionIconsContainer}>
-          <UiIcon
-            name="CloseSmall"
-            size="sm"
-            className={styles.clearIcon}
-            onClick={handleClearClick}
-            aria-label="Clear period selection"
-          />
-          <Separator orientation="vertical" className={styles.separator} />
-          <UiIcon name="KeyboardArrowDown" size="sm" className={styles.chevronIcon} />
-        </div>
+      <div className={cx(styles.displayContainer, className)}>
+        <UiHorizontalGroup align="center" gap="sm" className={overflowHiddenStyles}>
+          <Calendar size={16} />
+          <UiTypography as="span" variant="bodyBold">
+            {overallPeriod}
+          </UiTypography>
+          <UiTypography as="div" variant="bodyBold" color="light" className={overflowHiddenStyles}>
+            <UiEllipsis as="span">
+              [{getOptionLabel(startValue!)} - {getOptionLabel(endValue!)}]
+            </UiEllipsis>
+          </UiTypography>
+        </UiHorizontalGroup>
       </div>
     );
   }
 );
 
-TriggerContent.displayName = 'TriggerContent';
+DisplayContent.displayName = 'DisplayContent';
 
 const OptionList: React.FC<OptionListProps> = React.memo(
   ({
+    variant,
     options,
     tempStartValue,
     tempEndValue,
+    tempSelectedValue,
     onSelectOption,
     onSelectPreset,
     onApply,
@@ -561,8 +675,45 @@ const OptionList: React.FC<OptionListProps> = React.memo(
     formatPeriod,
     presets,
   }) => {
-    const hasSelection = Boolean(tempStartValue && tempEndValue);
+    const hasSelection = variant === 'single' ? Boolean(tempSelectedValue) : Boolean(tempStartValue && tempEndValue);
     const presetOptions = React.useMemo(() => createPresetOptions(presets), [presets]);
+
+    const renderSingleColumn = React.useCallback(() => {
+      return (
+        <div className={styles.fullColumn}>
+          <UiTypography as="div" variant="bodyBold" color="light" className={styles.columnHeader}>
+            Select Period
+          </UiTypography>
+          <ScrollArea className={styles.scrollArea}>
+            <UiVerticalGroup align="stretch" justify="start" gap="xs" className={styles.scrollContent}>
+              {options.map((option) => {
+                const isSelected = option.value === tempSelectedValue;
+
+                return (
+                  <UiVerticalGroup
+                    gap="xs"
+                    align="start"
+                    justify="center"
+                    key={option.value}
+                    onClick={() => onSelectOption(option.value)}
+                    className={cx(styles.optionItem, isSelected && styles.selectedOptionItem)}
+                  >
+                    {option.period && (
+                      <UiTypography as="span" color="inherit">
+                        {formatPeriod(option.period)}
+                      </UiTypography>
+                    )}
+                    <UiTypography as="span" color="inherit" variant="bodySmall">
+                      [{option.label}]
+                    </UiTypography>
+                  </UiVerticalGroup>
+                );
+              })}
+            </UiVerticalGroup>
+          </ScrollArea>
+        </div>
+      );
+    }, [options, tempSelectedValue, formatPeriod, onSelectOption]);
 
     const renderColumn = React.useCallback(
       (columnType: ColumnType, title: string) => {
@@ -570,30 +721,41 @@ const OptionList: React.FC<OptionListProps> = React.memo(
 
         return (
           <div className={styles.column}>
-            <div className={styles.columnHeader}>{title}</div>
-            <div className={styles.columnContent}>
-              {filteredOptions.map((option) => {
-                const isSelected = option.value === (columnType === 'start' ? tempStartValue : tempEndValue);
-                const isInRange = isOptionInRange(option.value);
+            <UiTypography as="div" variant="bodyBold" color="light" className={styles.columnHeader}>
+              {title}
+            </UiTypography>
+            <ScrollArea className={styles.scrollArea}>
+              <UiVerticalGroup align="stretch" justify="start" gap="xs" className={styles.scrollContent}>
+                {filteredOptions.map((option) => {
+                  const isSelected = option.value === (columnType === 'start' ? tempStartValue : tempEndValue);
+                  const isInRange = isOptionInRange(option.value);
 
-                const handleClick = () => onSelectOption(option.value, columnType);
-
-                return (
-                  <div
-                    key={`${columnType}-${option.value}`}
-                    onClick={handleClick}
-                    className={cx(
-                      styles.optionItem,
-                      isSelected && styles.selectedOptionItem,
-                      isInRange && !isSelected && styles.rangeOptionItem
-                    )}
-                  >
-                    {option.period && <UiPeriodBadge>{formatPeriod(option.period)}</UiPeriodBadge>}
-                    <span>{option.label}</span>
-                  </div>
-                );
-              })}
-            </div>
+                  return (
+                    <UiVerticalGroup
+                      gap="xs"
+                      align="start"
+                      justify="center"
+                      key={`${columnType}-${option.value}`}
+                      onClick={() => onSelectOption(option.value, columnType)}
+                      className={cx(
+                        styles.optionItem,
+                        isSelected && styles.selectedOptionItem,
+                        isInRange && !isSelected && styles.rangeOptionItem
+                      )}
+                    >
+                      {option.period && (
+                        <UiTypography as="span" color="inherit">
+                          {formatPeriod(option.period)}
+                        </UiTypography>
+                      )}
+                      <UiTypography as="span" color="inherit" variant="bodySmall">
+                        [{option.label}]
+                      </UiTypography>
+                    </UiVerticalGroup>
+                  );
+                })}
+              </UiVerticalGroup>
+            </ScrollArea>
           </div>
         );
       },
@@ -603,44 +765,45 @@ const OptionList: React.FC<OptionListProps> = React.memo(
     const renderPresetColumn = React.useCallback(() => {
       return (
         <div className={styles.presetColumn}>
-          <div className={styles.columnHeader}>Presets</div>
-          <div className={styles.columnContent}>
-            {presetOptions.map((preset) => {
-              const handleClick = () => onSelectPreset(preset.count);
-
-              return (
-                <div key={preset.label} onClick={handleClick} className={styles.optionItem}>
+          <UiTypography as="div" variant="bodyBold" color="light" className={styles.columnHeader}>
+            Presets
+          </UiTypography>
+          <ScrollArea className={styles.scrollArea}>
+            <UiVerticalGroup align="stretch" justify="start" gap="xs" className={styles.scrollContent}>
+              {presetOptions.map((preset) => (
+                <div key={preset.label} onClick={() => onSelectPreset(preset.count)} className={styles.optionItem}>
                   {preset.label}
                 </div>
-              );
-            })}
-          </div>
+              ))}
+            </UiVerticalGroup>
+          </ScrollArea>
         </div>
       );
     }, [presetOptions, onSelectPreset]);
 
     return (
-      <div>
-        <div className={styles.columnsContainer}>
-          {renderPresetColumn()}
-          {renderColumn('start', 'From')}
-          {renderColumn('end', 'To')}
-        </div>
+      <UiVerticalGroup align="stretch" justify="start" gap="xs">
+        {variant === 'single' ? (
+          <div className={styles.singleColumnContainer}>{renderSingleColumn()}</div>
+        ) : (
+          <div className={styles.columnsContainer}>
+            {renderPresetColumn()}
+            {renderColumn('start', 'From')}
+            {renderColumn('end', 'To')}
+          </div>
+        )}
 
-        <div className={styles.actionButtonsContainer}>
+        <UiHorizontalGroup align="center" justify="center" gap="sm" className={styles.actionButtonsContainer}>
           {hasSelection && (
-            <>
-              <UiButton variant="default" onClick={onApply} className={styles.applyButton}>
-                Apply
-              </UiButton>
-              <Separator orientation="vertical" className={styles.separator} />
-            </>
+            <UiButton variant="default" className={styles.button} onClick={onApply}>
+              Apply
+            </UiButton>
           )}
-          <UiButton variant="secondary" onClick={onCancel} className={styles.closeButton}>
+          <UiButton variant="secondary" className={styles.button} onClick={onCancel}>
             Cancel
           </UiButton>
-        </div>
-      </div>
+        </UiHorizontalGroup>
+      </UiVerticalGroup>
     );
   }
 );
@@ -650,12 +813,13 @@ OptionList.displayName = 'OptionList';
 export const UiPeriodSelect = React.forwardRef<HTMLButtonElement, PeriodSelectProps>(
   (
     {
+      variant = 'range',
+      disabled = false,
       options,
       onValueChange,
       defaultValue = [],
       placeholder = 'Select period',
       modalPopover = false,
-      asChild = false,
       presets = [3, 5, 10],
       className,
       ...props
@@ -663,24 +827,37 @@ export const UiPeriodSelect = React.forwardRef<HTMLButtonElement, PeriodSelectPr
     ref
   ) => {
     const periodSelect = usePeriodSelect({
+      variant,
       options,
       defaultValue,
       onValueChange,
       presets,
     });
 
-    const handleEscapeKeyDown = React.useCallback(() => {
-      periodSelect.setPopoverOpen(false);
-    }, [periodSelect]);
-
     const handleCancel = React.useCallback(() => {
       periodSelect.setPopoverOpen(false);
     }, [periodSelect]);
 
+    if (disabled) {
+      return (
+        <DisplayContent
+          variant={variant}
+          startValue={periodSelect.state.startValue}
+          endValue={periodSelect.state.endValue}
+          selectedValue={periodSelect.state.selectedValue}
+          placeholder={placeholder}
+          getOptionLabel={periodSelect.getOptionLabel}
+          formatOverallPeriod={periodSelect.formatOverallPeriod}
+          formatSinglePeriod={periodSelect.formatSinglePeriod}
+          className={className}
+        />
+      );
+    }
+
     return (
       <Popover open={periodSelect.state.isPopoverOpen} onOpenChange={periodSelect.setPopoverOpen} modal={modalPopover}>
         <PopoverTrigger asChild>
-          <Button
+          <UiButton
             ref={ref}
             {...props}
             onClick={periodSelect.togglePopover}
@@ -688,21 +865,29 @@ export const UiPeriodSelect = React.forwardRef<HTMLButtonElement, PeriodSelectPr
             variant="outline"
           >
             <TriggerContent
+              variant={variant}
               startValue={periodSelect.state.startValue}
               endValue={periodSelect.state.endValue}
+              selectedValue={periodSelect.state.selectedValue}
               placeholder={placeholder}
               getOptionLabel={periodSelect.getOptionLabel}
               formatOverallPeriod={periodSelect.formatOverallPeriod}
-              onClearAll={periodSelect.clearAll}
+              formatSinglePeriod={periodSelect.formatSinglePeriod}
             />
-          </Button>
+          </UiButton>
         </PopoverTrigger>
 
-        <PopoverContent className={styles.popoverContent} align="start" onEscapeKeyDown={handleEscapeKeyDown}>
+        <PopoverContent
+          className={variant === 'single' ? styles.popoverContentSingle : styles.popoverContent}
+          align="start"
+          onEscapeKeyDown={handleCancel}
+        >
           <OptionList
+            variant={variant}
             options={options}
             tempStartValue={periodSelect.state.tempStartValue}
             tempEndValue={periodSelect.state.tempEndValue}
+            tempSelectedValue={periodSelect.state.tempSelectedValue}
             onSelectOption={periodSelect.selectOption}
             onSelectPreset={periodSelect.selectPreset}
             onApply={periodSelect.applySelection}

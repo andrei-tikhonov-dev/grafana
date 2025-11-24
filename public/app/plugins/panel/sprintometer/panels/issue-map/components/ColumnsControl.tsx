@@ -1,3 +1,4 @@
+import { css } from '@emotion/css';
 import React from 'react';
 
 import { UiHorizontalGroup } from '../../../components/ui';
@@ -27,7 +28,13 @@ export function ColumnsControl({
   };
 
   return (
-    <UiHorizontalGroup gap="xs">
+    <UiHorizontalGroup
+      gap="xs"
+      className={css`
+        position: relative;
+        overflow: hidden;
+      `}
+    >
       {columns.map(({ id, name, show }, index) => (
         <Column
           key={id}

@@ -256,7 +256,7 @@ export const getChartOptions = ({
       },
     },
     grid: {
-      top: 10,
+      top: 20,
       left: 0,
       right: 20,
       bottom: 40,

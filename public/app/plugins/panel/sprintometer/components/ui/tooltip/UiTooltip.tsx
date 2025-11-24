@@ -1,5 +1,7 @@
+import { css, cx } from '@emotion/css';
 import React from 'react';
 
+import { theme3 } from '../../../theme';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../shadcn/tooltip';
 
 export interface TooltipProps {
@@ -9,6 +11,11 @@ export interface TooltipProps {
   contentClassName?: string;
   disabled?: boolean;
 }
+
+const contentStyles = css`
+  max-width: ${theme3.tailwind.container2xl};
+  pointer-events: none;
+`;
 
 export const UiTooltip: React.FC<TooltipProps> = ({
   content,
@@ -25,7 +32,7 @@ export const UiTooltip: React.FC<TooltipProps> = ({
     <TooltipProvider delayDuration={delayDuration}>
       <Tooltip>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
-        <TooltipContent className={contentClassName}>{content}</TooltipContent>
+        <TooltipContent className={cx(contentStyles, contentClassName)}>{content}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );

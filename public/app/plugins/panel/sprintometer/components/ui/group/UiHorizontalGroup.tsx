@@ -5,9 +5,10 @@ import { theme3 } from '../../../theme';
 
 type AlignItems = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
 type JustifyContent = 'start' | 'center' | 'end' | 'space-between' | 'space-around' | 'space-evenly';
-type Gap = 'xs' | 'sm' | 'md' | 'lg';
+type Gap = 'none' | 'xs' | 'sm' | 'md' | 'lg';
 
 const gapValues: Record<Gap, string> = {
+  none: '0',
   xs: theme3.tailwind.spacing,
   sm: theme3.tailwind.spacing2,
   md: theme3.tailwind.spacing4,
