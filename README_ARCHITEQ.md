@@ -46,7 +46,7 @@ docker buildx build --network=host --platform linux/amd64 -t imarchiteq/sprintom
 
 docker login
 
-docker push imarchiteq/sprintometer-ui-test:11.1.61
+docker push imarchiteq/sprintometer-ui-test:11.1.62
 ```
 
 

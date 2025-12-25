@@ -16,6 +16,7 @@ WORKDIR /tmp/grafana
 
 COPY package.json project.json nx.json yarn.lock .yarnrc.yml ./
 COPY .yarn .yarn
+COPY api api
 COPY packages packages
 COPY plugins-bundled plugins-bundled
 COPY public public
