@@ -2,11 +2,12 @@ import React from 'react';
 
 import { UiPeriodSelect } from '../../../components/ui';
 import { PeriodSelectOption } from '../../../components/ui/period-select/UiPeriodSelect';
-import { TPeriodVariant } from '../../../types';
+import { EPeriodVariant, TPeriodVariant } from '../../../types';
+import { findInEnum } from '../../../utils/enums';
 import { setVariable, setVariables } from '../../../utils/grafana';
 import { MInterval, MIntervalOption } from '../types';
 
-interface Props extends MInterval { }
+interface Props extends MInterval {}
 
 const convertToPeriodSelectOptions = (intervals: MIntervalOption[]): PeriodSelectOption[] => {
   return intervals.map((interval) => ({
@@ -23,11 +24,13 @@ export function getDefaultPeriodValue(options: PeriodSelectOption[], variant: TP
     return options[0].value;
   }
 
-  if (variant === 'single') {
+  const normalizedVariant = findInEnum(EPeriodVariant, variant, EPeriodVariant.Single);
+
+  if (normalizedVariant === EPeriodVariant.Single) {
     return currentOptions[0].value;
   }
 
-  if (variant === 'range') {
+  if (normalizedVariant === EPeriodVariant.Range) {
     if (currentOptions.length === 1) {
       return [currentOptions[0].value, currentOptions[0].value];
     }
@@ -48,9 +51,11 @@ export const IntervalSelector: React.FC<Props> = ({ options, variant, selectable
 
   const handleValueChange = React.useCallback(
     async (value: string | string[]) => {
-      if (variant === 'single') {
+      const normalizedVariant = findInEnum(EPeriodVariant, variant, EPeriodVariant.Single);
+
+      if (normalizedVariant === EPeriodVariant.Single) {
         await setVariable('selectedId', value as string);
-      } else if (variant === 'range') {
+      } else if (normalizedVariant === EPeriodVariant.Range) {
         const [startId, endId] = value as string[];
         await setVariables({
           startId,

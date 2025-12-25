@@ -1,11 +1,12 @@
 import { css, cx } from '@emotion/css';
-import { Ban, ChevronDown, Circle, Construction, TramFront } from 'lucide-react';
+import { Ban, ChevronDown, Circle, Construction, Sparkles, TramFront } from 'lucide-react';
 import React, { useState } from 'react';
 
 import { ScrollArea, ScrollBar } from '../../../components/shadcn/scroll-area';
-import { UiEllipsis, UiHorizontalGroup, UiMarkdown, UiTypography } from '../../../components/ui';
+import { UiButton, UiEllipsis, UiHorizontalGroup, UiMarkdown, UiTypography } from '../../../components/ui';
 import { statusStyles, theme3 } from '../../../theme';
 import { ESprintometerStatus, MSprintometerStatusData } from '../../../types';
+import { findInEnum } from '../../../utils/enums';
 
 export interface SprintometerStatusCardProps extends MSprintometerStatusData {
   height?: number;
@@ -76,23 +77,30 @@ const statusIconsMap: Record<ESprintometerStatus, React.ComponentType<any>> = {
  * StatusCard component.
  * Displays the sprintometer status with expandable details.
  */
-export const StatusCard: React.FC<SprintometerStatusCardProps> = ({
+export const StatusCard: React.FC<SprintometerStatusCardProps & { onAnalyze?: () => void }> = ({
   status,
   name,
   summary,
   className,
   details,
   height = 300,
+  onAnalyze,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const statusStyle = statusStylesMap[status];
-  const StatusIcon = statusIconsMap[status];
+  const normalizedStatus = findInEnum(ESprintometerStatus, status, ESprintometerStatus.Default);
+  const statusStyle = statusStylesMap[normalizedStatus];
+  const StatusIcon = statusIconsMap[normalizedStatus];
   const hasDetails = Boolean(details);
 
   const handleToggle = () => {
     if (hasDetails) {
       setIsExpanded(!isExpanded);
     }
+  };
+
+  const handleAnalyze = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onAnalyze?.();
   };
 
   return (
@@ -114,7 +122,16 @@ export const StatusCard: React.FC<SprintometerStatusCardProps> = ({
           </UiTypography>
           <UiEllipsis style={{ minWidth: 0, flex: 1 }}>{summary}</UiEllipsis>
         </UiHorizontalGroup>
-        {hasDetails && <ChevronDown size={20} className={cx(chevronStyles, isExpanded && chevronRotatedStyles)} />}
+
+        <UiHorizontalGroup gap="sm" justify="end" onClick={(e) => e.stopPropagation()}>
+          {onAnalyze && (
+            <UiButton variant="ghost" size="sm" onClick={handleAnalyze}>
+              <Sparkles size={16} />
+              Analyze status
+            </UiButton>
+          )}
+          {hasDetails && <ChevronDown size={20} className={cx(chevronStyles, isExpanded && chevronRotatedStyles)} />}
+        </UiHorizontalGroup>
       </UiHorizontalGroup>
 
       {hasDetails && (

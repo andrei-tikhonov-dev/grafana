@@ -1,17 +1,13 @@
 import { css, cx } from '@emotion/css';
+import { Sparkles } from 'lucide-react';
 import React from 'react';
 
 import { PanelProps } from '@grafana/data';
 
 import { Separator } from '../../components/shadcn/separator';
-import {
-  UiAiViewer,
-  UiBreadcrumbs,
-  UiCard,
-  UiHorizontalGroup,
-  UiTypography,
-  UiVerticalGroup,
-} from '../../components/ui';
+import { UiBreadcrumbs, UiButton, UiCard, UiHorizontalGroup, UiTypography, UiVerticalGroup } from '../../components/ui';
+import { useAiChatDrawer } from '../../features/ai-chat';
+import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
 import { panelContainerStyles } from '../../theme';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -45,14 +41,15 @@ const eventsContainerStyles = css`
   width: 100%;
 `;
 
+const CONTAINER_PADDINGS = 70;
+
 /**
  * Header panel component.
  * Displays dashboard information, status, metrics, and timeline.
  */
-export const Header: React.FC<Props> = ({ height, data }) => {
+export const Header: React.FC<Props> = ({ width, height, data }) => {
   const {
     title,
-    ai,
     status,
     breadcrumbs,
     update,
@@ -65,10 +62,27 @@ export const Header: React.FC<Props> = ({ height, data }) => {
     eventsToday,
   } = getGrafanaCustomData<MHeaderCustomData>(data, initialData);
 
-  const hasActions = update || ai;
+  const hasActions = true;
   const hasMetrics = interval || progress || organizationUnit;
   const hasEvents = eventsToday || eventsUpcoming;
   const hasTimelineSection = timeline || hasEvents;
+  const grafanaVariables = useGrafanaVariables(['team', 'project']);
+
+  // AI Chat Drawer
+  const { openGeneral, openAutoSummary, drawer } = useAiChatDrawer({
+    teamId: grafanaVariables.team as string,
+    project: grafanaVariables.project as string,
+    startScreen: {
+      title: 'Your sprint, explained instantly',
+      subtitle: 'Choose a question to get data-driven insights',
+      prompts: [
+        'Check the pulse of your sprint and spot problems early',
+        'Understand how your team is doing & where improvement is possible',
+        'Predict outcomes and understand "what-ifs"',
+        'Learn from historical data and uncover recurring patterns',
+      ],
+    },
+  });
 
   return (
     <UiVerticalGroup align="stretch" className={cx(panelContainerStyles, containerStyles(height))}>
@@ -90,12 +104,15 @@ export const Header: React.FC<Props> = ({ height, data }) => {
         {hasActions && (
           <UiHorizontalGroup>
             {update && <UpdateButton {...update} />}
-            {ai && <UiAiViewer {...ai} label="AI insights" />}
+            <UiButton onClick={openGeneral} variant="ai">
+              <Sparkles />
+              AI helper
+            </UiButton>
           </UiHorizontalGroup>
         )}
       </UiHorizontalGroup>
 
-      {status && <StatusCard {...status} />}
+      {status && <StatusCard {...status} onAnalyze={openAutoSummary} />}
 
       {hasMetrics && (
         <UiHorizontalGroup gap="lg" justify="start" align="center">
@@ -108,7 +125,7 @@ export const Header: React.FC<Props> = ({ height, data }) => {
       {hasTimelineSection && (
         <UiCard>
           <UiVerticalGroup align="start" gap="lg">
-            {timeline && <Timeline days={timeline} />}
+            {timeline && <Timeline days={timeline} width={width - CONTAINER_PADDINGS} />}
 
             {hasEvents && (
               <UiHorizontalGroup justify="space-between" align="start" gap="lg" className={eventsContainerStyles}>
@@ -119,6 +136,8 @@ export const Header: React.FC<Props> = ({ height, data }) => {
           </UiVerticalGroup>
         </UiCard>
       )}
+
+      {drawer}
     </UiVerticalGroup>
   );
 };

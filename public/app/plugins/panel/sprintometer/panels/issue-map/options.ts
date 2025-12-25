@@ -1,6 +1,7 @@
 import { FieldOverrideContext, getFieldDisplayName } from '@grafana/data';
 
-import { EPanelType, TPanelOptions } from '../../types';
+import { DEFAULT_CONFIGURATION_CATEGORY } from '../../constants';
+import { DashboardTitles, EDashboard, EPanelType, TPanelOptions } from '../../types';
 
 type SelectOption = { value: string; label: string };
 
@@ -24,11 +25,24 @@ export function registerIssueMapOptions(
   }
 ) {
   const getFieldOptions = params?.getFieldOptions ?? defaultGetFieldOptions;
-  const category = ['Issue map'];
   const showIf = (opts: TPanelOptions) => opts.panelType === EPanelType.IssueMap;
 
+  builder.addSelect({
+    path: 'sankey.dashboard',
+    name: 'Dashboard',
+    category: DEFAULT_CONFIGURATION_CATEGORY,
+    settings: {
+      options: [
+        { value: EDashboard.Daily, label: DashboardTitles[EDashboard.Daily] },
+        { value: EDashboard.SprintPlanning, label: DashboardTitles[EDashboard.SprintPlanning] },
+        { value: EDashboard.SprintReview, label: DashboardTitles[EDashboard.SprintReview] },
+      ],
+    },
+    showIf: () => false,
+  });
+
   builder.addMultiSelect({
-    category,
+    category: DEFAULT_CONFIGURATION_CATEGORY,
     showIf,
     path: 'sankey.filterFields',
     name: 'Filter Fields',

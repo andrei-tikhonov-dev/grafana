@@ -3,7 +3,8 @@ import React from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { UiAiViewer, UiTypography } from '../../components/ui';
+import { UiTypography } from '../../components/ui';
+import { AiViewerWrapper } from '../../features/ai-viewer/AiViewerWrapper';
 import { theme3 } from '../../theme';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -46,7 +47,7 @@ export const AI: React.FC<Props> = ({ width, height, data }) => {
     >
       <UiTypography variant="panelTitle">{title}</UiTypography>
 
-      {ai && <UiAiViewer label="View AI analysis" content={ai.content} title={ai.title} />}
+      <AiViewerWrapper initialData={ai} label="View AI analysis" />
     </div>
   );
 };

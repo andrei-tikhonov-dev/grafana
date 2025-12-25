@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { UiTypography, UiVerticalGroup } from '../../../components/ui';
+import { UiHorizontalGroup, UiTypography, UiVerticalGroup, UiAvatarGroup } from '../../../components/ui';
 import { formatSmartPeriod } from '../../../utils/dateTime';
 import { MEvent } from '../types';
 
@@ -18,14 +18,19 @@ export const EventItem: React.FC<EventItemProps> = ({ event, size = 'md' }) => {
   const bodyVariant = size === 'sm' ? 'bodySmall' : 'body';
 
   return (
-    <UiVerticalGroup align="start" gap="xs">
-      <UiTypography variant={bodyVariant} as="div" color="default">
-        <UiTypography variant={bodyVariant} as="span" color="light">
-          {periodText}
+    <UiHorizontalGroup align="start" justify="space-between" gap="sm" style={{ width: '100%' }}>
+      <UiVerticalGroup align="start" gap="xs">
+        <UiTypography variant={bodyVariant} as="div" color="default">
+          <UiTypography variant={bodyVariant} as="span" color="light">
+            {periodText}
+          </UiTypography>
+          &nbsp;&nbsp;
+          {event.description}
         </UiTypography>
-        &nbsp;&nbsp;
-        {event.description}
-      </UiTypography>
-    </UiVerticalGroup>
+      </UiVerticalGroup>
+      {event.members && event.members.length > 0 && (
+        <UiAvatarGroup maxVisible={3} users={event.members} size={size === 'sm' ? 'sm' : 'md'} />
+      )}
+    </UiHorizontalGroup>
   );
 };

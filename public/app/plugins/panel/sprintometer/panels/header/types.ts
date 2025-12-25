@@ -60,12 +60,14 @@ export interface MEvent {
   type: EEventType;
   period: TPeriod;
   description: string;
+  members?: TUser[];
 }
 
 export interface MEventGroup {
   type: EEventGroupType;
   summary: string;
   events: MEvent[];
+  members?: TUser[];
 }
 
 export enum EDayState {

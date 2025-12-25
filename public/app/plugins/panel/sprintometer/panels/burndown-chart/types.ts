@@ -9,7 +9,17 @@ export interface MBurndownCustomData {
     [EValueMode.IssuesAmount]: MSummary;
   };
   ai?: TAiData;
+  aiForecast?: TAiForecast;
 }
+
+export type TAiForecast = {
+  data: Array<{
+    date: string;
+    value: number;
+    upperBound: number;
+    lowerBound: number;
+  }>;
+};
 
 export enum EValueMode {
   StoryPoints = 'storyPoints',

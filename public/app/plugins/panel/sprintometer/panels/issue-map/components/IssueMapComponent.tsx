@@ -2,8 +2,9 @@ import { css } from '@emotion/css';
 import React, { useMemo, useCallback } from 'react';
 
 import { ScrollArea, ScrollBar } from '../../../components/shadcn/scroll-area';
-import { UiAiViewer, UiFiltersContainer, UiVerticalGroup } from '../../../components/ui';
+import { UiFiltersContainer, UiVerticalGroup } from '../../../components/ui';
 import { UiPanelContainer } from '../../../components/ui/panel-container/PanelContainer';
+import { AiViewerWrapper } from '../../../features/ai-viewer/AiViewerWrapper';
 import { usePluginState } from '../../../hooks/usePluginState';
 import { useZoom } from '../../../hooks/useZoom';
 import { getGrafanaCustomData } from '../../../utils/grafana';
@@ -170,9 +171,7 @@ export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsC
   return (
     <UiPanelContainer width={width} height={height} title="Issue map">
       <UiVerticalGroup align="stretch" gap="sm">
-        <UiFiltersContainer
-          suffix={ai && <UiAiViewer label="View AI analysis" content={ai.content} title={ai.title} />}
-        >
+        <UiFiltersContainer suffix={<AiViewerWrapper label="View AI analysis" initialData={ai} />}>
           {filtersComponent}
         </UiFiltersContainer>
         <UiFiltersContainer suffix={zoomComponent}>

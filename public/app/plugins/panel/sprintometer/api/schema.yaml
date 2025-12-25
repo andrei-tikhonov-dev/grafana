@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+  title: Sprintometer API
+  version: 1.0.0
+paths:
+  /import/update:
+    get:
+      summary: Update Import
+      operationId: updateImport
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+  /header/ai:
+    get:
+      summary: Get AI Data
+      operationId: getAiData
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: AI Insights
+                  content:
+                    type: string
+                    example: Here are some insights...

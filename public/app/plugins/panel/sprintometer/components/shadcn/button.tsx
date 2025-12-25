@@ -103,6 +103,54 @@ const variantStyles = {
       text-decoration: underline;
     }
   `,
+  ai: css`
+    position: relative;
+    background-color: ${theme3.shadcn.background};
+    color: ${theme3.shadcn.foreground};
+    border: none;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: ${theme3.tailwind.radiusSm};
+      background: linear-gradient(
+        var(--angle, 90deg),
+        #a855f7,
+        #ec4899,
+        #ef4444,
+        #f97316,
+        #fbbf24,
+        #84cc16,
+        #22c55e,
+        #14b8a6,
+        #a855f7
+      );
+      z-index: -2;
+      animation: rotate 3s linear infinite;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: ${theme3.shadcn.background};
+      border-radius: calc(${theme3.tailwind.radiusSm} - 1px);
+      z-index: -1;
+    }
+
+    @property --angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    @keyframes rotate {
+      to {
+        --angle: 360deg;
+      }
+    }
+  `,
 };
 
 const sizeStyles = {

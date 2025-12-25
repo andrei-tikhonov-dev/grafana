@@ -1,13 +1,14 @@
 import { css, cx } from '@emotion/css';
+import { Calendar, ChevronDown } from 'lucide-react';
 import * as React from 'react';
 
 import { theme3 } from '../../../theme';
-import { TPeriod, TPeriodVariant } from '../../../types';
+import { EPeriodVariant, TPeriod, TPeriodVariant } from '../../../types';
 import { formatFullDate, formatFullPeriod } from '../../../utils/dateTime';
+import { findInEnum } from '../../../utils/enums';
 import { Popover, PopoverContent, PopoverTrigger } from '../../shadcn/popover';
 import { ScrollArea } from '../../shadcn/scroll-area';
 import { UiButton, UiEllipsis, UiHorizontalGroup, UiTypography, UiVerticalGroup } from '../index';
-import { Calendar, ChevronDown } from 'lucide-react';
 
 const styles = {
   triggerButton: css`
@@ -231,7 +232,9 @@ interface PeriodSelectProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonEl
 }
 
 const createInitialState = (variant: PeriodSelectVariant, defaultValue: string | string[]): PeriodSelectState => {
-  if (variant === 'single') {
+  const normalizedVariant = findInEnum(EPeriodVariant, variant, EPeriodVariant.Single);
+
+  if (normalizedVariant === EPeriodVariant.Single) {
     const value = typeof defaultValue === 'string' ? defaultValue : defaultValue[0] || null;
     return {
       startValue: null,
@@ -294,7 +297,9 @@ const usePeriodSelect = ({
 
   const isOptionDisabled = React.useCallback(
     (optionValue: string, columnType: ColumnType): boolean => {
-      if (variant === 'single') {
+      const normalizedVariant = findInEnum(EPeriodVariant, variant, EPeriodVariant.Single);
+
+      if (normalizedVariant === EPeriodVariant.Single) {
         return false;
       }
 
@@ -317,7 +322,9 @@ const usePeriodSelect = ({
 
   const isOptionInRange = React.useCallback(
     (optionValue: string): boolean => {
-      if (variant === 'single' || !state.tempStartValue || !state.tempEndValue) {
+      const normalizedVariant = findInEnum(EPeriodVariant, variant, EPeriodVariant.Single);
+
+      if (normalizedVariant === EPeriodVariant.Single || !state.tempStartValue || !state.tempEndValue) {
         return false;
       }
 
@@ -365,7 +372,9 @@ const usePeriodSelect = ({
 
   const selectOption = React.useCallback(
     (optionValue: string, columnType?: ColumnType): void => {
-      if (variant === 'single') {
+      const normalizedVariant = findInEnum(EPeriodVariant, variant, EPeriodVariant.Single);
+
+      if (normalizedVariant === EPeriodVariant.Single) {
         setState((prev) => ({
           ...prev,
           tempSelectedValue: optionValue === prev.tempSelectedValue ? null : optionValue,
@@ -425,7 +434,9 @@ const usePeriodSelect = ({
 
   const applySelection = React.useCallback((): void => {
     setState((prev) => {
-      if (variant === 'single') {
+      const normalizedVariant = findInEnum(EPeriodVariant, variant, EPeriodVariant.Single);
+
+      if (normalizedVariant === EPeriodVariant.Single) {
         const finalValue = prev.tempSelectedValue || options[0]?.value || null;
         if (onValueChange && finalValue) {
           onValueChange(finalValue);
@@ -473,7 +484,9 @@ const usePeriodSelect = ({
     (open: boolean): void => {
       setState((prev) => {
         if (open) {
-          if (variant === 'single') {
+          const normalizedVariant = findInEnum(EPeriodVariant, variant, EPeriodVariant.Single);
+
+          if (normalizedVariant === EPeriodVariant.Single) {
             return {
               ...prev,
               isPopoverOpen: open,
@@ -522,7 +535,9 @@ const TriggerContent: React.FC<TriggerContentProps> = React.memo(
     formatSinglePeriod,
     showChevron = true,
   }) => {
-    if (variant === 'single') {
+    const normalizedVariant = findInEnum(EPeriodVariant, variant, EPeriodVariant.Single);
+
+    if (normalizedVariant === EPeriodVariant.Single) {
       if (!selectedValue) {
         return (
           <UiHorizontalGroup justify="space-between" gap="md">
@@ -599,7 +614,9 @@ const DisplayContent: React.FC<DisplayContentProps> = React.memo(
     formatSinglePeriod,
     className,
   }) => {
-    if (variant === 'single') {
+    const normalizedVariant = findInEnum(EPeriodVariant, variant, EPeriodVariant.Single);
+
+    if (normalizedVariant === EPeriodVariant.Single) {
       if (!selectedValue) {
         return (
           <div className={cx(styles.displayContainer, className)}>
@@ -675,7 +692,11 @@ const OptionList: React.FC<OptionListProps> = React.memo(
     formatPeriod,
     presets,
   }) => {
-    const hasSelection = variant === 'single' ? Boolean(tempSelectedValue) : Boolean(tempStartValue && tempEndValue);
+    const normalizedVariant = findInEnum(EPeriodVariant, variant, EPeriodVariant.Single);
+    const hasSelection =
+      normalizedVariant === EPeriodVariant.Single
+        ? Boolean(tempSelectedValue)
+        : Boolean(tempStartValue && tempEndValue);
     const presetOptions = React.useMemo(() => createPresetOptions(presets), [presets]);
 
     const renderSingleColumn = React.useCallback(() => {
@@ -783,7 +804,7 @@ const OptionList: React.FC<OptionListProps> = React.memo(
 
     return (
       <UiVerticalGroup align="stretch" justify="start" gap="xs">
-        {variant === 'single' ? (
+        {normalizedVariant === EPeriodVariant.Single ? (
           <div className={styles.singleColumnContainer}>{renderSingleColumn()}</div>
         ) : (
           <div className={styles.columnsContainer}>
@@ -813,7 +834,7 @@ OptionList.displayName = 'OptionList';
 export const UiPeriodSelect = React.forwardRef<HTMLButtonElement, PeriodSelectProps>(
   (
     {
-      variant = 'range',
+      variant = EPeriodVariant.Range,
       disabled = false,
       options,
       onValueChange,
@@ -833,6 +854,8 @@ export const UiPeriodSelect = React.forwardRef<HTMLButtonElement, PeriodSelectPr
       onValueChange,
       presets,
     });
+
+    const normalizedVariant = findInEnum(EPeriodVariant, variant, EPeriodVariant.Single);
 
     const handleCancel = React.useCallback(() => {
       periodSelect.setPopoverOpen(false);
@@ -878,7 +901,7 @@ export const UiPeriodSelect = React.forwardRef<HTMLButtonElement, PeriodSelectPr
         </PopoverTrigger>
 
         <PopoverContent
-          className={variant === 'single' ? styles.popoverContentSingle : styles.popoverContent}
+          className={normalizedVariant === EPeriodVariant.Single ? styles.popoverContentSingle : styles.popoverContent}
           align="start"
           onEscapeKeyDown={handleCancel}
         >

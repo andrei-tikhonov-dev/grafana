@@ -144,3 +144,38 @@ export const statusStyles = {
     ${statusBaseStyles}
   `,
 };
+
+const SCROLLBAR_WIDTH = 6;
+const SCROLLBAR_OFFSET = 4;
+
+export const scrollbarStyles = css`
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Custom scrollbar with offset from border */
+  &::-webkit-scrollbar {
+    width: ${SCROLLBAR_WIDTH + SCROLLBAR_OFFSET}px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    margin: ${SCROLLBAR_OFFSET}px 0;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${theme3.shadcn.border};
+    border-radius: ${SCROLLBAR_WIDTH / 2}px;
+    border-right: ${SCROLLBAR_OFFSET}px solid transparent;
+    background-clip: padding-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${theme3.shadcn.mutedForeground};
+    border-right: ${SCROLLBAR_OFFSET}px solid transparent;
+    background-clip: padding-box;
+  }
+
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: ${theme3.shadcn.border} transparent;
+`;

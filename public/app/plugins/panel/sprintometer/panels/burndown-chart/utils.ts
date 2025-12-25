@@ -25,6 +25,7 @@ import {
   MScopeChanges,
   MTotalScopeChanges,
   EValueMode,
+  TAiForecast,
 } from './types';
 
 function groupScopeChangesByDayAndStatus(days: MDayData[]): {
@@ -195,8 +196,17 @@ function formatTooltip(
 
   let result = `<div style="font-weight: 600; margin-bottom: 8px">${axisValueLabel}</div>`;
 
+  const seenSeries = new Set<string>();
+
   params.forEach((param: any) => {
-    if (param.seriesName && param.seriesName !== LEGEND_NON_WORKING_DAYS) {
+    if (
+      param.seriesName &&
+      param.seriesName !== LEGEND_NON_WORKING_DAYS &&
+      param.value !== undefined &&
+      param.value !== null &&
+      !seenSeries.has(param.seriesName)
+    ) {
+      seenSeries.add(param.seriesName);
       result += `<div><span style="color: ${param.color};">${param.seriesName}:</span> ${param.value}</div>`;
     }
   });
@@ -219,6 +229,7 @@ interface ChartOptions {
   nonWorkingDays: MNonWorkingDays;
   color: string;
   scopeChanges: MScopeChanges;
+  aiForecast?: TAiForecast | null;
 }
 
 export const getChartOptions = ({
@@ -229,11 +240,44 @@ export const getChartOptions = ({
   nonWorkingDays,
   color,
   scopeChanges,
+  aiForecast,
 }: ChartOptions): echarts.EChartsOption => {
   const nonWorkingDaysFormated: MarkArea2DDataItemOption[] = nonWorkingDays.map(([start, end]) => [
     { xAxis: start },
     { xAxis: end },
   ]);
+
+  // Align AI data to the days axis
+  const predictionData = new Array(days.length).fill(null);
+  const lowerBoundData = new Array(days.length).fill(null);
+  const upperBoundDiffData = new Array(days.length).fill(null); // For stacked area (Upper - Lower)
+
+  if (aiForecast?.data) {
+    // Find the last actual data point to connect the line
+    const lastActualIndex = actual.length - 1;
+    const lastActualValue = actual[lastActualIndex];
+
+    // We want the prediction line to start from the last actual point
+    if (lastActualIndex >= 0) {
+      predictionData[lastActualIndex] = lastActualValue;
+      // We can also start the band from here if we want continuity,
+      // but typically confidence starts spreading from the next point.
+      // Let's connect the band from the point as well (width 0 at t=0)
+      lowerBoundData[lastActualIndex] = lastActualValue;
+      upperBoundDiffData[lastActualIndex] = 0;
+    }
+
+    aiForecast.data.forEach((item) => {
+      const index = days.indexOf(item.date);
+      if (index !== -1) {
+        predictionData[index] = item.value;
+        lowerBoundData[index] = item.lowerBound;
+        // Stacked value must be positive difference
+        const diff = item.upperBound - item.lowerBound;
+        upperBoundDiffData[index] = diff > 0 ? diff : 0;
+      }
+    });
+  }
 
   return {
     backgroundColor: 'transparent',
@@ -250,7 +294,7 @@ export const getChartOptions = ({
       bottom: 0,
       left: 'center',
       orient: 'horizontal',
-      data: ['', LEGEND_IDEAL_BURNDOWN, LEGEND_ACTUAL_BURNDOWN],
+      data: ['', LEGEND_IDEAL_BURNDOWN, LEGEND_ACTUAL_BURNDOWN, 'AI Prediction'],
       textStyle: {
         color: theme.colors.semantic.text,
       },
@@ -334,6 +378,45 @@ export const getChartOptions = ({
         },
       },
       getCurrentPeriodSeries(currentDay),
+      // AI Prediction Line
+      {
+        name: 'AI Prediction',
+        type: 'line',
+        data: predictionData,
+        lineStyle: {
+          color: theme.colors.semantic.primary, // Or another distinct color
+          width: 2,
+          type: 'dashed',
+        },
+        itemStyle: {
+          color: theme.colors.semantic.primary,
+        },
+        showSymbol: false,
+      },
+      // Confidence Band (Lower - Hidden)
+      {
+        name: 'AI Prediction',
+        type: 'line',
+        data: lowerBoundData,
+        lineStyle: { opacity: 0 },
+        stack: 'confidence-band',
+        symbol: 'none',
+        silent: true, // Don't show in tooltip
+      },
+      // Confidence Band (Upper - Stacked Area)
+      {
+        name: 'AI Prediction',
+        type: 'line',
+        data: upperBoundDiffData,
+        lineStyle: { opacity: 0 },
+        areaStyle: {
+          color: theme.colors.semantic.primary,
+          opacity: 0.2,
+        },
+        stack: 'confidence-band',
+        symbol: 'none',
+        silent: true, // Don't show in tooltip
+      },
     ],
   };
 };

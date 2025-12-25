@@ -3,8 +3,9 @@ import React, { useMemo } from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { UiAiViewer, UiFiltersContainer, UiMultiSelect, UiSwitch } from '../../components/ui';
+import { UiFiltersContainer, UiMultiSelect, UiSwitch } from '../../components/ui';
 import { UiPanelContainer } from '../../components/ui/panel-container/PanelContainer';
+import { AiViewerWrapper } from '../../features/ai-viewer/AiViewerWrapper';
 import { useEcharts } from '../../hooks/useEcharts';
 import { usePluginState } from '../../hooks/usePluginState';
 import { TPanelOptions } from '../../types';
@@ -95,7 +96,7 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
 
   return (
     <UiPanelContainer width={width} height={height} title="Cumulative flow diagram">
-      <UiFiltersContainer suffix={ai && <UiAiViewer label="View AI analysis" content={ai.content} title={ai.title} />}>
+      <UiFiltersContainer suffix={<AiViewerWrapper label="View AI analysis" initialData={ai} />}>
         <UiMultiSelect
           options={issueOptions}
           defaultValue={selectedIssues}

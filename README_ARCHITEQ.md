@@ -25,7 +25,10 @@ yarn start
 ```shell
 yarn workspace <name_of_plugin> dev
 ```
-
+### OpenAPI package intall
+```shell
+yarn add @architeq/core-api-client@file:./api/architeq-core-api-client-2.2.1.tgz
+```
 
 # Docker
 
@@ -36,7 +39,9 @@ yarn workspace <name_of_plugin> dev
 
 ### Build and publish docker file
 ```shell
-docker buildx build --platform linux/amd64 -t imarchiteq/sprintometer-ui-test:11.1.61 --load .
+docker buildx build --platform linux/amd64 -t imarchiteq/sprintometer-ui-test:11.1.62 --load .
+# vpn on
+docker buildx build --network=host --platform linux/amd64 -t imarchiteq/sprintometer-ui-test:11.1.62 --load .
 # or --platform linux/arm64
 
 docker login

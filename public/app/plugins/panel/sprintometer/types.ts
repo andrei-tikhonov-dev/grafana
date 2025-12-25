@@ -24,20 +24,42 @@ export interface TBasePanelOptions {
 }
 
 export interface TBurndownOptionsNS {
-  burndown?: {};
+  burndown?: {
+    dashboard: EDashboard;
+  };
 }
 
 export interface THeaderOptionsNS {
-  header?: {};
+  header?: {
+    dashboard: EDashboard;
+  };
 }
 
 export interface TIssueMapOptionsNS {
   sankey: {
+    dashboard: EDashboard;
     filterFields: string[];
   };
 }
 
-export type TPanelOptions = TBasePanelOptions & TBurndownOptionsNS & THeaderOptionsNS & TIssueMapOptionsNS;
+export interface TAiOptionsNS {
+  ai: {
+    dashboard: EDashboard;
+  };
+}
+
+export interface TCumulativeFlowDiagramOptionsNS {
+  cumulativeFlowDiagram?: {
+    dashboard: EDashboard;
+  };
+}
+
+export type TPanelOptions = TBasePanelOptions &
+  TBurndownOptionsNS &
+  THeaderOptionsNS &
+  TIssueMapOptionsNS &
+  TCumulativeFlowDiagramOptionsNS &
+  TAiOptionsNS;
 
 export const enum EPanelType {
   BurndownChart = 'BurndownChart',
@@ -190,4 +212,68 @@ export interface TBreadcrumbItem {
   label: string;
 }
 
-export type TPeriodVariant = 'range' | 'single';
+export enum EPeriodVariant {
+  Range = 'range',
+  Single = 'single',
+}
+
+export type TPeriodVariant = EPeriodVariant | string;
+
+export enum EDashboard {
+  // Team
+  Daily = 'Daily',
+  Cockpit = 'Cockpit',
+  PIMonitoring = 'PIMonitoring',
+  Calendar = 'Calendar',
+  BudgetGeneral = 'BudgetGeneral',
+  BudgetPersonal = 'BudgetPersonal',
+  MemberCapacity = 'MemberCapacity',
+  HistoricalData = 'HistoricalData',
+  SprintReview = 'SprintReview',
+  LastSprintComponents = 'LastSprintComponents',
+  SprintPlanning = 'SprintPlanning',
+  PIPlanningTeam = 'PIPlanningTeam',
+  AdminToolsTeam = 'AdminToolsTeam',
+
+  // ART
+  CockpitART = 'CockpitART',
+  PIMonitoringART = 'PIMonitoringART',
+  PIsHistoricalDataART = 'PIsHistoricalDataART',
+  PIPlanningART = 'PIPlanningART',
+  AdminToolsART = 'AdminToolsART',
+
+  // DSO
+  CockpitDSO = 'CockpitDSO',
+  PIMonitoringDSO = 'PIMonitoringDSO',
+  PIsHistoricalDataDSO = 'PIsHistoricalDataDSO',
+  PlanningDSO = 'PlanningDSO',
+  AdminToolsDSO = 'AdminToolsDSO',
+}
+
+export const DashboardTitles: Record<EDashboard, string> = {
+  [EDashboard.Daily]: 'Team: Daily',
+  [EDashboard.Cockpit]: 'Team: Team cockpit',
+  [EDashboard.PIMonitoring]: 'Team: PI monitoring',
+  [EDashboard.Calendar]: 'Team: Calendar',
+  [EDashboard.BudgetGeneral]: 'Team: Budget general',
+  [EDashboard.BudgetPersonal]: 'Team: Budget personal',
+  [EDashboard.MemberCapacity]: 'Team: Team member capacity',
+  [EDashboard.HistoricalData]: 'Team: Historical data',
+  [EDashboard.SprintReview]: 'Team: Sprint review',
+  [EDashboard.LastSprintComponents]: 'Team: Last sprint components',
+  [EDashboard.SprintPlanning]: 'Team: Sprint planning',
+  [EDashboard.PIPlanningTeam]: 'Team: PI planning',
+  [EDashboard.AdminToolsTeam]: 'Team: Admin tools',
+
+  [EDashboard.CockpitART]: 'ART: Cockpit',
+  [EDashboard.PIMonitoringART]: 'ART: PI monitoring',
+  [EDashboard.PIsHistoricalDataART]: 'ART: PIs historical data',
+  [EDashboard.PIPlanningART]: 'ART: PI planning',
+  [EDashboard.AdminToolsART]: 'ART: Admin tools',
+
+  [EDashboard.CockpitDSO]: 'DSO: Cockpit',
+  [EDashboard.PIMonitoringDSO]: 'DSO: PI monitoring',
+  [EDashboard.PIsHistoricalDataDSO]: 'DSO: PIs historical data',
+  [EDashboard.PlanningDSO]: 'DSO: Planning',
+  [EDashboard.AdminToolsDSO]: 'DSO: Admin tools',
+};

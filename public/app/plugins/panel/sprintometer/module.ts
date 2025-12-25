@@ -1,6 +1,7 @@
 import { PanelPlugin } from '@grafana/data';
 
 import { Panel } from './Panel';
+import { DEFAULT_CONFIGURATION_CATEGORY } from './constants';
 import { PANELS_REGISTRY } from './registry';
 import { TPanelOptions, EPanelType } from './types';
 
@@ -24,10 +25,9 @@ export const getPanelTypeOptions = async () => {
 export const plugin = new PanelPlugin<TPanelOptions>(Panel).setPanelOptions((builder) => {
   builder
     .addSelect({
-      category: ['Sprintometer Configuration'],
+      category: DEFAULT_CONFIGURATION_CATEGORY,
       path: 'panelType',
       name: 'Panel type',
-      description: 'Select the type of the panel.',
       defaultValue: EPanelType.EmptyPanel,
       settings: {
         allowCustomValue: false,

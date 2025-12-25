@@ -4,14 +4,16 @@ import React, { useState } from 'react';
 
 import { Drawer } from '@grafana/ui';
 
-import { UiButton } from '../index';
+import { UiButton, UiTypography } from '../index';
 import { UiMarkdown } from '../markdown/UiMarkdown';
 
 interface Props {
-  title: string;
-  content: string;
+  title?: string;
+  content?: string;
   label: string;
   className?: string;
+  onOpen?: () => void;
+  isLoading?: boolean;
 }
 
 const styles = {
@@ -21,10 +23,13 @@ const styles = {
   buttonWrapper: css``,
 };
 
-export const UiAiViewer: React.FC<Props> = ({ title, content, label, className }) => {
+export const UiAiViewer: React.FC<Props> = ({ title, content, label, className, onOpen, isLoading }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const openDrawer = () => setIsDrawerOpen(true);
+  const openDrawer = () => {
+    setIsDrawerOpen(true);
+    onOpen?.();
+  };
   const closeDrawer = () => setIsDrawerOpen(false);
 
   return (
@@ -37,9 +42,9 @@ export const UiAiViewer: React.FC<Props> = ({ title, content, label, className }
       </div>
 
       {isDrawerOpen && (
-        <Drawer title={title} onClose={closeDrawer}>
+        <Drawer title={title || 'AI Insights'} onClose={closeDrawer}>
           <div className={styles.drawer}>
-            <UiMarkdown content={content} />
+            {isLoading ? <UiTypography>Loading...</UiTypography> : <UiMarkdown content={content || ''} />}
           </div>
         </Drawer>
       )}

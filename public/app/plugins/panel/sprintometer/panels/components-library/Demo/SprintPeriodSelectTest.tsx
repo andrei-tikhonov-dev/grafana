@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 
 import { UiPeriodSelect } from '../../../components/ui';
 import { PeriodSelectOption } from '../../../components/ui/period-select/UiPeriodSelect';
+import { EPeriodVariant } from '../../../types';
 
 const containerStyles = css`
   padding: 2rem;
@@ -186,17 +187,17 @@ export function UiPeriodSelectTestPage() {
   const [rangeValue, setRangeValue] = useState<string[]>(['sprint-19', 'sprint-21']);
   const [singleValue, setSingleValue] = useState<string>('sprint-20');
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
-  const [variant, setVariant] = useState<'range' | 'single'>('range');
+  const [variant, setVariant] = useState<EPeriodVariant>(EPeriodVariant.Range);
   const [dynamicRangeValue, setDynamicRangeValue] = useState<string[]>(['sprint-19', 'sprint-21']);
   const [dynamicSingleValue, setDynamicSingleValue] = useState<string>('sprint-20');
   const [piValue, setPiValue] = useState<string[]>(['pi-2025-q2', 'pi-2025-q3']);
   const [backwardCompatValue, setBackwardCompatValue] = useState<string[]>(['sprint-19', 'sprint-21']);
 
   const renderDynamicSelect = () => {
-    if (variant === 'single') {
+    if (variant === EPeriodVariant.Single) {
       return (
         <UiPeriodSelect
-          variant="single"
+          variant={EPeriodVariant.Single}
           disabled={isDisabled}
           options={sprintList}
           defaultValue={dynamicSingleValue}
@@ -208,7 +209,7 @@ export function UiPeriodSelectTestPage() {
 
     return (
       <UiPeriodSelect
-        variant="range"
+        variant={EPeriodVariant.Range}
         disabled={isDisabled}
         options={sprintList}
         defaultValue={dynamicRangeValue}
@@ -224,7 +225,7 @@ export function UiPeriodSelectTestPage() {
       <div className={containerStyles}>
         <h3>Range Mode</h3>
         <UiPeriodSelect
-          variant="range"
+          variant={EPeriodVariant.Range}
           options={sprintList}
           defaultValue={rangeValue}
           onValueChange={(value) => setRangeValue(value as string[])}
@@ -236,7 +237,7 @@ export function UiPeriodSelectTestPage() {
       <div className={containerStyles}>
         <h3>Single Mode</h3>
         <UiPeriodSelect
-          variant="single"
+          variant={EPeriodVariant.Single}
           options={sprintList}
           defaultValue={singleValue}
           onValueChange={(value) => setSingleValue(value as string)}
@@ -248,7 +249,7 @@ export function UiPeriodSelectTestPage() {
         <h3>Disabled - Range</h3>
         <UiPeriodSelect
           disabled
-          variant="range"
+          variant={EPeriodVariant.Range}
           options={sprintList}
           defaultValue={['sprint-19', 'sprint-21']}
           placeholder="Period not selected"
@@ -259,7 +260,7 @@ export function UiPeriodSelectTestPage() {
         <h3>Disabled - Single</h3>
         <UiPeriodSelect
           disabled
-          variant="single"
+          variant={EPeriodVariant.Single}
           options={sprintList}
           defaultValue={singleValue}
           placeholder="Period not selected"
@@ -276,18 +277,18 @@ export function UiPeriodSelectTestPage() {
           <label style={{ marginLeft: '1rem' }}>
             <input
               type="radio"
-              value="range"
-              checked={variant === 'range'}
-              onChange={(e) => setVariant(e.target.value as 'range')}
+              value={EPeriodVariant.Range}
+              checked={variant === EPeriodVariant.Range}
+              onChange={(e) => setVariant(e.target.value as EPeriodVariant)}
             />
             Range
           </label>
           <label>
             <input
               type="radio"
-              value="single"
-              checked={variant === 'single'}
-              onChange={(e) => setVariant(e.target.value as 'single')}
+              value={EPeriodVariant.Single}
+              checked={variant === EPeriodVariant.Single}
+              onChange={(e) => setVariant(e.target.value as EPeriodVariant)}
             />
             Single
           </label>
