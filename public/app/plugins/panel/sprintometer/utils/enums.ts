@@ -12,3 +12,7 @@ export function findInEnum<T extends Record<string, string>>(
   const enumValues = getEnumValues(enumObj);
   return findNormalizedString(enumValues, searchString, defaultValue);
 }
+
+export function getSelectOptionsFromEnum<T extends Record<string, string>>(enumObj: T): Array<{ value: T[keyof T]; label: T[keyof T] }> {
+  return getEnumValues(enumObj).map((value) => ({ value, label: value }));
+}

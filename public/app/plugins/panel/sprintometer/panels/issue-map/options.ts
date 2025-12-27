@@ -1,7 +1,10 @@
+import { SendMetricChatMessageBoardTypeEnum, SendMetricChatMessageMetricNameEnum } from '@architeq/core-api-client';
+
 import { FieldOverrideContext, getFieldDisplayName } from '@grafana/data';
 
 import { DEFAULT_CONFIGURATION_CATEGORY } from '../../constants';
-import { DashboardTitles, EDashboard, EPanelType, TPanelOptions } from '../../types';
+import { EPanelType, TPanelOptions } from '../../types';
+import { getSelectOptionsFromEnum } from '../../utils/enums';
 
 type SelectOption = { value: string; label: string };
 
@@ -32,13 +35,19 @@ export function registerIssueMapOptions(
     name: 'Dashboard',
     category: DEFAULT_CONFIGURATION_CATEGORY,
     settings: {
-      options: [
-        { value: EDashboard.Daily, label: DashboardTitles[EDashboard.Daily] },
-        { value: EDashboard.SprintPlanning, label: DashboardTitles[EDashboard.SprintPlanning] },
-        { value: EDashboard.SprintReview, label: DashboardTitles[EDashboard.SprintReview] },
-      ],
+      options: getSelectOptionsFromEnum(SendMetricChatMessageBoardTypeEnum),
     },
-    showIf: () => false,
+    showIf,
+  });
+
+  builder.addSelect({
+    path: 'sankey.metric',
+    name: 'Metric',
+    category: DEFAULT_CONFIGURATION_CATEGORY,
+    settings: {
+      options: getSelectOptionsFromEnum(SendMetricChatMessageMetricNameEnum),
+    },
+    showIf,
   });
 
   builder.addMultiSelect({

@@ -1,4 +1,9 @@
-import { ChatFeedbackRequestValueEnum } from '@architeq/core-api-client';
+import {
+  ChatFeedbackRequestValueEnum,
+  SendMetricChatMessageBoardTypeEnum,
+  SendMetricChatMessageMetricNameEnum,
+  SubmitBoardChatFeedbackBoardTypeEnum,
+} from '@architeq/core-api-client';
 import { useMutation } from '@tanstack/react-query';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -20,6 +25,8 @@ import { FeedbackModal } from './FeedbackModal';
 interface Props {
   teamId: string;
   project: string;
+  dashboard?: SendMetricChatMessageBoardTypeEnum;
+  metric?: SendMetricChatMessageMetricNameEnum;
   client: AiChatClient;
   thinkingStages: string[];
   feedbackReasons: { up: string[]; down: string[] };
@@ -27,9 +34,13 @@ interface Props {
   startPrompts: string[];
 }
 
+const THINKING_STAGE_INTERVAL = 3000;
+
 export const AIChatController: React.FC<Props> = ({
   teamId,
   project,
+  dashboard,
+  metric,
   client,
   thinkingStages,
   feedbackReasons,
@@ -63,6 +74,41 @@ export const AIChatController: React.FC<Props> = ({
   const [pendingInputText, setPendingInputText] = useState<string>();
   const [pendingUserLocalId, setPendingUserLocalId] = useState<string>();
   const thinkingIntervalRef = useRef<number>();
+
+  const createMessageArgs = (message: string, history: ReturnType<typeof buildApiHistory>): SendMessageArgs => ({
+    teamId,
+    boardType: dashboard!,
+    metricName: metric!,
+    chatMessageRequest: {
+      project,
+      message,
+      history,
+    },
+  });
+
+  const initializeRequest = () => {
+    const controller = new AbortController();
+    setAbortController(controller);
+    setLoading(true);
+    setThinkingStageIndex(0);
+    return controller;
+  };
+
+  const cleanupPendingMessages = () => {
+    const pending = messages.find((m) => m.status === EAiChatStatus.Pending);
+    if (pending) {
+      removeMessage(pending.localId);
+    }
+
+    if (pendingUserLocalId) {
+      const userMsg = messages.find((m) => m.localId === pendingUserLocalId);
+      if (userMsg) {
+        setPendingInputText(userMsg.content);
+        removeMessage(pendingUserLocalId);
+      }
+      setPendingUserLocalId(undefined);
+    }
+  };
 
   // Send message mutation
   const sendMessageMutation = useMutation<
@@ -103,7 +149,7 @@ export const AIChatController: React.FC<Props> = ({
     if (isLoading) {
       thinkingIntervalRef.current = window.setInterval(() => {
         setThinkingStageIndex((thinkingStageIndex + 1) % thinkingStages.length);
-      }, 3000);
+      }, THINKING_STAGE_INTERVAL);
 
       return () => {
         if (thinkingIntervalRef.current) {
@@ -122,104 +168,71 @@ export const AIChatController: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openMode]);
 
+  const executeSendMessage = (message: string, history: ReturnType<typeof buildApiHistory>, pendingLocalId: string) => {
+    const requiredFields: Record<string, unknown> = {
+      dashboard,
+      metric,
+      teamId,
+      project,
+    };
+
+    const missingFields = Object.entries(requiredFields)
+      .filter(([_, value]) => !value)
+      .map(([key]) => key);
+
+    if (missingFields.length > 0) {
+      const errorMessage = `Configuration error. Missing: ${missingFields.join(', ')}`;
+      failAssistantMessage(pendingLocalId, errorMessage);
+      setLoading(false);
+      return;
+    }
+
+    const controller = initializeRequest();
+    const args = createMessageArgs(message, history);
+
+    sendMessageMutation.mutate({
+      args,
+      signal: controller.signal,
+      pendingLocalId,
+    });
+  };
+
   const handleSendMessage = (message: string) => {
-    // Create abort controller
-    const controller = new AbortController();
-    setAbortController(controller);
-
-    // Append user message
     const uiMessage = message || strings.autoSummaryMessage;
-
     const userLocalId = appendUserMessage(uiMessage);
     setPendingUserLocalId(userLocalId);
 
-    // Append pending assistant message
     const pendingLocalId = appendAssistantPending();
-
-    // Build history (before adding current message)
     const history = buildApiHistory(messages);
 
-    // Create request snapshot for retry
     setLastRequest({
       message,
       historySnapshot: history,
       kind: message ? 'user' : 'summary',
     });
 
-    // Start loading
-    setLoading(true);
-    setThinkingStageIndex(0);
-
-    // Send message
-    sendMessageMutation.mutate({
-      args: {
-        teamId,
-        chatMessageRequest: {
-          project,
-          message,
-          history,
-        },
-      },
-      signal: controller.signal,
-      pendingLocalId,
-    });
+    executeSendMessage(message, history, pendingLocalId);
   };
 
   const handleCancel = () => {
     const { abortController } = useAiChatStore.getState();
-    if (abortController) {
-      abortController.abort();
-    }
-
-    // Remove pending assistant message
-    const pending = messages.find((m) => m.status === EAiChatStatus.Pending);
-    if (pending) {
-      removeMessage(pending.localId);
-    }
-
-    // Remove user message and restore to input
-    if (pendingUserLocalId) {
-      const userMsg = messages.find((m) => m.localId === pendingUserLocalId);
-      if (userMsg) {
-        setPendingInputText(userMsg.content);
-        removeMessage(pendingUserLocalId);
-      }
-      setPendingUserLocalId(undefined);
-    }
-
+    abortController?.abort();
+    cleanupPendingMessages();
     resetRequestState();
   };
 
   const handleRetry = () => {
-    if (lastRequest) {
-      // Remove error message
-      const errorMsg = messages.find((m) => m.status === EAiChatStatus.Error);
-      if (errorMsg) {
-        removeMessage(errorMsg.localId);
-      }
-
-      // Resend with same history snapshot
-      const controller = new AbortController();
-      setAbortController(controller);
-
-      const pendingLocalId = appendAssistantPending();
-
-      setLoading(true);
-      setThinkingStageIndex(0);
-
-      sendMessageMutation.mutate({
-        args: {
-          teamId,
-          chatMessageRequest: {
-            project,
-            message: lastRequest.message,
-            history: lastRequest.historySnapshot,
-          },
-        },
-        signal: controller.signal,
-        pendingLocalId,
-      });
+    if (!lastRequest) {
+      return;
     }
+
+    const errorMsg = messages.find((m) => m.status === EAiChatStatus.Error);
+    if (errorMsg) {
+      removeMessage(errorMsg.localId);
+    }
+
+    const pendingLocalId = appendAssistantPending();
+    executeSendMessage(lastRequest.message, lastRequest.historySnapshot, pendingLocalId);
   };
 
   const handlePromptClick = (prompt: string) => {
@@ -241,13 +254,18 @@ export const AIChatController: React.FC<Props> = ({
       return;
     }
 
-    // Apply feedback to message (lock it)
     applyFeedback(targetLocalId, value, comment);
 
-    // Submit to backend
+    if (!dashboard) {
+      console.error('Dashboard is missing in feedback submit');
+      return;
+    }
+
     submitFeedbackMutation.mutate({
       teamId,
+      boardType: dashboard as unknown as SubmitBoardChatFeedbackBoardTypeEnum,
       chatFeedbackRequest: {
+        project,
         messageId: message.messageId,
         value,
         comment,
@@ -258,10 +276,9 @@ export const AIChatController: React.FC<Props> = ({
   };
 
   const currentThinkingStage = thinkingStages[thinkingStageIndex] || thinkingStages[0];
-  const feedbackReasonsForValue =
-    feedbackModal.value === ChatFeedbackRequestValueEnum.Up ? feedbackReasons.up : feedbackReasons.down;
-  const feedbackTitle =
-    feedbackModal.value === ChatFeedbackRequestValueEnum.Up ? strings.feedbackTitleUp : strings.feedbackTitleDown;
+  const isPositiveFeedback = feedbackModal.value === ChatFeedbackRequestValueEnum.Up;
+  const feedbackReasonsForValue = isPositiveFeedback ? feedbackReasons.up : feedbackReasons.down;
+  const feedbackTitle = isPositiveFeedback ? strings.feedbackTitleUp : strings.feedbackTitleDown;
 
   return (
     <>

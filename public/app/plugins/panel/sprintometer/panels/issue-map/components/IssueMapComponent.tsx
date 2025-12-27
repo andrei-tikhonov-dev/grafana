@@ -1,10 +1,12 @@
 import { css } from '@emotion/css';
+import { Sparkles } from 'lucide-react';
 import React, { useMemo, useCallback } from 'react';
 
 import { ScrollArea, ScrollBar } from '../../../components/shadcn/scroll-area';
-import { UiFiltersContainer, UiVerticalGroup } from '../../../components/ui';
+import { UiAiViewer, UiButton, UiFiltersContainer, UiVerticalGroup } from '../../../components/ui';
 import { UiPanelContainer } from '../../../components/ui/panel-container/PanelContainer';
-import { AiViewerWrapper } from '../../../features/ai-viewer/AiViewerWrapper';
+import { useAiChatDrawer } from '../../../features/ai-chat';
+import { useGrafanaVariables } from '../../../hooks/useGrafanaVariables';
 import { usePluginState } from '../../../hooks/usePluginState';
 import { useZoom } from '../../../hooks/useZoom';
 import { getGrafanaCustomData } from '../../../utils/grafana';
@@ -168,10 +170,41 @@ export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsC
 
   const styles = useIssueMapStyles(width, height, sankeyWidth, hasFilters);
 
+  const grafanaVariables = useGrafanaVariables(['team', 'project']);
+
+  // AI Chat Drawer
+  const { openAutoSummary, drawer } = useAiChatDrawer({
+    teamId: grafanaVariables.team as string,
+    project: grafanaVariables.project as string,
+    dashboard: options.sankey?.dashboard,
+    metric: options.sankey?.metric,
+    startScreen: {
+      title: 'Your sprint, explained instantly',
+      subtitle: 'Choose a question to get data-driven insights',
+      prompts: [
+        'Check the pulse of your sprint and spot problems early',
+        'Understand how your team is doing & where improvement is possible',
+        'Predict outcomes and understand "what-ifs"',
+        'Learn from historical data and uncover recurring patterns',
+      ],
+    },
+  });
+
   return (
     <UiPanelContainer width={width} height={height} title="Issue map">
       <UiVerticalGroup align="stretch" gap="sm">
-        <UiFiltersContainer suffix={<AiViewerWrapper label="View AI analysis" initialData={ai} />}>
+        <UiFiltersContainer
+          suffix={
+            ai ? (
+              <UiAiViewer title={ai?.title} content={ai?.content} label="AI data" />
+            ) : (
+              <UiButton onClick={openAutoSummary} variant="ai">
+                <Sparkles />
+                AI helper
+              </UiButton>
+            )
+          }
+        >
           {filtersComponent}
         </UiFiltersContainer>
         <UiFiltersContainer suffix={zoomComponent}>
@@ -193,6 +226,7 @@ export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsC
         />
         <ScrollBar orientation="vertical" />
       </ScrollArea>
+      {drawer}
     </UiPanelContainer>
   );
 };

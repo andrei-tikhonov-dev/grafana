@@ -184,8 +184,6 @@ const MessageFooter: React.FC<{
   onRetry: () => void;
   styles: ReturnType<typeof createStyles>;
 }> = ({ message, isUser, isError, isLast, onFeedback, onPromptClick, onRetry, styles }) => {
-  const { hasCopied, copyToClipboard } = useClipboard();
-
   if (isError) {
     return (
       <div className={styles.footerContainer}>
@@ -202,6 +200,8 @@ const MessageFooter: React.FC<{
   if (!showFeedback && !showPrompts) {
     return null;
   }
+
+  const { hasCopied, copyToClipboard } = useClipboard();
 
   return (
     <>

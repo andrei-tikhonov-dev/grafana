@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { UiHorizontalGroup, UiTypography, UiVerticalGroup, UiAvatarGroup } from '../../../components/ui';
+import { UiHorizontalGroup, UiTypography, UiVerticalGroup } from '../../../components/ui';
+import { UiAvatarGroup } from '../../../components/ui/avatar-group/UiAvatarGroup';
 import { formatSmartPeriod } from '../../../utils/dateTime';
 import { MEvent } from '../types';
 

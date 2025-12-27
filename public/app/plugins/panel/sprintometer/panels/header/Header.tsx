@@ -47,7 +47,7 @@ const CONTAINER_PADDINGS = 70;
  * Header panel component.
  * Displays dashboard information, status, metrics, and timeline.
  */
-export const Header: React.FC<Props> = ({ width, height, data }) => {
+export const Header: React.FC<Props> = ({ width, height, data, options }) => {
   const {
     title,
     status,
@@ -72,6 +72,8 @@ export const Header: React.FC<Props> = ({ width, height, data }) => {
   const { openGeneral, openAutoSummary, drawer } = useAiChatDrawer({
     teamId: grafanaVariables.team as string,
     project: grafanaVariables.project as string,
+    dashboard: options.header?.dashboard,
+    metric: options.header?.metric,
     startScreen: {
       title: 'Your sprint, explained instantly',
       subtitle: 'Choose a question to get data-driven insights',
@@ -137,6 +139,7 @@ export const Header: React.FC<Props> = ({ width, height, data }) => {
         </UiCard>
       )}
 
+      {/* AI Chat Drawer */}
       {drawer}
     </UiVerticalGroup>
   );

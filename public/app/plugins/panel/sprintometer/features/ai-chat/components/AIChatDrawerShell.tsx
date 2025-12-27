@@ -1,3 +1,4 @@
+import { SendMetricChatMessageBoardTypeEnum, SendMetricChatMessageMetricNameEnum } from '@architeq/core-api-client';
 import React from 'react';
 
 import { Drawer } from '@grafana/ui';
@@ -10,6 +11,8 @@ import { AIChatController } from './AIChatController';
 interface Props {
   teamId: string;
   project: string;
+  dashboard?: SendMetricChatMessageBoardTypeEnum;
+  metric?: SendMetricChatMessageMetricNameEnum;
   client: AiChatClient;
   thinkingStages: string[];
   feedbackReasons: { up: string[]; down: string[] };

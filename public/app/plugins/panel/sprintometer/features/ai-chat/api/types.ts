@@ -1,11 +1,11 @@
 import type {
-  ChatMessageRequest,
   ChatMessageResponse,
-  ChatFeedbackRequest,
   ChatFeedbackResponse,
   ChatHistoryMessage,
   ChatFeedbackRequestValueEnum,
   ChatHistoryMessageRoleEnum,
+  SendMetricChatMessageRequest,
+  SubmitBoardChatFeedbackRequest,
 } from '@architeq/core-api-client';
 
 /**
@@ -22,15 +22,9 @@ export interface AiChatClient {
   submitFeedback(args: SubmitFeedbackArgs, init?: RequestInit): Promise<ChatFeedbackResponse>;
 }
 
-export interface SendMessageArgs {
-  teamId: string;
-  chatMessageRequest: ChatMessageRequest;
-}
+export interface SendMessageArgs extends SendMetricChatMessageRequest {}
 
-export interface SubmitFeedbackArgs {
-  teamId: string;
-  chatFeedbackRequest: ChatFeedbackRequest;
-}
+export interface SubmitFeedbackArgs extends SubmitBoardChatFeedbackRequest {}
 
 /**
  * Enums for AI Chat

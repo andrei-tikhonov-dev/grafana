@@ -1,12 +1,14 @@
 import { css } from '@emotion/css';
+import { Sparkles } from 'lucide-react';
 import React, { useMemo } from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { UiFiltersContainer, UiMultiSelect, UiSwitch } from '../../components/ui';
+import { UiAiViewer, UiButton, UiFiltersContainer, UiMultiSelect, UiSwitch } from '../../components/ui';
 import { UiPanelContainer } from '../../components/ui/panel-container/PanelContainer';
-import { AiViewerWrapper } from '../../features/ai-viewer/AiViewerWrapper';
+import { useAiChatDrawer } from '../../features/ai-chat';
 import { useEcharts } from '../../hooks/useEcharts';
+import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
 import { usePluginState } from '../../hooks/usePluginState';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -59,6 +61,26 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
     periodType,
   });
 
+  const grafanaVariables = useGrafanaVariables(['team', 'project']);
+
+  // AI Chat Drawer
+  const { openAutoSummary, drawer } = useAiChatDrawer({
+    teamId: grafanaVariables.team as string,
+    project: grafanaVariables.project as string,
+    dashboard: options.cumulativeFlowDiagram?.dashboard,
+    metric: options.cumulativeFlowDiagram?.metric,
+    startScreen: {
+      title: 'Your sprint, explained instantly',
+      subtitle: 'Choose a question to get data-driven insights',
+      prompts: [
+        'Check the pulse of your sprint and spot problems early',
+        'Understand how your team is doing & where improvement is possible',
+        'Predict outcomes and understand "what-ifs"',
+        'Learn from historical data and uncover recurring patterns',
+      ],
+    },
+  });
+
   const option = useMemo(
     () =>
       getCumulativeFlowDiagramOptions({
@@ -94,9 +116,23 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
     }));
   };
 
+  // @ts-ignore
+  const dashboard = options.cumulativeFlowDiagram?.dashboard;
+
   return (
     <UiPanelContainer width={width} height={height} title="Cumulative flow diagram">
-      <UiFiltersContainer suffix={<AiViewerWrapper label="View AI analysis" initialData={ai} />}>
+      <UiFiltersContainer
+        suffix={
+          ai ? (
+            <UiAiViewer title={ai?.title} content={ai?.content} label="AI data" />
+          ) : (
+            <UiButton onClick={openAutoSummary} variant="ai">
+              <Sparkles />
+              AI helper
+            </UiButton>
+          )
+        }
+      >
         <UiMultiSelect
           options={issueOptions}
           defaultValue={selectedIssues}
@@ -112,6 +148,7 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
           flex: 1 1 auto;
         `}
       />
+      {drawer}
     </UiPanelContainer>
   );
 };

@@ -1,18 +1,28 @@
+import { SendMetricChatMessageBoardTypeEnum, SendMetricChatMessageMetricNameEnum } from '@architeq/core-api-client';
+
 import { DEFAULT_CONFIGURATION_CATEGORY } from '../../constants';
-import { DashboardTitles, EDashboard, TPanelOptions } from '../../types';
+import { EPanelType, TPanelOptions } from '../../types';
+import { getSelectOptionsFromEnum } from '../../utils/enums';
 
 export function registerAIOptions(builder: any) {
-  const showIf = (opts: TPanelOptions) => false;
+  const showIf = (opts: TPanelOptions) => opts.panelType === EPanelType.AI;
 
   builder.addSelect({
     path: 'ai.dashboard',
     name: 'Dashboard',
     category: DEFAULT_CONFIGURATION_CATEGORY,
     settings: {
-      options: Object.values(EDashboard).map((value) => ({
-        value,
-        label: DashboardTitles[value],
-      })),
+      options: getSelectOptionsFromEnum(SendMetricChatMessageBoardTypeEnum),
+    },
+    showIf,
+  });
+
+  builder.addSelect({
+    path: 'ai.metric',
+    name: 'Metric',
+    category: DEFAULT_CONFIGURATION_CATEGORY,
+    settings: {
+      options: getSelectOptionsFromEnum(SendMetricChatMessageMetricNameEnum),
     },
     showIf,
   });

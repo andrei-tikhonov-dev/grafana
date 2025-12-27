@@ -1,22 +1,28 @@
 import { css } from '@emotion/css';
+import { Loader2, Sparkles } from 'lucide-react';
 import React, { useMemo } from 'react';
 
 import { PanelProps } from '@grafana/data';
 
 import {
   UiAiViewer,
+  UiButton,
   UiFiltersContainer,
   UiHorizontalGroup,
   UiMultiSelect,
   UiSelect,
   UiSwitch,
+  UiText,
 } from '../../components/ui';
 import { UiPanelContainer } from '../../components/ui/panel-container/PanelContainer';
+import { useAiChatDrawer } from '../../features/ai-chat';
 import { useEcharts } from '../../hooks/useEcharts';
+import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
 import { usePluginState } from '../../hooks/usePluginState';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
+import { useAiPrediction } from './api/useAiPrediction';
 import { ScopeChangesViewer } from './components/ScopeChangesViewer';
 import { Summary } from './components/Summary';
 import {
@@ -28,20 +34,13 @@ import {
   PLACEHOLDER_SELECT_VALUE,
   STORY_POINTS_COLOR,
 } from './constants';
+import { initial } from './mocks/initial';
 import { MBurndownCustomData, EValueMode } from './types';
 import { filterBurndownChartData, getChartOptions, prepareData } from './utils';
 
 interface BurndownChartProps extends PanelProps<TPanelOptions> {}
 
-const initialData: MBurndownCustomData = {
-  currentDate: '',
-  days: [],
-  issueTypes: [],
-  summary: {
-    [EValueMode.StoryPoints]: { completed: 0, remaining: 0, total: 0, percentage: 0 },
-    [EValueMode.IssuesAmount]: { completed: 0, remaining: 0, total: 0, percentage: 0 },
-  },
-};
+const initialData: MBurndownCustomData = initial;
 
 interface BurndownChartState {
   valueMode: EValueMode;
@@ -64,6 +63,25 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
 
   const [state, setState] = usePluginState<BurndownChartState>(options, onOptionsChange, initialState);
   const { valueMode, selectedIssues, showNonWorkingDays } = state;
+  const grafanaVariables = useGrafanaVariables(['team', 'project']);
+
+  // AI Chat Drawer
+  const { openAutoSummary, drawer } = useAiChatDrawer({
+    teamId: grafanaVariables.team as string,
+    project: grafanaVariables.project as string,
+    dashboard: options.burndown?.dashboard,
+    metric: options.burndown?.metric,
+    startScreen: {
+      title: 'Your sprint, explained instantly',
+      subtitle: 'Choose a question to get data-driven insights',
+      prompts: [
+        'Check the pulse of your sprint and spot problems early',
+        'Understand how your team is doing & where improvement is possible',
+        'Predict outcomes and understand "what-ifs"',
+        'Learn from historical data and uncover recurring patterns',
+      ],
+    },
+  });
 
   const { ai, ...customData } = getGrafanaCustomData<MBurndownCustomData>(panelData, initialData);
 
@@ -88,6 +106,22 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
     showNonWorkingDays,
   });
 
+  const futureDates = useMemo(() => {
+    if (actual.length >= days.length) {
+      return [];
+    }
+    return days.slice(actual.length);
+  }, [actual, days]);
+
+  const lastActualValue = actual.length > 0 ? actual[actual.length - 1] : 0;
+
+  // Only enable prediction if we have some data and remaining days
+  const { data: aiForecast, loading: aiLoading } = useAiPrediction({
+    enabled: actual.length > 0 && futureDates.length > 0,
+    startValue: lastActualValue,
+    futureDates,
+  });
+
   const option = useMemo(
     () =>
       getChartOptions({
@@ -98,8 +132,10 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
         currentDay,
         nonWorkingDays,
         scopeChanges,
+
+        // aiForecast: aiLoading ? null : aiForecast,
       }),
-    [actual, ideal, currentDay, scopeChanges, nonWorkingDays, days, valueMode]
+    [actual, ideal, currentDay, scopeChanges, nonWorkingDays, days, valueMode, aiForecast, aiLoading]
   );
 
   const chartRef = useEcharts({ width, height, option });
@@ -131,7 +167,14 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
         suffix={
           <>
             <ScopeChangesViewer daysData={daysData} />
-            {ai && <UiAiViewer label="View AI analysis" content={ai.content} title={ai.title} />}
+            {ai ? (
+              <UiAiViewer title={ai?.title} content={ai?.content} label="AI data" />
+            ) : (
+              <UiButton onClick={openAutoSummary} variant="ai">
+                <Sparkles />
+                AI helper
+              </UiButton>
+            )}
           </>
         }
       >
@@ -153,6 +196,22 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
           checked={showNonWorkingDays}
           onCheckedChange={handleShowNonWorkingDaysChange}
         />
+        {aiLoading && (
+          <UiHorizontalGroup gap="xs">
+            <Loader2
+              size={16}
+              className={css`
+                animation: spin 1s linear infinite;
+                @keyframes spin {
+                  100% {
+                    transform: rotate(360deg);
+                  }
+                }
+              `}
+            />
+            <UiText>AI calculating...</UiText>
+          </UiHorizontalGroup>
+        )}
       </UiFiltersContainer>
 
       <div
@@ -166,6 +225,7 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
         <Summary name={LABEL_STORY_POINTS} summary={summary.storyPoints} color={STORY_POINTS_COLOR} />
         <Summary name={LABEL_ISSUES_AMOUNT} summary={summary.issuesAmount} color={ISSUES_AMOUNT_COLOR} />
       </UiHorizontalGroup>
+      {drawer}
     </UiPanelContainer>
   );
 };

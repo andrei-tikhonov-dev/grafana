@@ -1,3 +1,4 @@
+import { SendMetricChatMessageBoardTypeEnum, SendMetricChatMessageMetricNameEnum } from '@architeq/core-api-client';
 import React, { useMemo } from 'react';
 
 import { useApi } from '../../api';
@@ -11,6 +12,8 @@ import { DEFAULT_FEEDBACK_REASONS, DEFAULT_STRINGS, DEFAULT_THINKING_STAGES } fr
 export interface UseAiChatDrawerConfig {
   teamId: string;
   project: string;
+  dashboard?: SendMetricChatMessageBoardTypeEnum;
+  metric?: SendMetricChatMessageMetricNameEnum;
   client?: AiChatClient;
   startScreen: {
     title: string;
@@ -79,6 +82,8 @@ export function useAiChatDrawer(config: UseAiChatDrawerConfig): UseAiChatDrawerR
     <AIChatDrawerShell
       teamId={config.teamId}
       project={config.project}
+      dashboard={config.dashboard}
+      metric={config.metric}
       client={client}
       thinkingStages={thinkingStages}
       feedbackReasons={feedbackReasons}
