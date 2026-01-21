@@ -61,12 +61,21 @@ export interface TCumulativeFlowDiagramOptionsNS {
   };
 }
 
+export interface TAiChatMockOptionsNS {
+  aiChatMock?: {
+    useMock: boolean;
+    autoSummary: string; // JSON string
+    general: string; // JSON string
+  };
+}
+
 export type TPanelOptions = TBasePanelOptions &
   TBurndownOptionsNS &
   THeaderOptionsNS &
   TIssueMapOptionsNS &
   TCumulativeFlowDiagramOptionsNS &
-  TAiOptionsNS;
+  TAiOptionsNS &
+  TAiChatMockOptionsNS;
 
 export const enum EPanelType {
   BurndownChart = 'BurndownChart',

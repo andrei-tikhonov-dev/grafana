@@ -1,17 +1,15 @@
-import { ChatFeedbackRequestValueEnum, ChatHistoryMessageRoleEnum } from '@architeq/core-api-client';
 import { css, cx } from '@emotion/css';
 import { AlertCircle, RotateCw } from 'lucide-react';
 import React, { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-
 import { UiButton, UiHorizontalGroup, UiTypography } from '../../../components/ui';
-import { useClipboard } from '../../../hooks/useClipboard';
 import { theme3 } from '../../../theme';
+import { useClipboard } from '../../../hooks/useClipboard';
 import { AiChatMessageVM, EAiChatStatus } from '../api/types';
-
 import { MessageButtons } from './MessageButtons';
 import { SuggestedPrompts } from './SuggestedPrompts';
+import { ChatFeedbackRequestValueEnum, ChatHistoryMessageRoleEnum } from '@architeq/core-api-client';
 
 interface ChatMessageProps {
   message: AiChatMessageVM;
@@ -240,7 +238,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = React.memo(
 
     const containerClassName = useMemo(
       () => cx(styles.messageContainer, isUser ? styles.userMessage : styles.assistantMessage),
-      [isUser, styles]
+      [isUser, isError, styles]
     );
 
     return (

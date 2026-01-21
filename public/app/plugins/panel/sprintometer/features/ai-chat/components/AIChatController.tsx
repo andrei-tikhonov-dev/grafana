@@ -32,6 +32,7 @@ interface Props {
   feedbackReasons: { up: string[]; down: string[] };
   strings: AiChatStrings;
   startPrompts: string[];
+  instanceId: string;
 }
 
 const THINKING_STAGE_INTERVAL = 3000;
@@ -46,6 +47,7 @@ export const AIChatController: React.FC<Props> = ({
   feedbackReasons,
   strings,
   startPrompts,
+  instanceId,
 }) => {
   const {
     openMode,
@@ -69,8 +71,7 @@ export const AIChatController: React.FC<Props> = ({
     applyFeedback,
   } = useAiChatStore();
 
-  const messages = chats[openMode];
-
+  const messages = chats[instanceId]?.[openMode] || [];
   const [pendingInputText, setPendingInputText] = useState<string>();
   const [pendingUserLocalId, setPendingUserLocalId] = useState<string>();
   const thinkingIntervalRef = useRef<number>();

@@ -14,10 +14,11 @@ interface FeedbackModalState {
 interface AiChatState {
   // Drawer state
   activeDrawerId: string | undefined;
+  activeInstanceId: string | undefined;
   openMode: EAiChatMode;
 
-  // Messages
-  chats: Record<EAiChatMode, AiChatMessageVM[]>;
+  // Messages (scoped by instanceId)
+  chats: Record<string, Record<EAiChatMode, AiChatMessageVM[]>>;
 
   // Request lifecycle
   isLoading: boolean;
@@ -29,7 +30,7 @@ interface AiChatState {
   feedbackModal: FeedbackModalState;
 
   // Actions
-  open: (mode: EAiChatMode, drawerId: string) => void;
+  open: (mode: EAiChatMode, drawerId: string, instanceId: string) => void;
   close: () => void;
 
   appendUserMessage: (text: string) => string; // Returns localId
@@ -52,14 +53,17 @@ interface AiChatState {
   clearMessages: () => void;
 }
 
+const createEmptyInstanceChats = (): Record<EAiChatMode, AiChatMessageVM[]> => ({
+  [EAiChatMode.General]: [],
+  [EAiChatMode.AutoSummary]: [],
+});
+
 export const useAiChatStore = create<AiChatState>((set, get) => ({
   // Initial state
   activeDrawerId: undefined,
+  activeInstanceId: undefined,
   openMode: EAiChatMode.General,
-  chats: {
-    [EAiChatMode.General]: [],
-    [EAiChatMode.AutoSummary]: [],
-  },
+  chats: {},
   isLoading: false,
   thinkingStageIndex: 0,
   abortController: undefined,
@@ -69,7 +73,18 @@ export const useAiChatStore = create<AiChatState>((set, get) => ({
   },
 
   // Drawer actions
-  open: (mode, drawerId) => set({ activeDrawerId: drawerId, openMode: mode }),
+  open: (mode, drawerId, instanceId) =>
+    set((state) => ({
+      activeDrawerId: drawerId,
+      activeInstanceId: instanceId,
+      openMode: mode,
+      chats: state.chats[instanceId]
+        ? state.chats
+        : {
+            ...state.chats,
+            [instanceId]: createEmptyInstanceChats(),
+          },
+    })),
   close: () => set({ activeDrawerId: undefined }),
 
   // Message actions
@@ -81,12 +96,22 @@ export const useAiChatStore = create<AiChatState>((set, get) => ({
       content: text,
       status: EAiChatStatus.Ok,
     };
-    set((state) => ({
-      chats: {
-        ...state.chats,
-        [state.openMode]: [...state.chats[state.openMode], message],
-      },
-    }));
+    set((state) => {
+      const instanceId = state.activeInstanceId;
+      if (!instanceId) {
+        return state;
+      }
+      const instanceChats = state.chats[instanceId] || createEmptyInstanceChats();
+      return {
+        chats: {
+          ...state.chats,
+          [instanceId]: {
+            ...instanceChats,
+            [state.openMode]: [...instanceChats[state.openMode], message],
+          },
+        },
+      };
+    });
     return localId;
   },
 
@@ -98,58 +123,107 @@ export const useAiChatStore = create<AiChatState>((set, get) => ({
       content: '',
       status: EAiChatStatus.Pending,
     };
-    set((state) => ({
-      chats: {
-        ...state.chats,
-        [state.openMode]: [...state.chats[state.openMode], message],
-      },
-    }));
+    set((state) => {
+      const instanceId = state.activeInstanceId;
+      if (!instanceId) {
+        return state;
+      }
+      const instanceChats = state.chats[instanceId] || createEmptyInstanceChats();
+      return {
+        chats: {
+          ...state.chats,
+          [instanceId]: {
+            ...instanceChats,
+            [state.openMode]: [...instanceChats[state.openMode], message],
+          },
+        },
+      };
+    });
     return localId;
   },
 
   resolveAssistantMessage: (localId, messageId, content, suggestedPrompts) => {
-    set((state) => ({
-      chats: {
-        ...state.chats,
-        [state.openMode]: state.chats[state.openMode].map((msg) =>
-          msg.localId === localId
-            ? {
-                ...msg,
-                messageId,
-                content,
-                status: EAiChatStatus.Ok,
-                suggestedPrompts,
-              }
-            : msg
-        ),
-      },
-    }));
+    set((state) => {
+      const instanceId = state.activeInstanceId;
+      if (!instanceId) {
+        return state;
+      }
+      const instanceChats = state.chats[instanceId];
+      if (!instanceChats) {
+        return state;
+      }
+      return {
+        chats: {
+          ...state.chats,
+          [instanceId]: {
+            ...instanceChats,
+            [state.openMode]: instanceChats[state.openMode].map((msg) =>
+              msg.localId === localId
+                ? {
+                    ...msg,
+                    messageId,
+                    content,
+                    status: EAiChatStatus.Ok,
+                    suggestedPrompts,
+                  }
+                : msg
+            ),
+          },
+        },
+      };
+    });
   },
 
   failAssistantMessage: (localId, errorMessage) => {
-    set((state) => ({
-      chats: {
-        ...state.chats,
-        [state.openMode]: state.chats[state.openMode].map((msg) =>
-          msg.localId === localId
-            ? {
-                ...msg,
-                status: EAiChatStatus.Error,
-                errorMessage,
-              }
-            : msg
-        ),
-      },
-    }));
+    set((state) => {
+      const instanceId = state.activeInstanceId;
+      if (!instanceId) {
+        return state;
+      }
+      const instanceChats = state.chats[instanceId];
+      if (!instanceChats) {
+        return state;
+      }
+      return {
+        chats: {
+          ...state.chats,
+          [instanceId]: {
+            ...instanceChats,
+            [state.openMode]: instanceChats[state.openMode].map((msg) =>
+              msg.localId === localId
+                ? {
+                    ...msg,
+                    status: EAiChatStatus.Error,
+                    errorMessage,
+                  }
+                : msg
+            ),
+          },
+        },
+      };
+    });
   },
 
   removeMessage: (localId) => {
-    set((state) => ({
-      chats: {
-        ...state.chats,
-        [state.openMode]: state.chats[state.openMode].filter((msg) => msg.localId !== localId),
-      },
-    }));
+    set((state) => {
+      const instanceId = state.activeInstanceId;
+      if (!instanceId) {
+        return state;
+      }
+      const instanceChats = state.chats[instanceId];
+      if (!instanceChats) {
+        return state;
+      }
+      return {
+        chats: {
+          ...state.chats,
+          [instanceId]: {
+            ...instanceChats,
+            [state.openMode]: instanceChats[state.openMode].filter((msg) => msg.localId !== localId),
+          },
+        },
+      };
+    });
   },
 
   // Request lifecycle
@@ -200,29 +274,55 @@ export const useAiChatStore = create<AiChatState>((set, get) => ({
   },
 
   applyFeedback: (localId, value, comment) => {
-    set((state) => ({
-      chats: {
-        ...state.chats,
-        [state.openMode]: state.chats[state.openMode].map((msg) =>
-          msg.localId === localId
-            ? {
-                ...msg,
-                feedback: {
-                  value,
-                  comment,
-                },
-              }
-            : msg
-        ),
-      },
-    }));
+    set((state) => {
+      const instanceId = state.activeInstanceId;
+      if (!instanceId) {
+        return state;
+      }
+      const instanceChats = state.chats[instanceId];
+      if (!instanceChats) {
+        return state;
+      }
+      return {
+        chats: {
+          ...state.chats,
+          [instanceId]: {
+            ...instanceChats,
+            [state.openMode]: instanceChats[state.openMode].map((msg) =>
+              msg.localId === localId
+                ? {
+                    ...msg,
+                    feedback: {
+                      value,
+                      comment,
+                    },
+                  }
+                : msg
+            ),
+          },
+        },
+      };
+    });
   },
 
   clearMessages: () =>
-    set((state) => ({
-      chats: {
-        ...state.chats,
-        [state.openMode]: [],
-      },
-    })),
+    set((state) => {
+      const instanceId = state.activeInstanceId;
+      if (!instanceId) {
+        return state;
+      }
+      const instanceChats = state.chats[instanceId];
+      if (!instanceChats) {
+        return state;
+      }
+      return {
+        chats: {
+          ...state.chats,
+          [instanceId]: {
+            ...instanceChats,
+            [state.openMode]: [],
+          },
+        },
+      };
+    }),
 }));

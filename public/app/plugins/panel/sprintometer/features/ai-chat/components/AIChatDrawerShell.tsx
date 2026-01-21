@@ -19,11 +19,12 @@ interface Props {
   strings: AiChatStrings;
   startPrompts: string[];
   drawerId: string;
+  instanceId: string;
 }
 
 export const AIChatDrawerShell: React.FC<Props> = (props) => {
   const { activeDrawerId, close } = useAiChatStore();
-  const { strings, drawerId } = props;
+  const { strings, drawerId, instanceId } = props;
 
   const isOpen = activeDrawerId === drawerId;
 
@@ -33,7 +34,7 @@ export const AIChatDrawerShell: React.FC<Props> = (props) => {
 
   return (
     <Drawer title={strings.drawerTitle} onClose={close} size="md">
-      <AIChatController {...props} />
+      <AIChatController {...props} instanceId={instanceId} />
     </Drawer>
   );
 };

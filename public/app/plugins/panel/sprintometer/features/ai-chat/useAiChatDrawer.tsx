@@ -10,6 +10,7 @@ import { useAiChatStore } from './store/aiChatStore';
 import { DEFAULT_FEEDBACK_REASONS, DEFAULT_STRINGS, DEFAULT_THINKING_STAGES } from './utils/defaults';
 
 export interface UseAiChatDrawerConfig {
+  panelId: number;
   teamId: string;
   project: string;
   dashboard?: SendMetricChatMessageBoardTypeEnum;
@@ -38,6 +39,7 @@ export function useAiChatDrawer(config: UseAiChatDrawerConfig): UseAiChatDrawerR
   const apiContext = useApi();
   const { open } = useAiChatStore();
   const drawerId = useMemo(() => Math.random().toString(36).substring(7), []);
+  const instanceId = String(config.panelId);
 
   // Create or use provided client
   const client = useMemo(() => {
@@ -70,11 +72,11 @@ export function useAiChatDrawer(config: UseAiChatDrawerConfig): UseAiChatDrawerR
 
   // Handlers
   const openGeneral = () => {
-    open(EAiChatMode.General, drawerId);
+    open(EAiChatMode.General, drawerId, instanceId);
   };
 
   const openAutoSummary = () => {
-    open(EAiChatMode.AutoSummary, drawerId);
+    open(EAiChatMode.AutoSummary, drawerId, instanceId);
   };
 
   // Drawer node
@@ -90,6 +92,7 @@ export function useAiChatDrawer(config: UseAiChatDrawerConfig): UseAiChatDrawerR
       strings={strings}
       startPrompts={config.startScreen.prompts}
       drawerId={drawerId}
+      instanceId={instanceId}
     />
   );
 

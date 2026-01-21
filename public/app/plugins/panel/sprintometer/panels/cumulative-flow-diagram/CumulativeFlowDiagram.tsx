@@ -9,6 +9,7 @@ import { UiPanelContainer } from '../../components/ui/panel-container/PanelConta
 import { useAiChatDrawer } from '../../features/ai-chat';
 import { useEcharts } from '../../hooks/useEcharts';
 import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
+import { useMockAiChatClient } from '../../hooks/useMockAiChatClient';
 import { usePluginState } from '../../hooks/usePluginState';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -38,6 +39,7 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
   data: panelData,
   options,
   onOptionsChange,
+  id,
 }) => {
   const initialState: CumulativeFlowDiagramState = {
     selectedIssues: [],
@@ -62,13 +64,16 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
   });
 
   const grafanaVariables = useGrafanaVariables(['team', 'project']);
+  const mockClient = useMockAiChatClient(options);
 
   // AI Chat Drawer
   const { openAutoSummary, drawer } = useAiChatDrawer({
+    panelId: id,
     teamId: grafanaVariables.team as string,
     project: grafanaVariables.project as string,
     dashboard: options.cumulativeFlowDiagram?.dashboard,
     metric: options.cumulativeFlowDiagram?.metric,
+    client: mockClient,
     startScreen: {
       title: 'Your sprint, explained instantly',
       subtitle: 'Choose a question to get data-driven insights',

@@ -7,6 +7,7 @@ import { PanelProps } from '@grafana/data';
 import { UiAiViewer, UiButton, UiTypography } from '../../components/ui';
 import { useAiChatDrawer } from '../../features/ai-chat';
 import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
+import { useMockAiChatClient } from '../../hooks/useMockAiChatClient';
 import { theme3 } from '../../theme';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -34,17 +35,20 @@ const initialData: AICustomData = {
   },
 };
 
-export const AI: React.FC<Props> = ({ width, height, data, options }) => {
+export const AI: React.FC<Props> = ({ width, height, data, options, id }) => {
   const { title, ai } = getGrafanaCustomData<AICustomData>(data, initialData);
 
   const grafanaVariables = useGrafanaVariables(['team', 'project']);
+  const mockClient = useMockAiChatClient(options);
 
   // AI Chat Drawer
   const { openAutoSummary, drawer } = useAiChatDrawer({
+    panelId: id,
     teamId: grafanaVariables.team as string,
     project: grafanaVariables.project as string,
     dashboard: options.ai?.dashboard,
     metric: options.ai?.metric,
+    client: mockClient,
     startScreen: {
       title: 'Your sprint, explained instantly',
       subtitle: 'Choose a question to get data-driven insights',

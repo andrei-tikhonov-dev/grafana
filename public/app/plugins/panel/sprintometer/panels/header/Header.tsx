@@ -8,6 +8,7 @@ import { Separator } from '../../components/shadcn/separator';
 import { UiBreadcrumbs, UiButton, UiCard, UiHorizontalGroup, UiTypography, UiVerticalGroup } from '../../components/ui';
 import { useAiChatDrawer } from '../../features/ai-chat';
 import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
+import { useMockAiChatClient } from '../../hooks/useMockAiChatClient';
 import { panelContainerStyles } from '../../theme';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -47,7 +48,7 @@ const CONTAINER_PADDINGS = 70;
  * Header panel component.
  * Displays dashboard information, status, metrics, and timeline.
  */
-export const Header: React.FC<Props> = ({ width, height, data, options }) => {
+export const Header: React.FC<Props> = ({ width, height, data, options, id }) => {
   const {
     title,
     status,
@@ -67,13 +68,16 @@ export const Header: React.FC<Props> = ({ width, height, data, options }) => {
   const hasEvents = eventsToday || eventsUpcoming;
   const hasTimelineSection = timeline || hasEvents;
   const grafanaVariables = useGrafanaVariables(['team', 'project']);
+  const mockClient = useMockAiChatClient(options);
 
   // AI Chat Drawer
   const { openGeneral, openAutoSummary, drawer } = useAiChatDrawer({
+    panelId: id,
     teamId: grafanaVariables.team as string,
     project: grafanaVariables.project as string,
     dashboard: options.header?.dashboard,
     metric: options.header?.metric,
+    client: mockClient,
     startScreen: {
       title: 'Your sprint, explained instantly',
       subtitle: 'Choose a question to get data-driven insights',

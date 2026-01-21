@@ -18,6 +18,7 @@ import { UiPanelContainer } from '../../components/ui/panel-container/PanelConta
 import { useAiChatDrawer } from '../../features/ai-chat';
 import { useEcharts } from '../../hooks/useEcharts';
 import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
+import { useMockAiChatClient } from '../../hooks/useMockAiChatClient';
 import { usePluginState } from '../../hooks/usePluginState';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -54,6 +55,7 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
   data: panelData,
   options,
   onOptionsChange,
+  id,
 }) => {
   const initialState: BurndownChartState = {
     valueMode: EValueMode.StoryPoints,
@@ -64,13 +66,16 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
   const [state, setState] = usePluginState<BurndownChartState>(options, onOptionsChange, initialState);
   const { valueMode, selectedIssues, showNonWorkingDays } = state;
   const grafanaVariables = useGrafanaVariables(['team', 'project']);
+  const mockClient = useMockAiChatClient(options);
 
   // AI Chat Drawer
   const { openAutoSummary, drawer } = useAiChatDrawer({
+    panelId: id,
     teamId: grafanaVariables.team as string,
     project: grafanaVariables.project as string,
     dashboard: options.burndown?.dashboard,
     metric: options.burndown?.metric,
+    client: mockClient,
     startScreen: {
       title: 'Your sprint, explained instantly',
       subtitle: 'Choose a question to get data-driven insights',
