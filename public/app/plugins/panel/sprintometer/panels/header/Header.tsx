@@ -7,6 +7,7 @@ import { PanelProps } from '@grafana/data';
 import { Separator } from '../../components/shadcn/separator';
 import { UiBreadcrumbs, UiButton, UiCard, UiHorizontalGroup, UiTypography, UiVerticalGroup } from '../../components/ui';
 import { useAiChatDrawer } from '../../features/ai-chat';
+import { useDashboardUid } from '../../hooks/useDashboardUid';
 import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
 import { useMockAiChatClient } from '../../hooks/useMockAiChatClient';
 import { panelContainerStyles } from '../../theme';
@@ -67,12 +68,14 @@ export const Header: React.FC<Props> = ({ width, height, data, options, id }) =>
   const hasMetrics = interval || progress || organizationUnit;
   const hasEvents = eventsToday || eventsUpcoming;
   const hasTimelineSection = timeline || hasEvents;
+  const dashboardUid = useDashboardUid();
   const grafanaVariables = useGrafanaVariables(['team', 'project']);
   const mockClient = useMockAiChatClient(options);
 
   // AI Chat Drawer
   const { openGeneral, openAutoSummary, drawer } = useAiChatDrawer({
     panelId: id,
+    dashboardUid,
     teamId: grafanaVariables.team as string,
     project: grafanaVariables.project as string,
     dashboard: options.header?.dashboard,

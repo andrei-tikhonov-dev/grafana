@@ -7,6 +7,7 @@ import { PanelProps } from '@grafana/data';
 import { UiAiViewer, UiButton, UiFiltersContainer, UiMultiSelect, UiSwitch } from '../../components/ui';
 import { UiPanelContainer } from '../../components/ui/panel-container/PanelContainer';
 import { useAiChatDrawer } from '../../features/ai-chat';
+import { useDashboardUid } from '../../hooks/useDashboardUid';
 import { useEcharts } from '../../hooks/useEcharts';
 import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
 import { useMockAiChatClient } from '../../hooks/useMockAiChatClient';
@@ -63,12 +64,14 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
     periodType,
   });
 
+  const dashboardUid = useDashboardUid();
   const grafanaVariables = useGrafanaVariables(['team', 'project']);
   const mockClient = useMockAiChatClient(options);
 
   // AI Chat Drawer
   const { openAutoSummary, drawer } = useAiChatDrawer({
     panelId: id,
+    dashboardUid,
     teamId: grafanaVariables.team as string,
     project: grafanaVariables.project as string,
     dashboard: options.cumulativeFlowDiagram?.dashboard,
@@ -128,7 +131,7 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
     <UiPanelContainer width={width} height={height} title="Cumulative flow diagram">
       <UiFiltersContainer
         suffix={
-          ai ? (
+          ai?.content ? (
             <UiAiViewer title={ai?.title} content={ai?.content} label="AI data" />
           ) : (
             <UiButton onClick={openAutoSummary} variant="ai">

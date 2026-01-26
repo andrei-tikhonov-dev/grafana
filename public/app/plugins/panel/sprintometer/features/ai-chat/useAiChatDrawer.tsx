@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 
 import { useApi } from '../../api';
 
-import { createCoreApiClientAdapter } from './api/createCoreApiClientAdapter';
+import { createAiChatApiClientAdapter } from './api/createAiChatApiClientAdapter';
 import { AiChatClient, AiChatStrings, EAiChatMode } from './api/types';
 import { AIChatDrawerShell } from './components/AIChatDrawerShell';
 import { useAiChatStore } from './store/aiChatStore';
@@ -11,6 +11,7 @@ import { DEFAULT_FEEDBACK_REASONS, DEFAULT_STRINGS, DEFAULT_THINKING_STAGES } fr
 
 export interface UseAiChatDrawerConfig {
   panelId: number;
+  dashboardUid?: string;
   teamId: string;
   project: string;
   dashboard?: SendMetricChatMessageBoardTypeEnum;
@@ -39,14 +40,14 @@ export function useAiChatDrawer(config: UseAiChatDrawerConfig): UseAiChatDrawerR
   const apiContext = useApi();
   const { open } = useAiChatStore();
   const drawerId = useMemo(() => Math.random().toString(36).substring(7), []);
-  const instanceId = String(config.panelId);
+  const instanceId = config.dashboardUid ? `${config.dashboardUid}-${config.panelId}` : String(config.panelId);
 
   // Create or use provided client
   const client = useMemo(() => {
     if (config.client) {
       return config.client;
     }
-    return createCoreApiClientAdapter(apiContext.config);
+    return createAiChatApiClientAdapter(apiContext.config);
   }, [config.client, apiContext.config]);
 
   // Merge strings with defaults

@@ -6,6 +6,7 @@ import { ScrollArea, ScrollBar } from '../../../components/shadcn/scroll-area';
 import { UiAiViewer, UiButton, UiFiltersContainer, UiVerticalGroup } from '../../../components/ui';
 import { UiPanelContainer } from '../../../components/ui/panel-container/PanelContainer';
 import { useAiChatDrawer } from '../../../features/ai-chat';
+import { useDashboardUid } from '../../../hooks/useDashboardUid';
 import { useGrafanaVariables } from '../../../hooks/useGrafanaVariables';
 import { useMockAiChatClient } from '../../../hooks/useMockAiChatClient';
 import { usePluginState } from '../../../hooks/usePluginState';
@@ -171,12 +172,14 @@ export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsC
 
   const styles = useIssueMapStyles(width, height, sankeyWidth, hasFilters);
 
+  const dashboardUid = useDashboardUid();
   const grafanaVariables = useGrafanaVariables(['team', 'project']);
   const mockClient = useMockAiChatClient(options);
 
   // AI Chat Drawer
   const { openAutoSummary, drawer } = useAiChatDrawer({
     panelId: id,
+    dashboardUid,
     teamId: grafanaVariables.team as string,
     project: grafanaVariables.project as string,
     dashboard: options.sankey?.dashboard,
@@ -199,7 +202,7 @@ export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsC
       <UiVerticalGroup align="stretch" gap="sm">
         <UiFiltersContainer
           suffix={
-            ai ? (
+            ai?.content ? (
               <UiAiViewer title={ai?.title} content={ai?.content} label="AI data" />
             ) : (
               <UiButton onClick={openAutoSummary} variant="ai">

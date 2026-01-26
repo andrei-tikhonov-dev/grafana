@@ -16,6 +16,7 @@ import {
 } from '../../components/ui';
 import { UiPanelContainer } from '../../components/ui/panel-container/PanelContainer';
 import { useAiChatDrawer } from '../../features/ai-chat';
+import { useDashboardUid } from '../../hooks/useDashboardUid';
 import { useEcharts } from '../../hooks/useEcharts';
 import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
 import { useMockAiChatClient } from '../../hooks/useMockAiChatClient';
@@ -65,12 +66,14 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
 
   const [state, setState] = usePluginState<BurndownChartState>(options, onOptionsChange, initialState);
   const { valueMode, selectedIssues, showNonWorkingDays } = state;
+  const dashboardUid = useDashboardUid();
   const grafanaVariables = useGrafanaVariables(['team', 'project']);
   const mockClient = useMockAiChatClient(options);
 
   // AI Chat Drawer
   const { openAutoSummary, drawer } = useAiChatDrawer({
     panelId: id,
+    dashboardUid,
     teamId: grafanaVariables.team as string,
     project: grafanaVariables.project as string,
     dashboard: options.burndown?.dashboard,
@@ -172,7 +175,7 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
         suffix={
           <>
             <ScopeChangesViewer daysData={daysData} />
-            {ai ? (
+            {ai?.content ? (
               <UiAiViewer title={ai?.title} content={ai?.content} label="AI data" />
             ) : (
               <UiButton onClick={openAutoSummary} variant="ai">

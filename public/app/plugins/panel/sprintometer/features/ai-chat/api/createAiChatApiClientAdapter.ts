@@ -5,7 +5,7 @@ import { AiChatClient, SendMessageArgs, SubmitFeedbackArgs } from './types';
 /**
  * Create adapter for @architeq/core-api-client
  */
-export function createCoreApiClientAdapter(config: Configuration): AiChatClient {
+export function createAiChatApiClientAdapter(config: Configuration): AiChatClient {
   const api = new MetricChatApi(config);
 
   return {
