@@ -3,8 +3,9 @@ import React from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { UiExpandableTable, UiTypography } from '../../components/ui';
+import { UiExpandableTable, UiFiltersContainer, UiTypography } from '../../components/ui';
 import { UiPanelContainer } from '../../components/ui/panel-container/PanelContainer';
+import { usePanelAiChat } from '../../features/ai-chat';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
@@ -25,13 +26,31 @@ const initialData: MData = {
   data: [],
 };
 
-export const IncomingDependencies: React.FC<IncomingDependenciesProps> = ({ width, height, data: panelData }) => {
-  const { total, columns, innerColumns, data } = getGrafanaCustomData<MData>(panelData, initialData);
+export const IncomingDependencies: React.FC<IncomingDependenciesProps> = ({
+  width,
+  height,
+  data: panelData,
+  options,
+  id,
+}) => {
+  const { ai, ...customData } = getGrafanaCustomData<MData>(panelData, initialData);
+  const { total, columns, innerColumns, data } = customData;
   const initialExpandedRows = data.reduce((acc, row) => ({ ...acc, [row.id]: row.hasChanges }), {});
+
+  const { toggle, drawer } = usePanelAiChat({
+    panelId: id,
+    aiEnabled: options.aiEnabled,
+    dashboard: options.incomingDependencies?.dashboard,
+    metric: options.incomingDependencies?.metric,
+    aiData: ai,
+    mockConfig: options.aiChatMock,
+  });
 
   return (
     <UiPanelContainer width={width} height={height} title="Incoming dependencies">
-      <UiTypography color="light">Issues that depend on other teams ({total})</UiTypography>
+      <UiFiltersContainer suffix={toggle}>
+        <UiTypography color="light">Issues that depend on other teams ({total})</UiTypography>
+      </UiFiltersContainer>
 
       <div className={styles.content}>
         <UiExpandableTable
@@ -41,6 +60,7 @@ export const IncomingDependencies: React.FC<IncomingDependenciesProps> = ({ widt
           initialExpandedRows={initialExpandedRows}
         />
       </div>
+      {drawer}
     </UiPanelContainer>
   );
 };

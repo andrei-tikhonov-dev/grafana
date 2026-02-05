@@ -22,7 +22,7 @@ export const getPanelTypeOptions = async () => {
   ]);
 };
 
-const AI_CHAT_MOCK_CATEGORY = ['AI Chat Mock'];
+const AI_CATEGORY = ['AI'];
 
 export const plugin = new PanelPlugin<TPanelOptions>(Panel).setPanelOptions((builder) => {
   builder
@@ -45,14 +45,21 @@ export const plugin = new PanelPlugin<TPanelOptions>(Panel).setPanelOptions((bui
       showIf: () => false,
     })
     .addBooleanSwitch({
-      category: AI_CHAT_MOCK_CATEGORY,
+      category: AI_CATEGORY,
+      path: 'aiEnabled',
+      name: 'Enable AI features',
+      description: 'Show AI helper button in panels',
+      defaultValue: true,
+    })
+    .addBooleanSwitch({
+      category: AI_CATEGORY,
       path: 'aiChatMock.useMock',
       name: 'Use mock',
       description: 'Enable mock AI chat responses instead of real API calls',
       defaultValue: false,
     })
     .addTextInput({
-      category: AI_CHAT_MOCK_CATEGORY,
+      category: AI_CATEGORY,
       path: 'aiChatMock.autoSummary',
       name: 'Auto-summary response',
       description: 'JSON object for auto-summary response. Leave empty for default.',
@@ -63,7 +70,7 @@ export const plugin = new PanelPlugin<TPanelOptions>(Panel).setPanelOptions((bui
       },
     })
     .addTextInput({
-      category: AI_CHAT_MOCK_CATEGORY,
+      category: AI_CATEGORY,
       path: 'aiChatMock.general',
       name: 'General responses',
       description: 'JSON array of responses for general chat. Leave empty for default.',

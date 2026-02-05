@@ -1,69 +1,84 @@
-import { useState, useEffect } from 'react';
+import {
+  GetMetricAiForecastBoardTypeEnum,
+  GetMetricAiForecastMetricNameEnum,
+} from '@architeq/core-api-client';
+import { useQuery } from '@tanstack/react-query';
 
-import { TAiForecast } from '../types';
+import { EValueMode, TAiForecast } from '../types';
+
+import { AiForecastClient } from './types';
 
 interface UseAiPredictionProps {
+  client: AiForecastClient;
   enabled: boolean;
+  /** Whether the API basePath is ready for requests */
+  isBasePathReady: boolean;
+  teamId: string;
+  project: string;
+  boardType: GetMetricAiForecastBoardTypeEnum;
+  metricName: GetMetricAiForecastMetricNameEnum;
+  valueMode: EValueMode;
+  showNonWorkingDays: boolean;
+  selectedIssues: string[];
   startValue: number;
   futureDates: string[];
 }
 
-export const useAiPrediction = ({ enabled, startValue, futureDates }: UseAiPredictionProps) => {
-  const [data, setData] = useState<TAiForecast | null>(null);
-  const [loading, setLoading] = useState(false);
+/**
+ * Hook for fetching AI-generated burndown predictions.
+ *
+ * This hook manages the query for AI forecast data, including proper
+ * handling of the basePath readiness to prevent race conditions.
+ *
+ * @param props - Configuration for the prediction query
+ * @returns Object containing forecast data, loading state, and any error
+ */
+export const useAiPrediction = ({
+  client,
+  enabled,
+  isBasePathReady,
+  teamId,
+  project,
+  boardType,
+  metricName,
+  valueMode,
+  showNonWorkingDays,
+  selectedIssues,
+  startValue,
+  futureDates,
+}: UseAiPredictionProps) => {
+  const { data, isLoading, error } = useQuery<TAiForecast>({
+    queryKey: [
+      'burndown-ai-forecast',
+      teamId,
+      project,
+      boardType,
+      metricName,
+      valueMode,
+      showNonWorkingDays,
+      selectedIssues,
+      startValue,
+      futureDates,
+    ],
+    queryFn: ({ signal }) =>
+      client.getForecast(
+        {
+          teamId,
+          project,
+          boardType,
+          metricName,
+          valueMode,
+          showNonWorkingDays,
+          selectedIssues,
+          futureDates,
+          startValue,
+        },
+        { signal }
+      ),
+    // Only enable when basePath is ready, user enabled it, and we have future dates
+    enabled: enabled && isBasePathReady && futureDates.length > 0,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 
-  useEffect(() => {
-    if (!enabled || futureDates.length === 0) {
-      setData(null);
-      return;
-    }
-
-    setLoading(true);
-
-    const timer = setTimeout(() => {
-      const forecastData = futureDates.map((date, index) => {
-        // Linear decline to 0 at the end
-
-        // Simple linear interpolation from startValue to 0
-        // But we want the FIRST point of futureDates to be the next day?
-        // Actually, for continuity, usually we include the start point.
-        // But here `futureDates` are the days *after* the last actual data point.
-        // So the first forecast point is the next day.
-
-        // Let's assume target is 0 at the last day.
-        const predictedValue = Math.max(0, startValue - (startValue * (index + 1)) / futureDates.length);
-
-        // Create a spread
-        const spread = startValue * 0.1 * ((index + 1) / futureDates.length) + 1; // Increasing uncertainty
-
-        return {
-          date,
-          value: Math.round(predictedValue * 10) / 10,
-          upperBound: Math.round((predictedValue + spread) * 10) / 10,
-          lowerBound: Math.round(Math.max(0, predictedValue - spread) * 10) / 10,
-        };
-      });
-
-      // To make the line connected, we might need the start point (the last actual data).
-      // But ECharts can handle separate series if they share a point?
-      // Or we should prepend the start point to the forecast data?
-      // In the context of ECharts 'line' series, valid data points are plotted.
-      // If we want a connected line:
-      // Series 1 (Actual): [A, B, C, null, null]
-      // Series 2 (Forecast): [null, null, C, D, E]
-      // So Forecast needs to include the last point of Actual.
-
-      // We will handle the "connection" point in the component (by merging or prepping data).
-      // The API returns the FORECAST for the FUTURE.
-
-      setData({
-        data: forecastData,
-      });
-      setLoading(false);
-    }, 0);
-
-    return () => clearTimeout(timer);
-  }, [enabled, startValue, JSON.stringify(futureDates)]);
-
-  return { data, loading };
+  return { data: data ?? null, loading: isLoading, error: error ?? null };
 };

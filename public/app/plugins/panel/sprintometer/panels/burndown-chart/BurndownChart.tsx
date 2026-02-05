@@ -1,29 +1,22 @@
+import { GetMetricAiForecastBoardTypeEnum, GetMetricAiForecastMetricNameEnum } from '@architeq/core-api-client';
 import { css } from '@emotion/css';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import React, { useMemo } from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import {
-  UiAiViewer,
-  UiButton,
-  UiFiltersContainer,
-  UiHorizontalGroup,
-  UiMultiSelect,
-  UiSelect,
-  UiSwitch,
-  UiText,
-} from '../../components/ui';
+import { useApi } from '../../api';
+import { UiFiltersContainer, UiHorizontalGroup, UiMultiSelect, UiSelect, UiSwitch, UiText } from '../../components/ui';
 import { UiPanelContainer } from '../../components/ui/panel-container/PanelContainer';
-import { useAiChatDrawer } from '../../features/ai-chat';
-import { useDashboardUid } from '../../hooks/useDashboardUid';
+import { usePanelAiChat } from '../../features/ai-chat';
 import { useEcharts } from '../../hooks/useEcharts';
 import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
-import { useMockAiChatClient } from '../../hooks/useMockAiChatClient';
+import { useMockAiForecastClient } from '../../hooks/useMockAiForecastClient';
 import { usePluginState } from '../../hooks/usePluginState';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
+import { createAiForecastApiClientAdapter } from './api/createAiForecastApiClientAdapter';
 import { useAiPrediction } from './api/useAiPrediction';
 import { ScopeChangesViewer } from './components/ScopeChangesViewer';
 import { Summary } from './components/Summary';
@@ -66,32 +59,27 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
 
   const [state, setState] = usePluginState<BurndownChartState>(options, onOptionsChange, initialState);
   const { valueMode, selectedIssues, showNonWorkingDays } = state;
-  const dashboardUid = useDashboardUid();
   const grafanaVariables = useGrafanaVariables(['team', 'project']);
-  const mockClient = useMockAiChatClient(options);
+  const { config, isBasePathReady } = useApi();
+  const mockForecastClient = useMockAiForecastClient(options);
 
-  // AI Chat Drawer
-  const { openAutoSummary, drawer } = useAiChatDrawer({
-    panelId: id,
-    dashboardUid,
-    teamId: grafanaVariables.team as string,
-    project: grafanaVariables.project as string,
-    dashboard: options.burndown?.dashboard,
-    metric: options.burndown?.metric,
-    client: mockClient,
-    startScreen: {
-      title: 'Your sprint, explained instantly',
-      subtitle: 'Choose a question to get data-driven insights',
-      prompts: [
-        'Check the pulse of your sprint and spot problems early',
-        'Understand how your team is doing & where improvement is possible',
-        'Predict outcomes and understand "what-ifs"',
-        'Learn from historical data and uncover recurring patterns',
-      ],
-    },
-  });
+  const forecastClient = useMemo(() => {
+    if (mockForecastClient) {
+      return mockForecastClient;
+    }
+    return createAiForecastApiClientAdapter(config);
+  }, [mockForecastClient, config]);
 
   const { ai, ...customData } = getGrafanaCustomData<MBurndownCustomData>(panelData, initialData);
+
+  const { toggle, drawer } = usePanelAiChat({
+    panelId: id,
+    aiEnabled: options.aiEnabled,
+    dashboard: options.burndown?.dashboard,
+    metric: options.burndown?.metric,
+    aiData: ai,
+    mockConfig: options.aiChatMock,
+  });
 
   const { summary, daysData, currentDay, issueOptions, valueOptions, data, scopeChanges } = useMemo(() => {
     return prepareData(customData);
@@ -123,9 +111,17 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
 
   const lastActualValue = actual.length > 0 ? actual[actual.length - 1] : 0;
 
-  // Only enable prediction if we have some data and remaining days
   const { data: aiForecast, loading: aiLoading } = useAiPrediction({
-    enabled: actual.length > 0 && futureDates.length > 0,
+    client: forecastClient,
+    enabled: options.aiEnabled !== false && actual.length > 0 && futureDates.length > 0,
+    isBasePathReady,
+    teamId: grafanaVariables.team as string,
+    project: grafanaVariables.project as string,
+    boardType: (options.burndown?.dashboard ?? '') as GetMetricAiForecastBoardTypeEnum,
+    metricName: (options.burndown?.metric ?? '') as GetMetricAiForecastMetricNameEnum,
+    valueMode,
+    showNonWorkingDays,
+    selectedIssues,
     startValue: lastActualValue,
     futureDates,
   });
@@ -141,7 +137,7 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
         nonWorkingDays,
         scopeChanges,
 
-        // aiForecast: aiLoading ? null : aiForecast,
+        aiForecast: aiLoading ? null : aiForecast,
       }),
     [actual, ideal, currentDay, scopeChanges, nonWorkingDays, days, valueMode, aiForecast, aiLoading]
   );
@@ -175,14 +171,7 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
         suffix={
           <>
             <ScopeChangesViewer daysData={daysData} />
-            {ai?.content ? (
-              <UiAiViewer title={ai?.title} content={ai?.content} label="AI data" />
-            ) : (
-              <UiButton onClick={openAutoSummary} variant="ai">
-                <Sparkles />
-                AI helper
-              </UiButton>
-            )}
+            {toggle}
           </>
         }
       >

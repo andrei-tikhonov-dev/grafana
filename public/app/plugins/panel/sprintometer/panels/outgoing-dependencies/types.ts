@@ -1,4 +1,4 @@
-import { EJiraType, TJiraPriority, TTable, TLink, TJiraChangesHistory, TUser, TJiraIssueType } from '../../types';
+import { EJiraType, TAiData, TJiraPriority, TTable, TLink, TJiraChangesHistory, TUser, TJiraIssueType } from '../../types';
 
 // Team types
 
@@ -52,6 +52,7 @@ export interface InnerIssue {
 
 export interface OutgoingDependenciesCustomData extends TTable<OuterIssue, InnerIssue> {
   total: number;
+  ai?: TAiData;
 }
 
 // ART types
@@ -107,4 +108,5 @@ export interface InnerArtIssue {
 
 export interface OutgoingArtDependenciesCustomData extends TTable<OuterArtIssue, InnerArtIssue> {
   total: number;
+  ai?: TAiData;
 }

@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 
 import {
+  TAiData,
   TDate,
   TId,
   TJiraIssueType,
@@ -15,6 +16,7 @@ import {
 export interface MPlannerBoardCustom extends Record<string, any> {
   teams: MTeam[];
   phases: MPhase[];
+  ai?: TAiData;
 }
 
 export interface MTeam {

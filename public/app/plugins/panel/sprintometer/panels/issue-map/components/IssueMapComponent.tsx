@@ -1,14 +1,10 @@
 import { css } from '@emotion/css';
-import { Sparkles } from 'lucide-react';
 import React, { useMemo, useCallback } from 'react';
 
 import { ScrollArea, ScrollBar } from '../../../components/shadcn/scroll-area';
-import { UiAiViewer, UiButton, UiFiltersContainer, UiVerticalGroup } from '../../../components/ui';
+import { UiFiltersContainer, UiVerticalGroup } from '../../../components/ui';
 import { UiPanelContainer } from '../../../components/ui/panel-container/PanelContainer';
-import { useAiChatDrawer } from '../../../features/ai-chat';
-import { useDashboardUid } from '../../../hooks/useDashboardUid';
-import { useGrafanaVariables } from '../../../hooks/useGrafanaVariables';
-import { useMockAiChatClient } from '../../../hooks/useMockAiChatClient';
+import { usePanelAiChat } from '../../../features/ai-chat';
 import { usePluginState } from '../../../hooks/usePluginState';
 import { useZoom } from '../../../hooks/useZoom';
 import { getGrafanaCustomData } from '../../../utils/grafana';
@@ -172,46 +168,19 @@ export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsC
 
   const styles = useIssueMapStyles(width, height, sankeyWidth, hasFilters);
 
-  const dashboardUid = useDashboardUid();
-  const grafanaVariables = useGrafanaVariables(['team', 'project']);
-  const mockClient = useMockAiChatClient(options);
-
-  // AI Chat Drawer
-  const { openAutoSummary, drawer } = useAiChatDrawer({
+  const { toggle, drawer } = usePanelAiChat({
     panelId: id,
-    dashboardUid,
-    teamId: grafanaVariables.team as string,
-    project: grafanaVariables.project as string,
+    aiEnabled: options.aiEnabled,
     dashboard: options.sankey?.dashboard,
     metric: options.sankey?.metric,
-    client: mockClient,
-    startScreen: {
-      title: 'Your sprint, explained instantly',
-      subtitle: 'Choose a question to get data-driven insights',
-      prompts: [
-        'Check the pulse of your sprint and spot problems early',
-        'Understand how your team is doing & where improvement is possible',
-        'Predict outcomes and understand "what-ifs"',
-        'Learn from historical data and uncover recurring patterns',
-      ],
-    },
+    aiData: ai,
+    mockConfig: options.aiChatMock,
   });
 
   return (
     <UiPanelContainer width={width} height={height} title="Issue map">
       <UiVerticalGroup align="stretch" gap="sm">
-        <UiFiltersContainer
-          suffix={
-            ai?.content ? (
-              <UiAiViewer title={ai?.title} content={ai?.content} label="AI data" />
-            ) : (
-              <UiButton onClick={openAutoSummary} variant="ai">
-                <Sparkles />
-                AI helper
-              </UiButton>
-            )
-          }
-        >
+        <UiFiltersContainer suffix={toggle}>
           {filtersComponent}
         </UiFiltersContainer>
         <UiFiltersContainer suffix={zoomComponent}>

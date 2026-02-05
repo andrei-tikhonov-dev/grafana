@@ -4,17 +4,7 @@ import { useMemo } from 'react';
 import { AiChatClient } from '../features/ai-chat/api/types';
 import { createMockAiChatClient, AiChatMockConfig } from '../mock';
 import { TPanelOptions } from '../types';
-
-function safeParseJson<T>(jsonString: string | undefined): T | null {
-  if (!jsonString || jsonString.trim() === '') {
-    return null;
-  }
-  try {
-    return JSON.parse(jsonString) as T;
-  } catch {
-    return null;
-  }
-}
+import { safeParseJson } from '../utils/json';
 
 export function useMockAiChatClient(options: TPanelOptions): AiChatClient | undefined {
   const mockOptions = options.aiChatMock;

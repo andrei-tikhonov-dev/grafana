@@ -1,4 +1,4 @@
-import * as echarts from 'echarts';
+import type { EChartsOption, LineSeriesOption } from 'echarts';
 
 import { theme } from '../../theme';
 import { aggregateValues } from '../../utils/arrays';
@@ -16,39 +16,31 @@ import {
   EPeriod,
 } from './types';
 
-const transformStructuredDataToAggregated = (data: MStructuredData[]): MAggregatedData => {
-  const result: MAggregatedData = {
-    issuesAmount: {},
-  };
+const textColor = theme.colors.semantic.text;
 
-  data.forEach((item) => {
-    result.issuesAmount[item.name] = item.issuesAmount;
-  });
+const transformStructuredDataToAggregated = (data: MStructuredData[]): MAggregatedData => ({
+  issuesAmount: Object.fromEntries(data.map((item) => [item.name, item.issuesAmount])),
+});
 
-  return result;
-};
+const formatPeriodValue = (value: string, periodType: MPeriod): string =>
+  periodType === 'date' ? formatDate(value) : value;
 
 export function prepareData({ periods, issueTypes, currentPeriod, periodType }: MData): MPreparedData {
-  const issueOptions = issueTypes.map(({ name }) => ({
-    label: name,
-    value: name,
-  }));
-
   return {
     currentPeriod: periodType === EPeriod.Date ? formatDate(currentPeriod) : currentPeriod,
     data: transformStructuredDataToAggregated(issueTypes),
     periodType,
     periodsData: periods,
-    issueOptions,
+    issueOptions: issueTypes.map(({ name }) => ({ label: name, value: name })),
   };
 }
 
-type FilterDataArgs = {
+interface FilterDataArgs {
   periodsData: MPeriodData[];
   data: MAggregatedData;
   selectedIssues: string[];
   periodType: MPeriod;
-};
+}
 
 export const filterCumulativeFlowDiagramData = ({
   data,
@@ -61,45 +53,37 @@ export const filterCumulativeFlowDiagramData = ({
       ? Object.keys(data.issuesAmount)
       : selectedIssues.filter((name) => data.issuesAmount[name]);
 
-  const periods = periodsData.map(({ value }) => (periodType === 'date' ? formatDate(value) : value));
+  const periods = periodsData.map(({ value }) => formatPeriodValue(value, periodType));
 
   if (keysToUse.length === 0) {
-    return { filteredData: [], periods: periods };
+    return { filteredData: [], periods };
   }
 
   const dataKeys = Array.from(new Set(keysToUse.flatMap((name) => Object.keys(data.issuesAmount[name]))));
 
   const filteredData = dataKeys.map((dataKey) => {
     const dataArrays = keysToUse
-      .filter((name) => data.issuesAmount[name][dataKey]) // фильтруем только те, у которых есть этот dataKey
+      .filter((name) => data.issuesAmount[name][dataKey])
       .map((name) => data.issuesAmount[name][dataKey]);
 
-    const aggregatedData = dataArrays.length === 1 ? dataArrays[0] : aggregateValues(dataArrays);
-
     return {
-      data: aggregatedData,
+      data: dataArrays.length === 1 ? dataArrays[0] : aggregateValues(dataArrays),
       name: dataKey,
     };
   });
 
-  return { filteredData, periods: periods };
+  return { filteredData, periods };
 };
 
-const formatSeries = (data: number[], name: string, isStacked: boolean): any => {
-  return {
-    name,
-    data,
-    type: 'line',
-    ...(isStacked && { stack: 'Total' }),
-    smooth: true,
-    areaStyle: {
-      opacity: 0.8,
-    },
-    emphasis: {
-      focus: 'series',
-    },
-  };
-};
+const createLineSeries = (data: number[], name: string, isStacked: boolean): LineSeriesOption => ({
+  name,
+  data,
+  type: 'line',
+  ...(isStacked && { stack: 'Total' }),
+  smooth: true,
+  areaStyle: { opacity: 0.8 },
+  emphasis: { focus: 'series' },
+});
 
 interface DiagramOptions {
   data: Array<{ data: number[]; name: string }>;
@@ -109,67 +93,56 @@ interface DiagramOptions {
   isStacked: boolean;
 }
 
+const isCurrentPeriodVisible = (periods: string[], currentPeriod: string): boolean =>
+  periods.includes(currentPeriod) && currentPeriod !== periods[periods.length - 1];
+
 export const getCumulativeFlowDiagramOptions = ({
   data,
   periods,
   currentPeriod,
   selected,
   isStacked,
-}: DiagramOptions): echarts.EChartsOption => {
-  return {
-    backgroundColor: 'transparent',
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'line',
-      },
+}: DiagramOptions): EChartsOption => ({
+  backgroundColor: 'transparent',
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: { type: 'line' },
+  },
+  legend: {
+    bottom: 0,
+    left: 'center',
+    orient: 'horizontal',
+    data: data.map(({ name }) => name),
+    selected,
+    textStyle: { color: textColor },
+  },
+  grid: {
+    top: 20,
+    left: 10,
+    right: 20,
+    bottom: 40,
+    containLabel: true,
+  },
+  xAxis: {
+    type: 'category',
+    boundaryGap: false,
+    data: periods,
+    axisLabel: { color: textColor },
+  },
+  yAxis: {
+    type: 'value',
+    name: '',
+    axisLine: {
+      show: true,
+      lineStyle: { color: textColor, type: 'solid' },
     },
-    legend: {
-      bottom: 0,
-      left: 'center',
-      orient: 'horizontal',
-      data: data.map(({ name }) => name),
-
-      selected,
-      textStyle: {
-        color: theme.colors.semantic.text,
-      },
+    axisLabel: {
+      color: textColor,
+      formatter: (value: number) => (value === 0 ? '' : value.toString()),
     },
-    grid: {
-      top: 20,
-      left: 10,
-      right: 20,
-      bottom: 40,
-      containLabel: true,
-    },
-    xAxis: {
-      type: 'category',
-      boundaryGap: false,
-      data: periods,
-      axisLabel: {
-        color: theme.colors.semantic.text,
-      },
-    },
-    yAxis: {
-      type: 'value',
-      name: '',
-      axisLine: {
-        show: true,
-        lineStyle: {
-          color: theme.colors.semantic.text,
-          type: 'solid',
-        },
-      },
-      axisLabel: {
-        color: theme.colors.semantic.text,
-        formatter: function (value: number) {
-          return value === 0 ? '' : value.toString();
-        },
-      },
-    },
-    series: [
-      ...data.map(({ data: values, name }) => formatSeries(values, name, isStacked)),
-      getCurrentPeriodSeries(currentPeriod),
-    ],
-  };
-};
+  },
+  series: [
+    ...data.map(({ data: values, name }) => createLineSeries(values, name, isStacked)),
+    getCurrentPeriodSeries(isCurrentPeriodVisible(periods, currentPeriod) ? currentPeriod : undefined),
+  ],
+});

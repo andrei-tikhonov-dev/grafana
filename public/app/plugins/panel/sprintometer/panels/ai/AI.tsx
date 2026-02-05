@@ -1,14 +1,10 @@
 import { css, cx } from '@emotion/css';
-import { Sparkles } from 'lucide-react';
 import React from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { UiAiViewer, UiButton, UiTypography } from '../../components/ui';
-import { useAiChatDrawer } from '../../features/ai-chat';
-import { useDashboardUid } from '../../hooks/useDashboardUid';
-import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
-import { useMockAiChatClient } from '../../hooks/useMockAiChatClient';
+import { UiTypography } from '../../components/ui';
+import { usePanelAiChat } from '../../features/ai-chat';
 import { theme3 } from '../../theme';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -39,24 +35,13 @@ const initialData: AICustomData = {
 export const AI: React.FC<Props> = ({ width, height, data, options, id }) => {
   const { title, ai } = getGrafanaCustomData<AICustomData>(data, initialData);
 
-  const dashboardUid = useDashboardUid();
-  const grafanaVariables = useGrafanaVariables(['team', 'project']);
-  const mockClient = useMockAiChatClient(options);
-
-  // AI Chat Drawer
-  const { openAutoSummary, drawer } = useAiChatDrawer({
+  const { toggle, drawer } = usePanelAiChat({
     panelId: id,
-    dashboardUid,
-    teamId: grafanaVariables.team as string,
-    project: grafanaVariables.project as string,
+    aiEnabled: options.aiEnabled,
     dashboard: options.ai?.dashboard,
     metric: options.ai?.metric,
-    client: mockClient,
-    startScreen: {
-      title: '',
-      subtitle: '',
-      prompts: [],
-    },
+    aiData: ai,
+    mockConfig: options.aiChatMock,
   });
 
   return (
@@ -70,14 +55,7 @@ export const AI: React.FC<Props> = ({ width, height, data, options, id }) => {
       )}
     >
       <UiTypography variant="panelTitle">{title}</UiTypography>
-      {ai?.content ? (
-        <UiAiViewer title={ai?.title} content={ai?.content} label="AI data" />
-      ) : (
-        <UiButton onClick={openAutoSummary} variant="ai">
-          <Sparkles />
-          AI helper
-        </UiButton>
-      )}
+      {toggle}
       {drawer}
     </div>
   );

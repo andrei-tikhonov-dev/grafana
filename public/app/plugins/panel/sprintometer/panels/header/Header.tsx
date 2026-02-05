@@ -6,10 +6,7 @@ import { PanelProps } from '@grafana/data';
 
 import { Separator } from '../../components/shadcn/separator';
 import { UiBreadcrumbs, UiButton, UiCard, UiHorizontalGroup, UiTypography, UiVerticalGroup } from '../../components/ui';
-import { useAiChatDrawer } from '../../features/ai-chat';
-import { useDashboardUid } from '../../hooks/useDashboardUid';
-import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
-import { useMockAiChatClient } from '../../hooks/useMockAiChatClient';
+import { usePanelAiChat } from '../../features/ai-chat';
 import { panelContainerStyles } from '../../theme';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -68,29 +65,13 @@ export const Header: React.FC<Props> = ({ width, height, data, options, id }) =>
   const hasMetrics = interval || progress || organizationUnit;
   const hasEvents = eventsToday || eventsUpcoming;
   const hasTimelineSection = timeline || hasEvents;
-  const dashboardUid = useDashboardUid();
-  const grafanaVariables = useGrafanaVariables(['team', 'project']);
-  const mockClient = useMockAiChatClient(options);
 
-  // AI Chat Drawer
-  const { openGeneral, openAutoSummary, drawer } = useAiChatDrawer({
+  const { openGeneral, openAutoSummary, drawer } = usePanelAiChat({
     panelId: id,
-    dashboardUid,
-    teamId: grafanaVariables.team as string,
-    project: grafanaVariables.project as string,
+    aiEnabled: options.aiEnabled,
     dashboard: options.header?.dashboard,
     metric: options.header?.metric,
-    client: mockClient,
-    startScreen: {
-      title: 'Your sprint, explained instantly',
-      subtitle: 'Choose a question to get data-driven insights',
-      prompts: [
-        'Check the pulse of your sprint and spot problems early',
-        'Understand how your team is doing & where improvement is possible',
-        'Predict outcomes and understand "what-ifs"',
-        'Learn from historical data and uncover recurring patterns',
-      ],
-    },
+    mockConfig: options.aiChatMock,
   });
 
   return (

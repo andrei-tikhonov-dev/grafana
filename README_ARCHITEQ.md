@@ -27,7 +27,7 @@ yarn workspace <name_of_plugin> dev
 ```
 ### OpenAPI package intall
 ```shell
-yarn add @architeq/core-api-client@file:./api/architeq-core-api-client-2.2.4.tgz
+yarn add @architeq/core-api-client@file:./api/architeq-core-api-client-2.2.7.tgz
 ```
 
 # Docker

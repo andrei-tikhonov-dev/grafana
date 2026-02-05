@@ -1,16 +1,12 @@
 import { css } from '@emotion/css';
-import { Sparkles } from 'lucide-react';
 import React, { useMemo } from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { UiAiViewer, UiButton, UiFiltersContainer, UiMultiSelect, UiSwitch } from '../../components/ui';
+import { UiFiltersContainer, UiMultiSelect, UiSwitch } from '../../components/ui';
 import { UiPanelContainer } from '../../components/ui/panel-container/PanelContainer';
-import { useAiChatDrawer } from '../../features/ai-chat';
-import { useDashboardUid } from '../../hooks/useDashboardUid';
+import { usePanelAiChat } from '../../features/ai-chat';
 import { useEcharts } from '../../hooks/useEcharts';
-import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
-import { useMockAiChatClient } from '../../hooks/useMockAiChatClient';
 import { usePluginState } from '../../hooks/usePluginState';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -64,29 +60,13 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
     periodType,
   });
 
-  const dashboardUid = useDashboardUid();
-  const grafanaVariables = useGrafanaVariables(['team', 'project']);
-  const mockClient = useMockAiChatClient(options);
-
-  // AI Chat Drawer
-  const { openAutoSummary, drawer } = useAiChatDrawer({
+  const { toggle, drawer } = usePanelAiChat({
     panelId: id,
-    dashboardUid,
-    teamId: grafanaVariables.team as string,
-    project: grafanaVariables.project as string,
+    aiEnabled: options.aiEnabled,
     dashboard: options.cumulativeFlowDiagram?.dashboard,
     metric: options.cumulativeFlowDiagram?.metric,
-    client: mockClient,
-    startScreen: {
-      title: 'Your sprint, explained instantly',
-      subtitle: 'Choose a question to get data-driven insights',
-      prompts: [
-        'Check the pulse of your sprint and spot problems early',
-        'Understand how your team is doing & where improvement is possible',
-        'Predict outcomes and understand "what-ifs"',
-        'Learn from historical data and uncover recurring patterns',
-      ],
-    },
+    aiData: ai,
+    mockConfig: options.aiChatMock,
   });
 
   const option = useMemo(
@@ -124,23 +104,9 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
     }));
   };
 
-  // @ts-ignore
-  const dashboard = options.cumulativeFlowDiagram?.dashboard;
-
   return (
     <UiPanelContainer width={width} height={height} title="Cumulative flow diagram">
-      <UiFiltersContainer
-        suffix={
-          ai?.content ? (
-            <UiAiViewer title={ai?.title} content={ai?.content} label="AI data" />
-          ) : (
-            <UiButton onClick={openAutoSummary} variant="ai">
-              <Sparkles />
-              AI helper
-            </UiButton>
-          )
-        }
-      >
+      <UiFiltersContainer suffix={toggle}>
         <UiMultiSelect
           options={issueOptions}
           defaultValue={selectedIssues}

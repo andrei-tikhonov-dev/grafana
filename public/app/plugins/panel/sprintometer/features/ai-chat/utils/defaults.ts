@@ -1,5 +1,12 @@
 import { AiChatStrings } from '../api/types';
 
+export const DEFAULT_START_PROMPTS = [
+  'Check the pulse of your sprint and spot problems early',
+  'Understand how your team is doing & where improvement is possible',
+  'Predict outcomes and understand "what-ifs"',
+  'Learn from historical data and uncover recurring patterns',
+];
+
 export const DEFAULT_THINKING_STAGES = [
     'Analyzing your sprint data…',
     'Reviewing task dependencies…',

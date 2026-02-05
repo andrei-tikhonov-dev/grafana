@@ -7,10 +7,10 @@ import { BurndownChart, registerBurndownOptions } from './panels/burndown-chart'
 import { ComponentsLibrary } from './panels/components-library';
 import { CumulativeFlowDiagram, registerCumulativeFlowDiagramOptions } from './panels/cumulative-flow-diagram';
 import { Header, registerHeaderOptions } from './panels/header';
-import { IncomingDependencies } from './panels/incoming-dependencies';
+import { IncomingDependencies, registerIncomingDependenciesOptions } from './panels/incoming-dependencies';
 import { IssueMap, registerIssueMapOptions } from './panels/issue-map';
-import { OutgoingDependencies } from './panels/outgoing-dependencies';
-import { PlannerBoard } from './panels/planner-board';
+import { OutgoingDependencies, registerOutgoingDependenciesOptions } from './panels/outgoing-dependencies';
+import { PlannerBoard, registerPlannerBoardOptions } from './panels/planner-board';
 import { SimilarIssues } from './panels/similar-issues';
 import { EPanelType, TPanelOptions } from './types';
 
@@ -24,10 +24,10 @@ export const PANELS_REGISTRY: Record<EPanelType, PanelDescriptor> = {
   [EPanelType.Header]: { component: Header, registerOptions: registerHeaderOptions },
   [EPanelType.BurndownChart]: { component: BurndownChart, registerOptions: registerBurndownOptions },
   [EPanelType.CumulativeFlowDiagram]: { component: CumulativeFlowDiagram, registerOptions: registerCumulativeFlowDiagramOptions },
-  [EPanelType.IncomingDependencies]: { component: IncomingDependencies },
-  [EPanelType.OutgoingDependencies]: { component: OutgoingDependencies },
+  [EPanelType.IncomingDependencies]: { component: IncomingDependencies, registerOptions: registerIncomingDependenciesOptions },
+  [EPanelType.OutgoingDependencies]: { component: OutgoingDependencies, registerOptions: registerOutgoingDependenciesOptions },
   [EPanelType.SimilarIssues]: { component: SimilarIssues },
-  [EPanelType.PlannerBoard]: { component: PlannerBoard },
+  [EPanelType.PlannerBoard]: { component: PlannerBoard, registerOptions: registerPlannerBoardOptions },
   [EPanelType.ComponentsLibrary]: { component: ComponentsLibrary },
   [EPanelType.IssueMap]: { component: IssueMap, registerOptions: registerIssueMapOptions },
   [EPanelType.AI]: { component: AI, registerOptions: registerAIOptions },

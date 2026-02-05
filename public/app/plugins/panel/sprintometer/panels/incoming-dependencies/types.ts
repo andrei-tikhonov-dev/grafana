@@ -1,11 +1,13 @@
-import { EJiraType, TJiraPriority, TTable, TUser, TLink, TJiraChangesHistory, TJiraIssueType } from '../../types';
+import { EJiraType, TAiData, TJiraPriority, TTable, TUser, TLink, TJiraChangesHistory, TJiraIssueType } from '../../types';
 
 export interface MCustomData extends TTable<MOuterArtIssue, MInnerArtIssue> {
   total: number;
+  ai?: TAiData;
 }
 
 export interface MData extends TTable<MOuterIssue, MInnerIssue> {
   total: number;
+  ai?: TAiData;
 }
 
 export enum EOuterArtIssueKey {

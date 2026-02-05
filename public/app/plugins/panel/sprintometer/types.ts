@@ -23,6 +23,7 @@ export type TColumnSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
 export interface TBasePanelOptions {
   panelType: EPanelType;
   savedState: string; // JSON-string
+  aiEnabled?: boolean;
 }
 
 export interface TBurndownOptionsNS {
@@ -69,13 +70,37 @@ export interface TAiChatMockOptionsNS {
   };
 }
 
+export interface TIncomingDependenciesOptionsNS {
+  incomingDependencies?: {
+    dashboard: SendMetricChatMessageBoardTypeEnum;
+    metric: SendMetricChatMessageMetricNameEnum;
+  };
+}
+
+export interface TOutgoingDependenciesOptionsNS {
+  outgoingDependencies?: {
+    dashboard: SendMetricChatMessageBoardTypeEnum;
+    metric: SendMetricChatMessageMetricNameEnum;
+  };
+}
+
+export interface TPlannerBoardOptionsNS {
+  plannerBoard?: {
+    dashboard: SendMetricChatMessageBoardTypeEnum;
+    metric: SendMetricChatMessageMetricNameEnum;
+  };
+}
+
 export type TPanelOptions = TBasePanelOptions &
   TBurndownOptionsNS &
   THeaderOptionsNS &
   TIssueMapOptionsNS &
   TCumulativeFlowDiagramOptionsNS &
   TAiOptionsNS &
-  TAiChatMockOptionsNS;
+  TAiChatMockOptionsNS &
+  TIncomingDependenciesOptionsNS &
+  TOutgoingDependenciesOptionsNS &
+  TPlannerBoardOptionsNS;
 
 export const enum EPanelType {
   BurndownChart = 'BurndownChart',

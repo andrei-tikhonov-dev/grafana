@@ -5,6 +5,7 @@ import { PanelProps } from '@grafana/data';
 
 import { ScrollArea } from '../../components/shadcn/scroll-area';
 import { UiPanelContainer } from '../../components/ui/panel-container/PanelContainer';
+import { usePanelAiChat } from '../../features/ai-chat';
 import { useColor } from '../../hooks/useColor';
 import { usePluginState } from '../../hooks/usePluginState';
 import { TPanelOptions } from '../../types';
@@ -31,11 +32,20 @@ const initialFilterState: MFilterState = {
   hasProblems: false,
 };
 
-export const PlannerBoard: React.FC<Props> = ({ width, height, data, options, onOptionsChange }) => {
+export const PlannerBoard: React.FC<Props> = ({ width, height, data, options, onOptionsChange, id }) => {
   const getColor = useColor();
-  const { phases, teams } = getGrafanaCustomData<MPlannerBoardCustom>(data, initialData);
+  const { ai, phases, teams } = getGrafanaCustomData<MPlannerBoardCustom>(data, initialData);
   const [filterState, setFilterState] = usePluginState<MFilterState>(options, onOptionsChange, initialFilterState);
   const { teams: filteredTeams, phases: filteredPhases } = filterData({ teams, phases, filters: filterState });
+
+  const { toggle, drawer } = usePanelAiChat({
+    panelId: id,
+    aiEnabled: options.aiEnabled,
+    dashboard: options.plannerBoard?.dashboard,
+    metric: options.plannerBoard?.metric,
+    aiData: ai,
+    mockConfig: options.aiChatMock,
+  });
 
   const teamOptions: MTeam[] = teams.map(({ id, name, color }) => ({
     id,
@@ -56,6 +66,7 @@ export const PlannerBoard: React.FC<Props> = ({ width, height, data, options, on
         defaultFilterState={filterState}
         totalIssues={totalIssues}
         filteredIssues={filteredIssues}
+        aiToggle={toggle}
       />
       <ScrollArea
         className={css`
@@ -65,6 +76,7 @@ export const PlannerBoard: React.FC<Props> = ({ width, height, data, options, on
       >
         <DataTable {...tableData} width={width} />
       </ScrollArea>
+      {drawer}
     </UiPanelContainer>
   );
 };

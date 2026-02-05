@@ -30,6 +30,7 @@ export { UiVerticalGroup } from './group/UiVerticalGroup';
 export { UiHorizontalGroup } from './group/UiHorizontalGroup';
 
 export { UiAiViewer } from './ai-viewer/UiAiViewer';
+export { UiAiHelperToggle } from './ai-helper-toggle/UiAiHelperToggle';
 export { UiMarkdown } from './markdown/UiMarkdown';
 export { UiBreadcrumbs } from './breadcrumbs/UiBreadcrumbs';
 
