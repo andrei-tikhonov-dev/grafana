@@ -239,7 +239,7 @@
     "yargs": "^17.5.1"
   },
   "dependencies": {
-    "@architeq/core-api-client": "file:./api/architeq-core-api-client-2.2.7.tgz",
+    "@architeq/core-api-client": "file:./api/architeq-core-api-client-2.2.9.tgz",
     "@emotion/css": "11.11.2",
     "@emotion/react": "11.11.4",
     "@fingerprintjs/fingerprintjs": "^3.4.2",

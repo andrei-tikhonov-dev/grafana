@@ -13,6 +13,7 @@ interface Props {
   project: string;
   dashboard?: SendMetricChatMessageBoardTypeEnum;
   metric?: SendMetricChatMessageMetricNameEnum;
+  metricContext?: string;
   client: AiChatClient;
   thinkingStages: string[];
   feedbackReasons: { up: string[]; down: string[] };

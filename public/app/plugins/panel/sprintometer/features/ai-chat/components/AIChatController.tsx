@@ -27,6 +27,7 @@ interface Props {
   project: string;
   dashboard?: SendMetricChatMessageBoardTypeEnum;
   metric?: SendMetricChatMessageMetricNameEnum;
+  metricContext?: string;
   client: AiChatClient;
   thinkingStages: string[];
   feedbackReasons: { up: string[]; down: string[] };
@@ -42,6 +43,7 @@ export const AIChatController: React.FC<Props> = ({
   project,
   dashboard,
   metric,
+  metricContext,
   client,
   thinkingStages,
   feedbackReasons,
@@ -81,6 +83,7 @@ export const AIChatController: React.FC<Props> = ({
     boardType: dashboard!,
     metricName: metric!,
     chatMessageRequest: {
+      metricContext,
       project,
       message,
       history,

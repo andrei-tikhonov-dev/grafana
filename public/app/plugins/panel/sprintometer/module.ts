@@ -47,7 +47,7 @@ export const plugin = new PanelPlugin<TPanelOptions>(Panel).setPanelOptions((bui
     .addBooleanSwitch({
       category: AI_CATEGORY,
       path: 'aiEnabled',
-      name: 'Enable AI features',
+      name: 'Enable AI chat',
       description: 'Show AI helper button in panels',
       defaultValue: true,
     })
