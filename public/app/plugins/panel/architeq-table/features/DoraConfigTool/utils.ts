@@ -1,0 +1,56 @@
+import { DataFrame } from '@grafana/data';
+
+import { Cells } from '../../constants';
+import { configureDataFrame, getFieldConfig, getPayloadIDs as getPayloadIDsBase } from '../../utils';
+
+import { DoraConfigToolFields } from './constants';
+import { DoraThresholds } from './types';
+
+interface ConfigDoraConfigToolData {
+  dataFrame: DataFrame;
+  handleDelete: (rowIndex: number) => void;
+  hiddenFields?: string[];
+  defaultThresholds: DoraThresholds;
+}
+
+export function configDoraConfigToolData({
+  dataFrame,
+  hiddenFields,
+  handleDelete,
+  defaultThresholds,
+}: ConfigDoraConfigToolData): DataFrame {
+  const options = { align: 'left' as const };
+
+  const wrappedDataFrame: DataFrame = {
+    ...dataFrame,
+    fields: dataFrame.fields.map((field) => {
+      if (field.name === DoraConfigToolFields.DoraThresholds) {
+        return {
+          ...field,
+          values: field.values.map((thresholdObj: DoraThresholds | Record<string, never>) => ({
+            thresholds: thresholdObj,
+            defaultThresholds,
+          })),
+        };
+      }
+      return field;
+    }),
+  };
+
+  const fieldConfigs = [
+    { fields: [DoraConfigToolFields.TechnicalServiceName], config: getFieldConfig(Cells.Input, { ...options }) },
+    { fields: [DoraConfigToolFields.BitbucketProjectKey], config: getFieldConfig(Cells.Input, { ...options }) },
+    { fields: [DoraConfigToolFields.BitbucketRepositorySlug], config: getFieldConfig(Cells.Input, { ...options }) },
+    { fields: [DoraConfigToolFields.SplunkProjectTags], config: getFieldConfig(Cells.Input, { ...options }) },
+    {
+      fields: [DoraConfigToolFields.DoraThresholds],
+      config: getFieldConfig(Cells.DoraThresholds, { ...options, width: 180 }),
+    },
+  ];
+
+  return configureDataFrame(wrappedDataFrame, hiddenFields, handleDelete, fieldConfigs);
+}
+
+export function getPayloadIDs(data: DataFrame) {
+  return getPayloadIDsBase(data, DoraConfigToolFields.ID);
+}

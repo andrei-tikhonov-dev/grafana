@@ -3,6 +3,7 @@ import { CapacityCell } from '../components/cells/CapacityCell';
 import { CheckboxCell } from '../components/cells/CheckboxCell';
 import { DateCell } from '../components/cells/DateCell';
 import { DaysCell } from '../components/cells/DaysCell';
+import { DoraThresholdsCell } from '../components/cells/DoraThresholdsCell';
 import { InfoLineCell } from '../components/cells/InfoLineCell';
 import { InputCell } from '../components/cells/InputCell';
 import { IssueTypeCell } from '../components/cells/IssueTypeCell';
@@ -28,6 +29,7 @@ export const enum TableType {
   RolesTool = 'RolesTool',
   GenericTable = 'GenericTable',
   JiraStatusMapperTool = 'JiraStatusMapperTool',
+  DoraConfigTool = 'DoraConfigTool',
 }
 
 export const enum RequestMethod {
@@ -50,6 +52,7 @@ export const Cells = {
   Checkbox: CheckboxCell,
   Date: DateCell,
   Days: DaysCell,
+  DoraThresholds: DoraThresholdsCell,
   InfoLine: InfoLineCell,
   Input: InputCell,
   IssueType: IssueTypeCell,

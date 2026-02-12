@@ -7,6 +7,7 @@ import { useStyles2 } from '@grafana/ui';
 
 import { TableType } from '../constants';
 import { CurrentSprint } from '../features/CurrentSprint';
+import { DoraConfigTool } from '../features/DoraConfigTool';
 import { GenericTable } from '../features/GenericTable';
 import { HistoricalData } from '../features/HistoricalData';
 import { HolidayPrefixesTool } from '../features/HolidayPrefixesTool';
@@ -35,6 +36,7 @@ const TablePanels = {
   [TableType.HolidayPrefixes]: HolidayPrefixesTool,
   [TableType.RolesTool]: RolesTool,
   [TableType.PiNamesTool]: PiNamesTool,
+  [TableType.DoraConfigTool]: DoraConfigTool,
 };
 
 export const TablePanel: React.FC<TablePanelProps> = (props) => {

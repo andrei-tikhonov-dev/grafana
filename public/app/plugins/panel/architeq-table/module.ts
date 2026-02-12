@@ -16,6 +16,7 @@ const ADMIN_TYPES = [
   TableType.HolidayPrefixes,
   TableType.RolesTool,
   TableType.JiraBoardsTool,
+  TableType.DoraConfigTool,
 ];
 const UPDATE_URL_TYPES = [
   TableType.HistoricalData,

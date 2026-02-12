@@ -56,6 +56,7 @@ export const getTableTypeOptions = async () => {
     { label: 'Roles Tool', value: TableType.RolesTool },
     { label: 'Holiday Prefixes', value: TableType.HolidayPrefixes },
     { label: 'Holiday Prefixes', value: TableType.HolidayPrefixes },
+    { label: 'DORA Config Tool', value: TableType.DoraConfigTool },
     { label: 'Generic Table', value: TableType.GenericTable },
   ]);
 };

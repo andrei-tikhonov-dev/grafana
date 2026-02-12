@@ -1,0 +1,18 @@
+export const enum DoraConfigToolFields {
+  ID = 'ID',
+  TechnicalServiceName = 'Technical Service Name',
+  BitbucketProjectKey = 'Bitbucket Project Key',
+  BitbucketRepositorySlug = 'Bitbucket Repository Slug',
+  SplunkProjectTags = 'Splunk Project Tags',
+  DoraThresholds = 'DORA Thresholds',
+}
+
+export const hiddenFields = [DoraConfigToolFields.ID];
+
+export const PROPERTY_NAME_MAP: Record<string, string> = {
+  [DoraConfigToolFields.TechnicalServiceName]: 'name',
+  [DoraConfigToolFields.BitbucketProjectKey]: 'bitbucketProjectKey',
+  [DoraConfigToolFields.BitbucketRepositorySlug]: 'bitbucketRepositorySlug',
+  [DoraConfigToolFields.SplunkProjectTags]: 'splunkProjectTags',
+  [DoraConfigToolFields.DoraThresholds]: 'doraThresholds',
+};
