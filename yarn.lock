@@ -71,10 +71,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@architeq/core-api-client@file:./api/architeq-core-api-client-2.2.9.tgz::locator=grafana%40workspace%3A.":
-  version: 2.2.9
-  resolution: "@architeq/core-api-client@file:./api/architeq-core-api-client-2.2.9.tgz#./api/architeq-core-api-client-2.2.9.tgz::hash=95bf5a&locator=grafana%40workspace%3A."
-  checksum: 10/892a0818e6fcd6ca1ed1f17a7df19be0f3b61876579967c4499990ca8bbf134541e646b8095901a70c852cf4eac339bb920317a3945cad77afca7183c76c2363
+"@architeq/core-api-client@file:./api/architeq-core-api-client-2.2.10.tgz::locator=grafana%40workspace%3A.":
+  version: 2.2.10
+  resolution: "@architeq/core-api-client@file:./api/architeq-core-api-client-2.2.10.tgz#./api/architeq-core-api-client-2.2.10.tgz::hash=d6970e&locator=grafana%40workspace%3A."
+  checksum: 10/d9f67befd00f79c1ed2edcd2226a80fc1b99fa3998df4e02c2b02a6d870c58c0418c15b157a8aca8c08251fe4a3367dc974c4d7d643324235fb457a6a188eed6
   languageName: node
   linkType: hard
 
@@ -18850,7 +18850,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "grafana@workspace:."
   dependencies:
-    "@architeq/core-api-client": "file:./api/architeq-core-api-client-2.2.9.tgz"
+    "@architeq/core-api-client": "file:./api/architeq-core-api-client-2.2.10.tgz"
     "@babel/core": "npm:7.24.7"
     "@babel/preset-env": "npm:7.24.7"
     "@babel/runtime": "npm:7.24.7"

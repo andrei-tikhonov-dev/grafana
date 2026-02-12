@@ -6,6 +6,7 @@ import {
 import { Sparkles } from 'lucide-react';
 import React, { useCallback, useMemo, useState } from 'react';
 
+import { getTemplateSrv } from '@grafana/runtime';
 import { Drawer } from '@grafana/ui';
 
 import { useApi } from '../../api';
@@ -66,6 +67,10 @@ export function usePanelAiChat({
   const project = asString(grafanaVariables.project);
   const metricContext = asString(grafanaVariables.context);
 
+  const templateSrv = getTemplateSrv();
+  const periodFrom = templateSrv.replace('${__from:date:iso}');
+  const periodTo = templateSrv.replace('${__to:date:iso}');
+
   const client = useMemo(() => {
     if (mockConfig?.useMock) {
       return createMockAiChatClient({
@@ -95,6 +100,8 @@ export function usePanelAiChat({
         dashboard={dashboard}
         metric={metric}
         metricContext={metricContext}
+        from={periodFrom}
+        to={periodTo}
         client={client}
         thinkingStages={DEFAULT_THINKING_STAGES}
         feedbackReasons={DEFAULT_FEEDBACK_REASONS}
