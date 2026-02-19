@@ -8,6 +8,7 @@ import { InfoLineCell } from '../components/cells/InfoLineCell';
 import { InputCell } from '../components/cells/InputCell';
 import { IssueTypeCell } from '../components/cells/IssueTypeCell';
 import { LinkCell } from '../components/cells/LinkCell';
+import { MultiSelectCell } from '../components/cells/MultiSelectCell';
 import { PriorityCell } from '../components/cells/PriorityCell';
 import { RoleCell } from '../components/cells/RoleCell';
 import { SelectCell } from '../components/cells/SelectCell';
@@ -58,6 +59,7 @@ export const Cells = {
   IssueType: IssueTypeCell,
   Link: LinkCell,
   Role: RoleCell,
+  MultiSelect: MultiSelectCell,
   Select: SelectCell,
   Simple: SimpleCell,
   Tooltip: TooltipCell,

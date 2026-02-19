@@ -24,9 +24,13 @@ interface Props extends TablePanelProps {}
 export const DoraConfigTool: React.FC<Props> = ({ options, data, width, height }) => {
   const dataFrame = data.series[0];
   const payloadIDs = getPayloadIDs(dataFrame);
-  const {
-    custom: { projectId, defaultThresholds },
-  } = dataFrame.meta as DoraConfigToolMetaType;
+  const { custom } = dataFrame.meta as DoraConfigToolMetaType;
+  const { projectId, defaultThresholds } = custom;
+  const defaultBugTypes: string[] = custom.defaultBugTypes ?? [];
+  const defaultBugPriorities: string[] = custom.defaultBugPriorities ?? [];
+  const availableBugTypes: string[] = custom.availableBugTypes ?? [];
+  const availableBugPriorities: string[] = custom.availableBugPriorities ?? [];
+  const availableBugComponentNames: string[] = custom.availableBugComponentNames ?? [];
 
   const { createRequest, updateRequest, deleteRequest, loading, isLoading } = useRequest({
     create: {
@@ -69,18 +73,38 @@ export const DoraConfigTool: React.FC<Props> = ({ options, data, width, height }
       bitbucketProjectKey: formData.bitbucketProjectKey,
       bitbucketRepositorySlug: formData.bitbucketRepositorySlug,
       splunkProjectTags: formData.splunkProjectTags || undefined,
+      bugTypes: formData.bugTypes,
+      bugPriorities: formData.bugPriorities,
+      bugComponentNames: formData.bugComponentNames,
     };
     return createRequest(payload);
   };
 
-  const configuredData = configDoraConfigToolData({ dataFrame, hiddenFields, handleDelete, defaultThresholds });
+  const configuredData = configDoraConfigToolData({
+    dataFrame,
+    hiddenFields,
+    handleDelete,
+    defaultThresholds,
+    availableBugTypes,
+    availableBugPriorities,
+    availableBugComponentNames,
+  });
 
   return (
     <>
       <HeaderContainer>
         <FormModalWrapper title="Add DORA Technical Service">
           {({ onClose }) => (
-            <AddDoraConfigForm onClose={onClose} onCreate={handleCreate} isLoading={isLoading} />
+            <AddDoraConfigForm
+                onClose={onClose}
+                onCreate={handleCreate}
+                isLoading={isLoading}
+                defaultBugTypes={defaultBugTypes}
+                defaultBugPriorities={defaultBugPriorities}
+                availableBugTypes={availableBugTypes}
+                availableBugPriorities={availableBugPriorities}
+                availableBugComponentNames={availableBugComponentNames}
+              />
           )}
         </FormModalWrapper>
       </HeaderContainer>

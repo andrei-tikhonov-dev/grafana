@@ -20,6 +20,11 @@ export interface DoraConfigToolMetaType {
   custom: {
     projectId: number;
     defaultThresholds: DoraThresholds;
+    defaultBugTypes?: string[];
+    defaultBugPriorities?: string[];
+    availableBugTypes?: string[];
+    availableBugPriorities?: string[];
+    availableBugComponentNames?: string[];
   };
 }
 
@@ -35,6 +40,9 @@ export interface DoraConfigToolCreatePayload {
   bitbucketProjectKey: string;
   bitbucketRepositorySlug: string;
   splunkProjectTags?: string;
+  bugTypes: string[];
+  bugPriorities: string[];
+  bugComponentNames: string[];
 }
 
 export interface DoraConfigToolCreateFormData {
@@ -42,4 +50,7 @@ export interface DoraConfigToolCreateFormData {
   bitbucketProjectKey: string;
   bitbucketRepositorySlug: string;
   splunkProjectTags: string;
+  bugTypes: string[];
+  bugPriorities: string[];
+  bugComponentNames: string[];
 }

@@ -11,6 +11,9 @@ interface ConfigDoraConfigToolData {
   handleDelete: (rowIndex: number) => void;
   hiddenFields?: string[];
   defaultThresholds: DoraThresholds;
+  availableBugTypes: string[];
+  availableBugPriorities: string[];
+  availableBugComponentNames: string[];
 }
 
 export function configDoraConfigToolData({
@@ -18,6 +21,9 @@ export function configDoraConfigToolData({
   hiddenFields,
   handleDelete,
   defaultThresholds,
+  availableBugTypes,
+  availableBugPriorities,
+  availableBugComponentNames,
 }: ConfigDoraConfigToolData): DataFrame {
   const options = { align: 'left' as const };
 
@@ -45,6 +51,18 @@ export function configDoraConfigToolData({
     {
       fields: [DoraConfigToolFields.DoraThresholds],
       config: getFieldConfig(Cells.DoraThresholds, { ...options, width: 180 }),
+    },
+    {
+      fields: [DoraConfigToolFields.BugTypes],
+      config: getFieldConfig(Cells.MultiSelect, { ...options, options: availableBugTypes.map((t) => ({ label: t, value: t })) }),
+    },
+    {
+      fields: [DoraConfigToolFields.BugPriorities],
+      config: getFieldConfig(Cells.MultiSelect, { ...options, options: availableBugPriorities.map((p) => ({ label: p, value: p })) }),
+    },
+    {
+      fields: [DoraConfigToolFields.BugComponentNames],
+      config: getFieldConfig(Cells.MultiSelect, { ...options, options: availableBugComponentNames.map((c) => ({ label: c, value: c })) }),
     },
   ];
 
