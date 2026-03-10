@@ -40,12 +40,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
   `,
 });
 
-type FormData = {
-  deploymentFrequency: { medium: number; high: number; elite: number };
-  leadTime: { medium: number; high: number; elite: number };
-  changeFailureRate: { medium: number; high: number; elite: number };
-  timeToRestore: { medium: number; high: number; elite: number };
-};
+type FormData = DoraThresholds;
 
 const METRIC_CONFIG = [
   {
@@ -81,6 +76,7 @@ function isCustomThresholds(
     }
 
     return (
+      (metric.low !== undefined && metric.low !== defaultMetric.low) ||
       (metric.medium !== undefined && metric.medium !== defaultMetric.medium) ||
       (metric.high !== undefined && metric.high !== defaultMetric.high) ||
       (metric.elite !== undefined && metric.elite !== defaultMetric.elite)
@@ -123,21 +119,25 @@ export const DoraThresholdsCell = (props: CustomCellRendererProps) => {
 
     const thresholdsPayload: DoraThresholds = {
       deploymentFrequency: {
+        low: Number(data.deploymentFrequency.low),
         medium: Number(data.deploymentFrequency.medium),
         high: Number(data.deploymentFrequency.high),
         elite: Number(data.deploymentFrequency.elite),
       },
       leadTime: {
+        low: Number(data.leadTime.low),
         medium: Number(data.leadTime.medium),
         high: Number(data.leadTime.high),
         elite: Number(data.leadTime.elite),
       },
       changeFailureRate: {
+        low: Number(data.changeFailureRate.low),
         medium: Number(data.changeFailureRate.medium),
         high: Number(data.changeFailureRate.high),
         elite: Number(data.changeFailureRate.elite),
       },
       timeToRestore: {
+        low: Number(data.timeToRestore.low),
         medium: Number(data.timeToRestore.medium),
         high: Number(data.timeToRestore.high),
         elite: Number(data.timeToRestore.elite),
@@ -155,6 +155,19 @@ export const DoraThresholdsCell = (props: CustomCellRendererProps) => {
   };
 
   const validateMetric = (metricKey: keyof FormData, higherIsBetter: boolean) => ({
+    low: {
+      required: 'Required',
+      valueAsNumber: true,
+      min: { value: 0, message: 'Must be positive' },
+      validate: (val: number, formValues: FormData) => {
+        const v = Number(val);
+        const m = Number(formValues[metricKey].medium);
+        if (higherIsBetter) {
+          return v <= m || 'Low must be <= Medium';
+        }
+        return v >= m || 'Low must be >= Medium';
+      },
+    },
     medium: {
       required: 'Required',
       valueAsNumber: true,
@@ -213,6 +226,9 @@ export const DoraThresholdsCell = (props: CustomCellRendererProps) => {
                 <div key={key} className={styles.metricSection}>
                   <div className={styles.metricTitle}>{label}</div>
                   <div className={styles.metricFields}>
+                    <Field label="Low" invalid={!!metricErrors?.low} error={metricErrors?.low?.message as string}>
+                      <Input type="number" step="any" {...register(`${key}.low`, rules.low)} />
+                    </Field>
                     <Field
                       label="Medium"
                       invalid={!!metricErrors?.medium}

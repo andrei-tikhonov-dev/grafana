@@ -1,4 +1,5 @@
 export interface MetricThreshold {
+  low: number;
   medium: number;
   high: number;
   elite: number;

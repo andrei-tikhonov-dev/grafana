@@ -39,14 +39,14 @@ yarn add @architeq/core-api-client@file:./api/architeq-core-api-client-2.2.10.tg
 
 ### Build and publish docker file
 ```shell
-docker buildx build --platform linux/amd64 -t imarchiteq/sprintometer-ui-test:11.1.69 --load .
+docker buildx build --platform linux/amd64 -t imarchiteq/sprintometer-ui-test:11.1.71 --load .
 # vpn on
-docker buildx build --network=host --platform linux/amd64 -t imarchiteq/sprintometer-ui-test:11.1.69 --load .
+docker buildx build --network=host --platform linux/amd64 -t imarchiteq/sprintometer-ui-test:11.1.71 --load .
 # or --platform linux/arm64
 
 docker login
 
-docker push imarchiteq/sprintometer-ui-test:11.1.69
+docker push imarchiteq/sprintometer-ui-test:11.1.71
 ```
 
 
