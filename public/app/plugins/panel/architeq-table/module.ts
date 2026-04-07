@@ -23,6 +23,7 @@ const UPDATE_URL_TYPES = [
   TableType.SprintPlaning,
   TableType.JiraStatusMapperTool,
   TableType.PiNotesTool,
+  TableType.SprintDatesConfigTool,
   ...ADMIN_TYPES,
 ];
 

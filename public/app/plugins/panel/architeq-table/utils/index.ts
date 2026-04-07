@@ -54,6 +54,7 @@ export const getTableTypeOptions = async () => {
     { label: 'PI Names Tool', value: TableType.PiNamesTool },
     { label: 'PI Notes Tool', value: TableType.PiNotesTool },
     { label: 'Roles Tool', value: TableType.RolesTool },
+    { label: 'Sprint Dates Config Tool', value: TableType.SprintDatesConfigTool },
     { label: 'Sprint Planing', value: TableType.SprintPlaning },
     { label: 'Team Admin Tool', value: TableType.TeamAdminTool },
     { label: 'Team Holidays Tool', value: TableType.TeamHolidaysTool },

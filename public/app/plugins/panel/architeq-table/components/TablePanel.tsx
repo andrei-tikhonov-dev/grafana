@@ -17,6 +17,7 @@ import { PiAdminTool } from '../features/PiAdminTool';
 import { PiNamesTool } from '../features/PiNamesTool';
 import { PiNotesTool } from '../features/PiNotesTool';
 import { RolesTool } from '../features/RolesTool';
+import { SprintDatesConfigTool } from '../features/SprintDatesConfigTool';
 import { SprintPlaning } from '../features/SprintPlaning';
 import { TeamAdminTool } from '../features/TeamAdminTool';
 import { TeamHolidaysTool } from '../features/TeamHolidaysTool';
@@ -39,6 +40,7 @@ const TablePanels = {
   [TableType.PiNamesTool]: PiNamesTool,
   [TableType.DoraConfigTool]: DoraConfigTool,
   [TableType.PiNotesTool]: PiNotesTool,
+  [TableType.SprintDatesConfigTool]: SprintDatesConfigTool,
 };
 
 export const TablePanel: React.FC<TablePanelProps> = (props) => {

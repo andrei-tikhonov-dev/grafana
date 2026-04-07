@@ -33,6 +33,7 @@ export const enum TableType {
   JiraStatusMapperTool = 'JiraStatusMapperTool',
   DoraConfigTool = 'DoraConfigTool',
   PiNotesTool = 'PiNotesTool',
+  SprintDatesConfigTool = 'SprintDatesConfigTool',
 }
 
 export const enum RequestMethod {
