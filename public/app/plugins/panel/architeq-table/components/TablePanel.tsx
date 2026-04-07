@@ -15,6 +15,7 @@ import { JiraBoardsTool } from '../features/JiraBoardsTool';
 import { JiraStatusMapperTool } from '../features/JiraStatusMapperTool';
 import { PiAdminTool } from '../features/PiAdminTool';
 import { PiNamesTool } from '../features/PiNamesTool';
+import { PiNotesTool } from '../features/PiNotesTool';
 import { RolesTool } from '../features/RolesTool';
 import { SprintPlaning } from '../features/SprintPlaning';
 import { TeamAdminTool } from '../features/TeamAdminTool';
@@ -37,6 +38,7 @@ const TablePanels = {
   [TableType.RolesTool]: RolesTool,
   [TableType.PiNamesTool]: PiNamesTool,
   [TableType.DoraConfigTool]: DoraConfigTool,
+  [TableType.PiNotesTool]: PiNotesTool,
 };
 
 export const TablePanel: React.FC<TablePanelProps> = (props) => {

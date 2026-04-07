@@ -13,6 +13,7 @@ import { PriorityCell } from '../components/cells/PriorityCell';
 import { RoleCell } from '../components/cells/RoleCell';
 import { SelectCell } from '../components/cells/SelectCell';
 import { SimpleCell } from '../components/cells/SimpleCell';
+import { TextAreaCell } from '../components/cells/TextAreaCell';
 import { TooltipCell } from '../components/cells/TooltipCell';
 import { UserCell } from '../components/cells/UserCell';
 
@@ -31,6 +32,7 @@ export const enum TableType {
   GenericTable = 'GenericTable',
   JiraStatusMapperTool = 'JiraStatusMapperTool',
   DoraConfigTool = 'DoraConfigTool',
+  PiNotesTool = 'PiNotesTool',
 }
 
 export const enum RequestMethod {
@@ -65,4 +67,5 @@ export const Cells = {
   Tooltip: TooltipCell,
   User: UserCell,
   Priority: PriorityCell,
+  TextArea: TextAreaCell,
 };

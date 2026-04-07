@@ -43,21 +43,21 @@ export const getPanelSelectOptions = async (context: FieldOverrideContext) => {
 
 export const getTableTypeOptions = async () => {
   return Promise.resolve([
-    { label: 'Historical Data', value: TableType.HistoricalData },
     { label: 'Current Sprint', value: TableType.CurrentSprint },
+    { label: 'DORA Config Tool', value: TableType.DoraConfigTool },
+    { label: 'Generic Table', value: TableType.GenericTable },
+    { label: 'Historical Data', value: TableType.HistoricalData },
+    { label: 'Holiday Prefixes', value: TableType.HolidayPrefixes },
+    { label: 'Jira Boards Tool', value: TableType.JiraBoardsTool },
+    { label: 'Jira Status Mapper Tool', value: TableType.JiraStatusMapperTool },
+    { label: 'PI Admin Tool', value: TableType.PiAdminTool },
+    { label: 'PI Names Tool', value: TableType.PiNamesTool },
+    { label: 'PI Notes Tool', value: TableType.PiNotesTool },
+    { label: 'Roles Tool', value: TableType.RolesTool },
     { label: 'Sprint Planing', value: TableType.SprintPlaning },
     { label: 'Team Admin Tool', value: TableType.TeamAdminTool },
     { label: 'Team Holidays Tool', value: TableType.TeamHolidaysTool },
     { label: 'Total Budget Tool', value: TableType.TotalBudgetTool },
-    { label: 'PI Admin Tool', value: TableType.PiAdminTool },
-    { label: 'PI Names Tool', value: TableType.PiNamesTool },
-    { label: 'Jira Boards Tool', value: TableType.JiraBoardsTool },
-    { label: 'Jira Status Mapper Tool', value: TableType.JiraStatusMapperTool },
-    { label: 'Roles Tool', value: TableType.RolesTool },
-    { label: 'Holiday Prefixes', value: TableType.HolidayPrefixes },
-    { label: 'Holiday Prefixes', value: TableType.HolidayPrefixes },
-    { label: 'DORA Config Tool', value: TableType.DoraConfigTool },
-    { label: 'Generic Table', value: TableType.GenericTable },
   ]);
 };
 

@@ -22,6 +22,7 @@ const UPDATE_URL_TYPES = [
   TableType.HistoricalData,
   TableType.SprintPlaning,
   TableType.JiraStatusMapperTool,
+  TableType.PiNotesTool,
   ...ADMIN_TYPES,
 ];
 
