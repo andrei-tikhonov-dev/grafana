@@ -1,15 +1,15 @@
-import { ChatFeedbackRequestValueEnum } from '@architeq/core-api-client';
+import { ChatFeedbackRequestValueEnum, ChatHistoryMessageRoleEnum } from '@architeq/core-api-client';
 import { css } from '@emotion/css';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 
 import { scrollbarStyles } from '../../../theme';
-import { AiChatMessageVM } from '../api/types';
+import { AiChatMessageVM, EAiChatStatus } from '../api/types';
 
 import { ChatMessage } from './ChatMessage';
 
 interface Props {
   messages: AiChatMessageVM[];
-  onPromptClick: (prompt: string) => void;
+  onSendMessage: (message: string) => void;
   onFeedback: (localId: string, value: ChatFeedbackRequestValueEnum) => void;
   onRetry: () => void;
 }
@@ -24,15 +24,22 @@ const styles = {
   `,
 };
 
-export const MessagesList: React.FC<Props> = ({ messages, onPromptClick, onFeedback, onRetry }) => {
+export const MessagesList: React.FC<Props> = ({ messages, onSendMessage, onFeedback, onRetry }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }, [messages]);
+
+  const firstAssistantIndex = useMemo(
+    () =>
+      messages.findIndex(
+        (m) => m.role === ChatHistoryMessageRoleEnum.Assistant && m.status === EAiChatStatus.Ok
+      ),
+    [messages]
+  );
 
   return (
     <div ref={containerRef} className={styles.container}>
@@ -40,10 +47,11 @@ export const MessagesList: React.FC<Props> = ({ messages, onPromptClick, onFeedb
         <ChatMessage
           key={message.localId}
           message={message}
-          onPromptClick={onPromptClick}
+          onSendMessage={onSendMessage}
           onFeedback={onFeedback}
           onRetry={onRetry}
           isLast={index === messages.length - 1}
+          isFirstAssistant={index === firstAssistantIndex}
         />
       ))}
     </div>

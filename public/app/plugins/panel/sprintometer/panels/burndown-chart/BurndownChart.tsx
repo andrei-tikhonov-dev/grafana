@@ -8,10 +8,8 @@ import { PanelProps } from '@grafana/data';
 import { useApi } from '../../api';
 import { UiFiltersContainer, UiHorizontalGroup, UiMultiSelect, UiSelect, UiSwitch, UiText } from '../../components/ui';
 import { UiPanelContainer } from '../../components/ui/panel-container/PanelContainer';
-import { usePanelAiChat } from '../../features/ai-chat';
 import { useEcharts } from '../../hooks/useEcharts';
 import { useGrafanaVariables } from '../../hooks/useGrafanaVariables';
-import { useMockAiForecastClient } from '../../hooks/useMockAiForecastClient';
 import { usePluginState } from '../../hooks/usePluginState';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
@@ -29,13 +27,11 @@ import {
   PLACEHOLDER_SELECT_VALUE,
   STORY_POINTS_COLOR,
 } from './constants';
-import { initial } from './mocks/initial';
+import { initialData } from './initial-data';
 import { MBurndownCustomData, EValueMode } from './types';
 import { filterBurndownChartData, getChartOptions, prepareData } from './utils';
 
 interface BurndownChartProps extends PanelProps<TPanelOptions> {}
-
-const initialData: MBurndownCustomData = initial;
 
 interface BurndownChartState {
   valueMode: EValueMode;
@@ -49,7 +45,6 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
   data: panelData,
   options,
   onOptionsChange,
-  id,
 }) => {
   const initialState: BurndownChartState = {
     valueMode: EValueMode.StoryPoints,
@@ -61,25 +56,12 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
   const { valueMode, selectedIssues, showNonWorkingDays } = state;
   const grafanaVariables = useGrafanaVariables(['team', 'project']);
   const { config, isBasePathReady } = useApi();
-  const mockForecastClient = useMockAiForecastClient(options);
 
   const forecastClient = useMemo(() => {
-    if (mockForecastClient) {
-      return mockForecastClient;
-    }
     return createAiForecastApiClientAdapter(config);
-  }, [mockForecastClient, config]);
+  }, [config]);
 
-  const { ai, ...customData } = getGrafanaCustomData<MBurndownCustomData>(panelData, initialData);
-
-  const { toggle, drawer } = usePanelAiChat({
-    panelId: id,
-    aiEnabled: options.aiEnabled,
-    dashboard: options.burndown?.dashboard,
-    metric: options.burndown?.metric,
-    aiData: ai,
-    mockConfig: options.aiChatMock,
-  });
+  const customData = getGrafanaCustomData<MBurndownCustomData>(panelData, initialData);
 
   const { summary, daysData, currentDay, issueOptions, valueOptions, data, scopeChanges } = useMemo(() => {
     return prepareData(customData);
@@ -113,7 +95,7 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
 
   const { data: aiForecast, loading: aiLoading } = useAiPrediction({
     client: forecastClient,
-    enabled: options.aiEnabled !== false && actual.length > 0 && futureDates.length > 0,
+    enabled: actual.length > 0 && futureDates.length > 0,
     isBasePathReady,
     teamId: grafanaVariables.team as string,
     project: grafanaVariables.project as string,
@@ -168,12 +150,7 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
   return (
     <UiPanelContainer width={width} height={height} title="Burndown chart">
       <UiFiltersContainer
-        suffix={
-          <>
-            <ScopeChangesViewer daysData={daysData} />
-            {toggle}
-          </>
-        }
+        suffix={<ScopeChangesViewer daysData={daysData} />}
       >
         <UiSelect
           groups={uiSelectGroups}
@@ -222,7 +199,6 @@ export const BurndownChart: React.FC<BurndownChartProps> = ({
         <Summary name={LABEL_STORY_POINTS} summary={summary.storyPoints} color={STORY_POINTS_COLOR} />
         <Summary name={LABEL_ISSUES_AMOUNT} summary={summary.issuesAmount} color={ISSUES_AMOUNT_COLOR} />
       </UiHorizontalGroup>
-      {drawer}
     </UiPanelContainer>
   );
 };

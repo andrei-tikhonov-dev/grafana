@@ -1,7 +1,7 @@
 import { ChatMessageResponse } from '@architeq/core-api-client';
 
-export const DEFAULT_AUTO_SUMMARY_RESPONSE: ChatMessageResponse = {
-  messageId: 'mock-auto-summary',
+export const DEFAULT_PRESET_RESPONSE: ChatMessageResponse = {
+  messageId: 'mock-preset',
   content: `## Sprint Status Overview
 
 Your current sprint is progressing **on track** with some areas requiring attention.

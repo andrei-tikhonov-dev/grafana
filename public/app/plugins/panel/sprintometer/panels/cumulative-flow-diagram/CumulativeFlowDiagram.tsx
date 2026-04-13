@@ -5,7 +5,6 @@ import { PanelProps } from '@grafana/data';
 
 import { UiFiltersContainer, UiMultiSelect, UiSwitch } from '../../components/ui';
 import { UiPanelContainer } from '../../components/ui/panel-container/PanelContainer';
-import { usePanelAiChat } from '../../features/ai-chat';
 import { useEcharts } from '../../hooks/useEcharts';
 import { usePluginState } from '../../hooks/usePluginState';
 import { TPanelOptions } from '../../types';
@@ -36,7 +35,6 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
   data: panelData,
   options,
   onOptionsChange,
-  id,
 }) => {
   const initialState: CumulativeFlowDiagramState = {
     selectedIssues: [],
@@ -47,7 +45,7 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
   const [state, setState] = usePluginState<CumulativeFlowDiagramState>(options, onOptionsChange, initialState);
   const { selectedIssues, selectedStatuses, isStacked } = state;
 
-  const { ai, ...customData } = getGrafanaCustomData<MData>(panelData, initialData);
+  const customData = getGrafanaCustomData<MData>(panelData, initialData);
 
   const { periodsData, currentPeriod, issueOptions, data, periodType } = useMemo(() => {
     return prepareData(customData);
@@ -58,15 +56,6 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
     selectedIssues,
     periodsData,
     periodType,
-  });
-
-  const { toggle, drawer } = usePanelAiChat({
-    panelId: id,
-    aiEnabled: options.aiEnabled,
-    dashboard: options.cumulativeFlowDiagram?.dashboard,
-    metric: options.cumulativeFlowDiagram?.metric,
-    aiData: ai,
-    mockConfig: options.aiChatMock,
   });
 
   const option = useMemo(
@@ -106,7 +95,7 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
 
   return (
     <UiPanelContainer width={width} height={height} title="Cumulative flow diagram">
-      <UiFiltersContainer suffix={toggle}>
+      <UiFiltersContainer>
         <UiMultiSelect
           options={issueOptions}
           defaultValue={selectedIssues}
@@ -122,7 +111,6 @@ export const CumulativeFlowDiagram: React.FC<CumulativeFlowDiagramProps> = ({
           flex: 1 1 auto;
         `}
       />
-      {drawer}
     </UiPanelContainer>
   );
 };

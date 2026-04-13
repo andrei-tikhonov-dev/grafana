@@ -1,11 +1,14 @@
-import type {
-  ChatMessageResponse,
-  ChatFeedbackResponse,
-  ChatHistoryMessage,
-  ChatFeedbackRequestValueEnum,
-  ChatHistoryMessageRoleEnum,
-  SendMetricChatMessageRequest,
-  SubmitBoardChatFeedbackRequest,
+import {
+  type ChatMessageResponse,
+  type ChatFeedbackResponse,
+  type ChatHistoryMessage,
+  type ChatFeedbackRequestValueEnum,
+  type ChatHistoryMessageRoleEnum,
+  type SendBoardChatMessageRequest,
+  type SubmitBoardChatFeedbackRequest,
+  SendMetricChatMessageBoardTypeEnum,
+  SendBoardChatMessageBoardTypeEnum,
+  SubmitBoardChatFeedbackBoardTypeEnum,
 } from '@architeq/core-api-client';
 
 /**
@@ -28,20 +31,20 @@ export type ApiHistoryMessage = ChatHistoryMessage;
  *
  * // Using a mock client for testing
  * const mockClient: AiChatClient = {
- *   sendMessage: async () => ({ messageId: '123', content: 'Mock response' }),
+ *   sendBoardMessage: async () => ({ messageId: '123', content: 'Mock response' }),
  *   submitFeedback: async () => ({ success: true }),
  * };
  * ```
  */
 export interface AiChatClient {
   /**
-   * Sends a chat message and receives an AI-generated response.
+   * Sends a board-level chat message (v3 API, no metricName required).
    *
-   * @param args - The message request parameters including history
+   * @param args - The board chat request parameters
    * @param init - Optional RequestInit for controlling the fetch request (e.g., AbortSignal)
    * @returns Promise resolving to the chat response with AI-generated content
    */
-  sendMessage(args: SendMessageArgs, init?: RequestInit): Promise<ChatMessageResponse>;
+  sendBoardMessage(args: SendBoardMessageArgs, init?: RequestInit): Promise<ChatMessageResponse>;
 
   /**
    * Submits user feedback for a specific chat message.
@@ -54,11 +57,11 @@ export interface AiChatClient {
 }
 
 /**
- * Arguments for sending a chat message.
+ * Arguments for sending a board-level chat message (v3).
  *
- * Extends the generated SendMetricChatMessageRequest type.
+ * Extends the generated SendBoardChatMessageRequest type.
  */
-export interface SendMessageArgs extends SendMetricChatMessageRequest {}
+export interface SendBoardMessageArgs extends SendBoardChatMessageRequest {}
 
 /**
  * Arguments for submitting chat feedback.
@@ -71,11 +74,11 @@ export interface SubmitFeedbackArgs extends SubmitBoardChatFeedbackRequest {}
  * Chat operation modes.
  *
  * - `General`: Standard conversational mode for user questions
- * - `AutoSummary`: Automatic summary generation mode
+ * - `Preset`: Preset query mode (opens with a predefined question)
  */
 export enum EAiChatMode {
   General = 'general',
-  AutoSummary = 'autoSummary',
+  Preset = 'preset',
 }
 
 /**
@@ -152,7 +155,9 @@ export interface AiChatStrings {
   error503: string;
   errorDefault: string;
   disclaimer: string;
-  autoSummaryMessage: string;
+  presetFallbackMessage: string;
+  copyToClipboard: string;
+  feedbackPlaceholder: string;
 }
 
 /**
@@ -169,4 +174,24 @@ export interface LastRequest {
 
   /** The type of request (user message or auto-summary) */
   kind: 'user' | 'summary';
+}
+
+/**
+ * Both enums are generated from the same OpenAPI enum with identical values
+ * (daily | planning | review | dora). This helper bridges the nominally-distinct types.
+ */
+export function toFeedbackBoardType(
+  boardType: SendMetricChatMessageBoardTypeEnum
+): SubmitBoardChatFeedbackBoardTypeEnum {
+  return boardType as unknown as SubmitBoardChatFeedbackBoardTypeEnum;
+}
+
+/**
+ * Bridges SendBoardChatMessageBoardTypeEnum to SendMetricChatMessageBoardTypeEnum.
+ * The v3 board type enum includes `historical`, which the v2 metric enum does not have.
+ */
+export function toBoardChatBoardType(
+  boardType: SendMetricChatMessageBoardTypeEnum | string
+): SendBoardChatMessageBoardTypeEnum {
+  return boardType as unknown as SendBoardChatMessageBoardTypeEnum;
 }

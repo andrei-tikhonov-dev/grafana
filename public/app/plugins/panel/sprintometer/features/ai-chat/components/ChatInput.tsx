@@ -3,18 +3,15 @@ import { Send, Square } from 'lucide-react';
 import React, { useState, useRef, useEffect, useCallback, type KeyboardEvent, type ChangeEvent } from 'react';
 
 import { scrollbarStyles, theme3 } from '../../../theme';
+import { useAiChatContext } from '../AiChatContext';
+import { useAiChatStore, EMPTY_REQUEST_STATE } from '../store/aiChatStore';
 
-// Constants
 const MAX_HEIGHT_VIEWPORT_RATIO = 0.3;
 const TEXTAREA_ROWS = 1;
 const ICON_SIZE = 14;
 const BUTTON_SIZE = 32;
 
-interface ChatInputProps {
-  placeholder: string;
-  sendLabel: string;
-  cancelLabel: string;
-  isLoading: boolean;
+interface Props {
   value?: string;
   onSend: (message: string) => void;
   onCancel: () => void;
@@ -96,10 +93,6 @@ const createStyles = () => ({
 
 const styles = createStyles();
 
-/**
- * Calculates and applies the appropriate height for the textarea
- * based on its content, respecting the maximum height constraint.
- */
 const adjustTextareaHeight = (textarea: HTMLTextAreaElement): void => {
   textarea.style.height = 'auto';
 
@@ -112,29 +105,26 @@ const adjustTextareaHeight = (textarea: HTMLTextAreaElement): void => {
   textarea.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
 };
 
-export const ChatInput: React.FC<ChatInputProps> = ({
-  placeholder,
-  sendLabel,
-  cancelLabel,
-  isLoading,
+export const ChatInput: React.FC<Props> = ({
   value: controlledValue,
   onSend,
   onCancel,
 }) => {
+  const { instanceId, strings } = useAiChatContext();
+  const isLoading = useAiChatStore((s) => (s.requestStates[instanceId] || EMPTY_REQUEST_STATE).isLoading);
+
   const [inputValue, setInputValue] = useState(controlledValue ?? '');
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const trimmedValue = inputValue.trim();
   const canSend = trimmedValue.length > 0 && !isLoading;
 
-  // Sync with controlled value
   useEffect(() => {
     if (controlledValue !== undefined) {
       setInputValue(controlledValue);
     }
   }, [controlledValue]);
 
-  // Auto-resize textarea when content changes
   useEffect(() => {
     if (textAreaRef.current) {
       adjustTextareaHeight(textAreaRef.current);
@@ -180,13 +170,13 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         <textarea
           ref={textAreaRef}
           className={styles.textArea}
-          placeholder={placeholder}
+          placeholder={strings.inputPlaceholder}
           value={inputValue}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           disabled={isLoading}
           rows={TEXTAREA_ROWS}
-          aria-label={placeholder}
+          aria-label={strings.inputPlaceholder}
         />
 
         <div className={styles.buttonWrapper}>
@@ -195,8 +185,8 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               type="button"
               className={styles.button}
               onClick={onCancel}
-              title={cancelLabel}
-              aria-label={cancelLabel}
+              title={strings.cancel}
+              aria-label={strings.cancel}
             >
               <Square size={ICON_SIZE} fill="currentColor" />
             </button>
@@ -206,8 +196,8 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               className={styles.button}
               onClick={handleSend}
               disabled={!canSend}
-              title={sendLabel}
-              aria-label={sendLabel}
+              title={strings.send}
+              aria-label={strings.send}
             >
               <Send size={ICON_SIZE} />
             </button>
@@ -215,7 +205,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         </div>
       </div>
 
-      <p className={styles.disclaimer}>Our chatbot can make mistakes. Trust answers with caution.</p>
+      <p className={styles.disclaimer}>{strings.disclaimer}</p>
     </div>
   );
 };

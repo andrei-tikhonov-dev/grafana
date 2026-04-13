@@ -33,74 +33,31 @@ export interface TBurndownOptionsNS {
   };
 }
 
-export interface THeaderOptionsNS {
-  header?: {
-    dashboard: SendMetricChatMessageBoardTypeEnum;
-    metric: SendMetricChatMessageMetricNameEnum;
-  };
+export interface TAiChatOptionsNS {
+  aiDashboard?: SendMetricChatMessageBoardTypeEnum;
+  aiMetric?: SendMetricChatMessageMetricNameEnum;
+  aiPanelIds?: string[];
 }
 
 export interface TIssueMapOptionsNS {
   sankey: {
-    dashboard: SendMetricChatMessageBoardTypeEnum;
-    metric: SendMetricChatMessageMetricNameEnum;
     filterFields: string[];
-  };
-}
-
-export interface TAiOptionsNS {
-  ai: {
-    dashboard: SendMetricChatMessageBoardTypeEnum;
-    metric: SendMetricChatMessageMetricNameEnum;
-  };
-}
-
-export interface TCumulativeFlowDiagramOptionsNS {
-  cumulativeFlowDiagram?: {
-    dashboard: SendMetricChatMessageBoardTypeEnum;
-    metric: SendMetricChatMessageMetricNameEnum;
   };
 }
 
 export interface TAiChatMockOptionsNS {
   aiChatMock?: {
     useMock: boolean;
-    autoSummary: string; // JSON string
+    preset: string; // JSON string
     general: string; // JSON string
-  };
-}
-
-export interface TIncomingDependenciesOptionsNS {
-  incomingDependencies?: {
-    dashboard: SendMetricChatMessageBoardTypeEnum;
-    metric: SendMetricChatMessageMetricNameEnum;
-  };
-}
-
-export interface TOutgoingDependenciesOptionsNS {
-  outgoingDependencies?: {
-    dashboard: SendMetricChatMessageBoardTypeEnum;
-    metric: SendMetricChatMessageMetricNameEnum;
-  };
-}
-
-export interface TPlannerBoardOptionsNS {
-  plannerBoard?: {
-    dashboard: SendMetricChatMessageBoardTypeEnum;
-    metric: SendMetricChatMessageMetricNameEnum;
   };
 }
 
 export type TPanelOptions = TBasePanelOptions &
   TBurndownOptionsNS &
-  THeaderOptionsNS &
+  TAiChatOptionsNS &
   TIssueMapOptionsNS &
-  TCumulativeFlowDiagramOptionsNS &
-  TAiOptionsNS &
-  TAiChatMockOptionsNS &
-  TIncomingDependenciesOptionsNS &
-  TOutgoingDependenciesOptionsNS &
-  TPlannerBoardOptionsNS;
+  TAiChatMockOptionsNS;
 
 export const enum EPanelType {
   BurndownChart = 'BurndownChart',
@@ -241,11 +198,6 @@ export type TId = number;
 
 export interface BaseCustomData extends Record<string, any> {
   zeroState?: TZeroState;
-}
-
-export interface TAiData {
-  title: string;
-  content: string;
 }
 
 export interface TBreadcrumbItem {

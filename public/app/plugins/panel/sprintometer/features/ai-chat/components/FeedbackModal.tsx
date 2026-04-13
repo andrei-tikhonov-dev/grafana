@@ -1,3 +1,4 @@
+import { ChatFeedbackRequestValueEnum } from '@architeq/core-api-client';
 import { css } from '@emotion/css';
 import React, { useState } from 'react';
 
@@ -5,18 +6,13 @@ import { Modal } from '@grafana/ui';
 
 import { UiButton, UiTypography, UiVerticalGroup } from '../../../components/ui';
 import { theme3 } from '../../../theme';
+import { useAiChatContext } from '../AiChatContext';
+import { useAiChatStore } from '../store/aiChatStore';
 
-import { ActionArrowButton } from './ActionArrowButton';
+import { QuickAction } from './QuickAction';
 
 interface Props {
-  isOpen: boolean;
-  title: string;
-  reasons: string[];
-  otherLabel: string;
-  submitLabel: string;
-  otherHint: string;
   onSubmit: (comment: string) => void;
-  onClose: () => void;
 }
 
 const styles = {
@@ -52,18 +48,17 @@ const styles = {
 
 const MAX_COMMENT_LENGTH = 1000;
 
-export const FeedbackModal: React.FC<Props> = ({
-  isOpen,
-  title,
-  reasons,
-  otherLabel,
-  submitLabel,
-  otherHint,
-  onSubmit,
-  onClose,
-}) => {
+export const FeedbackModal: React.FC<Props> = ({ onSubmit }) => {
+  const { strings, feedbackReasons } = useAiChatContext();
+  const feedbackModal = useAiChatStore((s) => s.feedbackModal);
+  const closeFeedbackModal = useAiChatStore((s) => s.closeFeedbackModal);
+
   const [showOther, setShowOther] = useState(false);
   const [otherText, setOtherText] = useState('');
+
+  const isPositive = feedbackModal.value === ChatFeedbackRequestValueEnum.Up;
+  const title = isPositive ? strings.feedbackTitleUp : strings.feedbackTitleDown;
+  const reasons = isPositive ? feedbackReasons.up : feedbackReasons.down;
 
   const handleReasonClick = (reason: string) => {
     onSubmit(reason);
@@ -85,30 +80,30 @@ export const FeedbackModal: React.FC<Props> = ({
   const handleClose = () => {
     setShowOther(false);
     setOtherText('');
-    onClose();
+    closeFeedbackModal();
   };
 
-  if (!isOpen) {
+  if (!feedbackModal.isOpen) {
     return null;
   }
 
   return (
-    <Modal title={title} isOpen={isOpen} onDismiss={handleClose} className={styles.modal}>
+    <Modal title={title} isOpen={feedbackModal.isOpen} onDismiss={handleClose} className={styles.modal}>
       <UiVerticalGroup gap="md">
         {!showOther ? (
           <>
             {reasons.map((reason, index) => (
-              <ActionArrowButton key={index} onClick={() => handleReasonClick(reason)}>
+              <QuickAction key={index} onClick={() => handleReasonClick(reason)}>
                 {reason}
-              </ActionArrowButton>
+              </QuickAction>
             ))}
 
-            <ActionArrowButton onClick={handleOtherClick}>{otherLabel}</ActionArrowButton>
+            <QuickAction onClick={handleOtherClick}>{strings.other}</QuickAction>
           </>
         ) : (
           <>
             <UiTypography variant="body" className={styles.hint}>
-              {otherHint}
+              {strings.feedbackHintOther}
             </UiTypography>
 
             <textarea
@@ -120,7 +115,7 @@ export const FeedbackModal: React.FC<Props> = ({
                   setOtherText(value);
                 }
               }}
-              placeholder="Type your feedback here..."
+              placeholder={strings.feedbackPlaceholder}
               autoFocus
             />
 
@@ -129,7 +124,7 @@ export const FeedbackModal: React.FC<Props> = ({
             </div>
 
             <UiButton variant="default" onClick={handleSubmitOther} disabled={!otherText.trim()}>
-              {submitLabel}
+              {strings.submit}
             </UiButton>
           </>
         )}

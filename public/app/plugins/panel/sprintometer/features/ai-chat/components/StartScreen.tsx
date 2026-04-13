@@ -4,14 +4,12 @@ import React from 'react';
 
 import { UiTypography, UiVerticalGroup } from '../../../components/ui';
 import { scrollbarStyles, theme3 } from '../../../theme';
+import { useAiChatContext } from '../AiChatContext';
 
-import { ActionArrowButton } from './ActionArrowButton';
+import { QuickAction } from './QuickAction';
 
 interface Props {
-  title: string;
-  subtitle: string;
-  prompts: string[];
-  onPromptClick: (prompt: string) => void;
+  onSendMessage: (prompt: string) => void;
 }
 
 const styles = {
@@ -60,7 +58,9 @@ const styles = {
   `,
 };
 
-export const StartScreen: React.FC<Props> = ({ title, subtitle, prompts, onPromptClick }) => {
+export const StartScreen: React.FC<Props> = ({ onSendMessage }) => {
+  const { strings, startPrompts } = useAiChatContext();
+
   return (
     <div className={styles.container}>
       <div className={styles.innerWrapper}>
@@ -69,17 +69,19 @@ export const StartScreen: React.FC<Props> = ({ title, subtitle, prompts, onPromp
         </div>
 
         <UiVerticalGroup align="center" gap="sm" className={styles.titleWrapper}>
-          <UiTypography variant="h2">{title}</UiTypography>
-          <UiTypography variant="body">{subtitle}</UiTypography>
+          <UiTypography variant="h2">{strings.startTitle}</UiTypography>
+          <UiTypography variant="body">{strings.startSubtitle}</UiTypography>
         </UiVerticalGroup>
 
-        <div className={styles.promptsWrapper}>
-          {prompts.map((prompt, index) => (
-            <ActionArrowButton key={index} onClick={() => onPromptClick(prompt)}>
-              {prompt}
-            </ActionArrowButton>
-          ))}
-        </div>
+        {startPrompts.length > 0 && (
+          <div className={styles.promptsWrapper}>
+            {startPrompts.map((prompt, index) => (
+              <QuickAction key={index} onClick={() => onSendMessage(prompt)}>
+                {prompt}
+              </QuickAction>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

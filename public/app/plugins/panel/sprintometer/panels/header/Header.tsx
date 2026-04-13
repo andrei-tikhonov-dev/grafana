@@ -61,17 +61,17 @@ export const Header: React.FC<Props> = ({ width, height, data, options, id }) =>
     eventsToday,
   } = getGrafanaCustomData<MHeaderCustomData>(data, initialData);
 
-  const hasActions = true;
   const hasMetrics = interval || progress || organizationUnit;
   const hasEvents = eventsToday || eventsUpcoming;
   const hasTimelineSection = timeline || hasEvents;
 
-  const { openGeneral, openAutoSummary, drawer } = usePanelAiChat({
+  const { openGeneral, drawer } = usePanelAiChat({
     panelId: id,
     aiEnabled: options.aiEnabled,
-    dashboard: options.header?.dashboard,
-    metric: options.header?.metric,
+    dashboard: options.aiDashboard,
+    metric: options.aiMetric,
     mockConfig: options.aiChatMock,
+    panelIds: options.aiPanelIds,
   });
 
   return (
@@ -91,18 +91,18 @@ export const Header: React.FC<Props> = ({ width, height, data, options, id }) =>
           {info && <DashboardInfo {...info} />}
         </UiHorizontalGroup>
 
-        {hasActions && (
-          <UiHorizontalGroup>
-            {update && <UpdateButton {...update} />}
+        <UiHorizontalGroup>
+          {update && <UpdateButton {...update} />}
+          {options.aiEnabled && (
             <UiButton onClick={openGeneral} variant="ai">
               <Sparkles />
               AI helper
             </UiButton>
-          </UiHorizontalGroup>
-        )}
+          )}
+        </UiHorizontalGroup>
       </UiHorizontalGroup>
 
-      {status && <StatusCard {...status} onAnalyze={openAutoSummary} />}
+      {status && <StatusCard {...status} />}
 
       {hasMetrics && (
         <UiHorizontalGroup gap="lg" justify="start" align="center">

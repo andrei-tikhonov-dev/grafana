@@ -1,8 +1,5 @@
-import { TAiData } from '../../types';
-
 export interface MIssueMapCustomData {
   valueField: string;
-  ai: TAiData;
 }
 
 export interface MPluginDataPath {

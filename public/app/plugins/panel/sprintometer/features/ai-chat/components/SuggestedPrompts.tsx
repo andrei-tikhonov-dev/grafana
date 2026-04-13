@@ -3,10 +3,11 @@ import React from 'react';
 
 import { UiButton } from '../../../components/ui';
 import { theme3 } from '../../../theme';
+import { AI_CHAT_COLORS } from '../utils/defaults';
 
 interface Props {
   prompts?: string[];
-  onPromptClick: (prompt: string) => void;
+  onSendMessage: (prompt: string) => void;
 }
 
 const styles = {
@@ -19,16 +20,16 @@ const styles = {
   chip: css`
     font-size: ${theme3.tailwind.textXs};
     padding: ${theme3.tailwind.spacing2} ${theme3.tailwind.spacing4};
-    background-color: #fee9d5;
-    border: 1px solid #fdcdab;
+    background-color: ${AI_CHAT_COLORS.suggestedChipBg};
+    border: 1px solid ${AI_CHAT_COLORS.suggestedChipBorder};
     border-radius: ${theme3.tailwind.radius2xl};
     &:hover:not(:disabled) {
-      background-color: #fdcdab;
+      background-color: ${AI_CHAT_COLORS.suggestedChipBorder};
     }
   `,
 };
 
-export const SuggestedPrompts: React.FC<Props> = ({ prompts, onPromptClick }) => {
+export const SuggestedPrompts: React.FC<Props> = ({ prompts, onSendMessage }) => {
   if (!prompts || prompts.length === 0) {
     return null;
   }
@@ -40,7 +41,7 @@ export const SuggestedPrompts: React.FC<Props> = ({ prompts, onPromptClick }) =>
           key={index}
           variant="secondary"
           size="sm"
-          onClick={() => onPromptClick(prompt)}
+          onClick={() => onSendMessage(prompt)}
           className={styles.chip}
         >
           {prompt}

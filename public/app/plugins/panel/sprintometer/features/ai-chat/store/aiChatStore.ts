@@ -1,257 +1,276 @@
 import { ChatFeedbackRequestValueEnum, ChatHistoryMessageRoleEnum } from '@architeq/core-api-client';
 import { create } from 'zustand';
 
+import { uid } from '../../../utils/uid';
 import { AiChatMessageVM, EAiChatMode, EAiChatStatus, LastRequest } from '../api/types';
-import { createLocalMessageId } from '../utils/ids';
 
-interface FeedbackModalState {
-  isOpen: boolean;
-  targetLocalId?: string;
-  value?: ChatFeedbackRequestValueEnum;
-  otherText?: string;
-}
-
-interface AiChatState {
-  // Drawer state
-  activeDrawerId: string | undefined;
-  activeInstanceId: string | undefined;
-  openMode: EAiChatMode;
-
-  // Messages (scoped by instanceId)
-  chats: Record<string, Record<EAiChatMode, AiChatMessageVM[]>>;
-
-  // Request lifecycle
+interface ChatRequestState {
   isLoading: boolean;
   thinkingStageIndex: number;
   abortController?: AbortController;
   lastRequest?: LastRequest;
+}
+
+const EMPTY_REQUEST_STATE: ChatRequestState = {
+  isLoading: false,
+  thinkingStageIndex: 0,
+};
+
+interface FeedbackModalState {
+  isOpen: boolean;
+  instanceId?: string;
+  targetLocalId?: string;
+  value?: ChatFeedbackRequestValueEnum;
+}
+
+interface AiChatState {
+  // Drawer state — panelInstanceId is unique per panel to prevent collisions
+  activeInstanceId: string | undefined;
+  // Chat scope — shared key for message history (userId-teamId-boardType-project)
+  activeChatScopeId: string | undefined;
+  openMode: EAiChatMode;
+
+  // Query passed via openWithQuery, consumed by usePresetMode
+  pendingOpenQuery: string | null;
+
+  // Messages (scoped by chatScopeId, single array per scope)
+  chats: Record<string, AiChatMessageVM[]>;
+
+  // Request lifecycle (scoped by chatScopeId)
+  requestStates: Record<string, ChatRequestState>;
 
   // Feedback modal
   feedbackModal: FeedbackModalState;
 
   // Actions
-  open: (mode: EAiChatMode, drawerId: string, instanceId: string) => void;
+  open: (mode: EAiChatMode, panelInstanceId: string, chatScopeId: string, query?: string) => void;
   close: () => void;
 
-  appendUserMessage: (text: string) => string; // Returns localId
-  appendAssistantPending: () => string; // Returns localId
-  resolveAssistantMessage: (localId: string, messageId: string, content: string, suggestedPrompts?: string[]) => void;
-  failAssistantMessage: (localId: string, errorMessage: string) => void;
-  removeMessage: (localId: string) => void;
+  appendUserMessage: (instanceId: string, text: string) => string;
+  appendAssistantPending: (instanceId: string) => string;
+  resolveAssistantMessage: (
+    instanceId: string,
+    localId: string,
+    messageId: string,
+    content: string,
+    suggestedPrompts?: string[]
+  ) => void;
+  failAssistantMessage: (instanceId: string, localId: string, errorMessage: string) => void;
+  removeMessage: (instanceId: string, localId: string) => void;
 
-  setLoading: (loading: boolean) => void;
-  setThinkingStageIndex: (index: number) => void;
-  setAbortController: (controller: AbortController | undefined) => void;
-  setLastRequest: (request: LastRequest | undefined) => void;
-  resetRequestState: () => void;
+  setLoading: (instanceId: string, loading: boolean) => void;
+  setThinkingStageIndex: (instanceId: string, index: number) => void;
+  setAbortController: (instanceId: string, controller: AbortController | undefined) => void;
+  setLastRequest: (instanceId: string, request: LastRequest | undefined) => void;
+  resetRequestState: (instanceId: string) => void;
 
-  openFeedbackModal: (localId: string, value: ChatFeedbackRequestValueEnum) => void;
+  openFeedbackModal: (instanceId: string, localId: string, value: ChatFeedbackRequestValueEnum) => void;
   closeFeedbackModal: () => void;
-  setFeedbackOtherText: (text: string) => void;
-  applyFeedback: (localId: string, value: ChatFeedbackRequestValueEnum, comment: string) => void;
+  applyFeedback: (instanceId: string, localId: string, value: ChatFeedbackRequestValueEnum, comment: string) => void;
 
-  clearMessages: () => void;
+  clearMessages: (instanceId: string) => void;
+
+  // Pending query (set by preset dropdown, consumed by controller)
+  pendingQuery: string | null;
+  setPendingQuery: (query: string | null) => void;
 }
-
-const createEmptyInstanceChats = (): Record<EAiChatMode, AiChatMessageVM[]> => ({
-  [EAiChatMode.General]: [],
-  [EAiChatMode.AutoSummary]: [],
-});
 
 export const useAiChatStore = create<AiChatState>((set, get) => ({
   // Initial state
-  activeDrawerId: undefined,
   activeInstanceId: undefined,
+  activeChatScopeId: undefined,
   openMode: EAiChatMode.General,
+  pendingOpenQuery: null,
   chats: {},
-  isLoading: false,
-  thinkingStageIndex: 0,
-  abortController: undefined,
-  lastRequest: undefined,
+  requestStates: {},
   feedbackModal: {
     isOpen: false,
   },
 
   // Drawer actions
-  open: (mode, drawerId, instanceId) =>
+  open: (mode, panelInstanceId, chatScopeId, query) =>
     set((state) => ({
-      activeDrawerId: drawerId,
-      activeInstanceId: instanceId,
+      activeInstanceId: panelInstanceId,
+      activeChatScopeId: chatScopeId,
       openMode: mode,
-      chats: state.chats[instanceId]
+      pendingOpenQuery: query ?? null,
+      chats: state.chats[chatScopeId]
         ? state.chats
         : {
             ...state.chats,
-            [instanceId]: createEmptyInstanceChats(),
+            [chatScopeId]: [],
           },
     })),
-  close: () => set({ activeDrawerId: undefined }),
+  close: () => {
+    const { activeChatScopeId, requestStates } = get();
+    const updates: Partial<AiChatState> = {
+      activeInstanceId: undefined,
+      activeChatScopeId: undefined,
+      pendingOpenQuery: null,
+    };
+    if (activeChatScopeId) {
+      const rs = requestStates[activeChatScopeId];
+      if (rs?.abortController) {
+        rs.abortController.abort();
+      }
+      updates.requestStates = { ...requestStates, [activeChatScopeId]: { ...EMPTY_REQUEST_STATE } };
+    }
+    set(updates);
+  },
 
-  // Message actions
-  appendUserMessage: (text) => {
-    const localId = createLocalMessageId();
+  // Message actions (scoped by instanceId)
+  appendUserMessage: (instanceId, text) => {
+    const localId = uid('local');
     const message: AiChatMessageVM = {
       localId,
       role: ChatHistoryMessageRoleEnum.User,
       content: text,
       status: EAiChatStatus.Ok,
     };
-    set((state) => {
-      const instanceId = state.activeInstanceId;
-      if (!instanceId) {
-        return state;
-      }
-      const instanceChats = state.chats[instanceId] || createEmptyInstanceChats();
-      return {
-        chats: {
-          ...state.chats,
-          [instanceId]: {
-            ...instanceChats,
-            [state.openMode]: [...instanceChats[state.openMode], message],
-          },
-        },
-      };
-    });
+    set((state) => ({
+      chats: {
+        ...state.chats,
+        [instanceId]: [...(state.chats[instanceId] || []), message],
+      },
+    }));
     return localId;
   },
 
-  appendAssistantPending: () => {
-    const localId = createLocalMessageId();
+  appendAssistantPending: (instanceId) => {
+    const localId = uid('local');
     const message: AiChatMessageVM = {
       localId,
       role: ChatHistoryMessageRoleEnum.Assistant,
       content: '',
       status: EAiChatStatus.Pending,
     };
-    set((state) => {
-      const instanceId = state.activeInstanceId;
-      if (!instanceId) {
-        return state;
-      }
-      const instanceChats = state.chats[instanceId] || createEmptyInstanceChats();
-      return {
-        chats: {
-          ...state.chats,
-          [instanceId]: {
-            ...instanceChats,
-            [state.openMode]: [...instanceChats[state.openMode], message],
-          },
-        },
-      };
-    });
+    set((state) => ({
+      chats: {
+        ...state.chats,
+        [instanceId]: [...(state.chats[instanceId] || []), message],
+      },
+    }));
     return localId;
   },
 
-  resolveAssistantMessage: (localId, messageId, content, suggestedPrompts) => {
+  resolveAssistantMessage: (instanceId, localId, messageId, content, suggestedPrompts) => {
     set((state) => {
-      const instanceId = state.activeInstanceId;
-      if (!instanceId) {
-        return state;
-      }
-      const instanceChats = state.chats[instanceId];
-      if (!instanceChats) {
+      const messages = state.chats[instanceId];
+      if (!messages) {
         return state;
       }
       return {
         chats: {
           ...state.chats,
-          [instanceId]: {
-            ...instanceChats,
-            [state.openMode]: instanceChats[state.openMode].map((msg) =>
-              msg.localId === localId
-                ? {
-                    ...msg,
-                    messageId,
-                    content,
-                    status: EAiChatStatus.Ok,
-                    suggestedPrompts,
-                  }
-                : msg
-            ),
-          },
+          [instanceId]: messages.map((msg) =>
+            msg.localId === localId
+              ? {
+                  ...msg,
+                  messageId,
+                  content,
+                  status: EAiChatStatus.Ok,
+                  suggestedPrompts,
+                }
+              : msg
+          ),
         },
       };
     });
   },
 
-  failAssistantMessage: (localId, errorMessage) => {
+  failAssistantMessage: (instanceId, localId, errorMessage) => {
     set((state) => {
-      const instanceId = state.activeInstanceId;
-      if (!instanceId) {
-        return state;
-      }
-      const instanceChats = state.chats[instanceId];
-      if (!instanceChats) {
+      const messages = state.chats[instanceId];
+      if (!messages) {
         return state;
       }
       return {
         chats: {
           ...state.chats,
-          [instanceId]: {
-            ...instanceChats,
-            [state.openMode]: instanceChats[state.openMode].map((msg) =>
-              msg.localId === localId
-                ? {
-                    ...msg,
-                    status: EAiChatStatus.Error,
-                    errorMessage,
-                  }
-                : msg
-            ),
-          },
+          [instanceId]: messages.map((msg) =>
+            msg.localId === localId
+              ? {
+                  ...msg,
+                  status: EAiChatStatus.Error,
+                  errorMessage,
+                }
+              : msg
+          ),
         },
       };
     });
   },
 
-  removeMessage: (localId) => {
+  removeMessage: (instanceId, localId) => {
     set((state) => {
-      const instanceId = state.activeInstanceId;
-      if (!instanceId) {
-        return state;
-      }
-      const instanceChats = state.chats[instanceId];
-      if (!instanceChats) {
+      const messages = state.chats[instanceId];
+      if (!messages) {
         return state;
       }
       return {
         chats: {
           ...state.chats,
-          [instanceId]: {
-            ...instanceChats,
-            [state.openMode]: instanceChats[state.openMode].filter((msg) => msg.localId !== localId),
-          },
+          [instanceId]: messages.filter((msg) => msg.localId !== localId),
         },
       };
     });
   },
 
-  // Request lifecycle
-  setLoading: (loading) => set({ isLoading: loading }),
-  setThinkingStageIndex: (index) => set({ thinkingStageIndex: index }),
-  setAbortController: (controller) => set({ abortController: controller }),
-  setLastRequest: (request) => set({ lastRequest: request }),
+  // Request lifecycle (scoped by instanceId)
+  setLoading: (instanceId, loading) => {
+    set((state) => ({
+      requestStates: {
+        ...state.requestStates,
+        [instanceId]: { ...(state.requestStates[instanceId] || EMPTY_REQUEST_STATE), isLoading: loading },
+      },
+    }));
+  },
+  setThinkingStageIndex: (instanceId, index) => {
+    set((state) => ({
+      requestStates: {
+        ...state.requestStates,
+        [instanceId]: { ...(state.requestStates[instanceId] || EMPTY_REQUEST_STATE), thinkingStageIndex: index },
+      },
+    }));
+  },
+  setAbortController: (instanceId, controller) => {
+    set((state) => ({
+      requestStates: {
+        ...state.requestStates,
+        [instanceId]: { ...(state.requestStates[instanceId] || EMPTY_REQUEST_STATE), abortController: controller },
+      },
+    }));
+  },
+  setLastRequest: (instanceId, request) => {
+    set((state) => ({
+      requestStates: {
+        ...state.requestStates,
+        [instanceId]: { ...(state.requestStates[instanceId] || EMPTY_REQUEST_STATE), lastRequest: request },
+      },
+    }));
+  },
 
-  resetRequestState: () => {
-    const { abortController } = get();
-    if (abortController) {
-      abortController.abort();
+  resetRequestState: (instanceId) => {
+    const rs = get().requestStates[instanceId];
+    if (rs?.abortController) {
+      rs.abortController.abort();
     }
-    set({
-      isLoading: false,
-      thinkingStageIndex: 0,
-      abortController: undefined,
-    });
+    set((state) => ({
+      requestStates: {
+        ...state.requestStates,
+        [instanceId]: { ...EMPTY_REQUEST_STATE },
+      },
+    }));
   },
 
   // Feedback modal
-  openFeedbackModal: (localId, value) => {
+  openFeedbackModal: (instanceId, localId, value) => {
     set({
       feedbackModal: {
         isOpen: true,
+        instanceId,
         targetLocalId: localId,
         value,
-        otherText: '',
       },
     });
   },
@@ -264,65 +283,48 @@ export const useAiChatStore = create<AiChatState>((set, get) => ({
     });
   },
 
-  setFeedbackOtherText: (text) => {
-    set((state) => ({
-      feedbackModal: {
-        ...state.feedbackModal,
-        otherText: text,
-      },
-    }));
-  },
-
-  applyFeedback: (localId, value, comment) => {
+  applyFeedback: (instanceId, localId, value, comment) => {
     set((state) => {
-      const instanceId = state.activeInstanceId;
-      if (!instanceId) {
-        return state;
-      }
-      const instanceChats = state.chats[instanceId];
-      if (!instanceChats) {
+      const messages = state.chats[instanceId];
+      if (!messages) {
         return state;
       }
       return {
         chats: {
           ...state.chats,
-          [instanceId]: {
-            ...instanceChats,
-            [state.openMode]: instanceChats[state.openMode].map((msg) =>
-              msg.localId === localId
-                ? {
-                    ...msg,
-                    feedback: {
-                      value,
-                      comment,
-                    },
-                  }
-                : msg
-            ),
-          },
+          [instanceId]: messages.map((msg) =>
+            msg.localId === localId
+              ? {
+                  ...msg,
+                  feedback: {
+                    value,
+                    comment,
+                  },
+                }
+              : msg
+          ),
         },
       };
     });
   },
 
-  clearMessages: () =>
+  // Pending query
+  pendingQuery: null,
+  setPendingQuery: (query) => set({ pendingQuery: query }),
+
+  clearMessages: (instanceId) =>
     set((state) => {
-      const instanceId = state.activeInstanceId;
-      if (!instanceId) {
-        return state;
-      }
-      const instanceChats = state.chats[instanceId];
-      if (!instanceChats) {
+      if (!state.chats[instanceId]) {
         return state;
       }
       return {
         chats: {
           ...state.chats,
-          [instanceId]: {
-            ...instanceChats,
-            [state.openMode]: [],
-          },
+          [instanceId]: [],
         },
       };
     }),
 }));
+
+export { EMPTY_REQUEST_STATE };
+export type { ChatRequestState };

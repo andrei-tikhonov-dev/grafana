@@ -1,3 +1,5 @@
+import type { AiChatStrings } from '../api/types';
+
 export interface AiChatError {
   status?: number;
   code?: string;
@@ -5,10 +7,18 @@ export interface AiChatError {
   isAbort?: boolean;
 }
 
+interface HttpErrorShape {
+  status?: number;
+  statusCode?: number;
+  body?: { message?: string; error?: string };
+  message?: string;
+  code?: string;
+}
+
 /**
  * Normalize errors from API calls
  */
-export function toAiChatError(err: unknown): AiChatError {
+export function toAiChatError(err: unknown, strings?: AiChatStrings): AiChatError {
   // Check for AbortError
   if (err instanceof Error && err.name === 'AbortError') {
     return {
@@ -17,9 +27,11 @@ export function toAiChatError(err: unknown): AiChatError {
     };
   }
 
+  const fallback = strings?.errorDefault || 'Something went wrong. Please try again.';
+
   // Check for HTTP error with ErrorResponse
   if (typeof err === 'object' && err !== null) {
-    const error = err as any;
+    const error = err as HttpErrorShape;
 
     // Extract status
     const status = error.status || error.statusCode;
@@ -28,14 +40,16 @@ export function toAiChatError(err: unknown): AiChatError {
     const message = error.body?.message || error.message || 'Unknown error';
     const code = error.body?.error || error.code;
 
-    // Map status codes to user-friendly messages
-    let userMessage = message;
+    // Map known status codes to user-friendly messages; preserve server message for others
+    let userMessage: string;
     if (status === 404) {
-      userMessage = 'Active sprint not found.';
-    } else if (status === 503 || status === 502 || status === 504) {
-      userMessage = 'AI service unavailable';
+      userMessage = strings?.error404 || 'Active sprint not found.';
+    } else if (status === 502 || status === 503 || status === 504) {
+      userMessage = strings?.error503 || 'AI service unavailable';
+    } else if (message && message !== 'Unknown error') {
+      userMessage = message;
     } else {
-      userMessage = 'Something went wrong. Please try again.';
+      userMessage = fallback;
     }
 
     return {
@@ -48,7 +62,7 @@ export function toAiChatError(err: unknown): AiChatError {
 
   // Fallback
   return {
-    message: 'Something went wrong. Please try again.',
+    message: fallback,
     isAbort: false,
   };
 }

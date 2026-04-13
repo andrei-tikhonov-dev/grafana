@@ -2,7 +2,9 @@ import { ChatFeedbackRequestValueEnum, ChatHistoryMessageRoleEnum } from '@archi
 import { css } from '@emotion/css';
 import React from 'react';
 
-import { AiChatMessageVM, EAiChatMode, EAiChatStatus } from '../api/types';
+import { useAiChatContext } from '../AiChatContext';
+import { EAiChatMode, EAiChatStatus } from '../api/types';
+import { useAiChatStore, EMPTY_REQUEST_STATE } from '../store/aiChatStore';
 
 import { ChatInput } from './ChatInput';
 import { MessagesList } from './MessagesList';
@@ -10,27 +12,11 @@ import { StartScreen } from './StartScreen';
 import { ThinkingIndicator } from './ThinkingIndicator';
 
 interface Props {
-  // State
-  openMode: EAiChatMode;
-  messages: AiChatMessageVM[];
-  isLoading: boolean;
   thinkingStageText: string;
-  pendingInputText?: string;
-
-  // Config
-  startTitle: string;
-  startSubtitle: string;
-  startPrompts: string[];
-  inputPlaceholder: string;
-  sendLabel: string;
-  cancelLabel: string;
-  retryLabel: string;
-
-  // Handlers
+  restoredInputText?: string;
   onSendMessage: (message: string) => void;
   onCancel: () => void;
   onRetry: () => void;
-  onPromptClick: (prompt: string) => void;
   onFeedback: (localId: string, value: ChatFeedbackRequestValueEnum) => void;
 }
 
@@ -49,31 +35,21 @@ const styles = {
 };
 
 export const AIChatView: React.FC<Props> = ({
-  openMode,
-  messages,
-  isLoading,
   thinkingStageText,
-  pendingInputText,
-  startTitle,
-  startSubtitle,
-  startPrompts,
-  inputPlaceholder,
-  sendLabel,
-  cancelLabel,
-  retryLabel,
+  restoredInputText,
   onSendMessage,
   onCancel,
   onRetry,
-  onPromptClick,
   onFeedback,
 }) => {
-  // Check for error state
-  const lastMessage = messages[messages.length - 1];
+  const { instanceId } = useAiChatContext();
+  const openMode = useAiChatStore((s) => s.openMode);
+  const messages = useAiChatStore((s) => s.chats[instanceId] || []);
+  const isLoading = useAiChatStore((s) => (s.requestStates[instanceId] || EMPTY_REQUEST_STATE).isLoading);
 
-  // Show start screen only for general mode with no messages
+  const lastMessage = messages[messages.length - 1];
   const showStartScreen = openMode === EAiChatMode.General && messages.length === 0 && !isLoading;
 
-  // Filter out empty pending assistant messages during loading
   const visibleMessages = React.useMemo(() => {
     if (
       isLoading &&
@@ -90,36 +66,23 @@ export const AIChatView: React.FC<Props> = ({
     <div className={styles.container}>
       <div className={styles.content}>
         {showStartScreen ? (
-          <StartScreen
-            title={startTitle}
-            subtitle={startSubtitle}
-            prompts={startPrompts}
-            onPromptClick={onPromptClick}
-          />
+          <StartScreen onSendMessage={onSendMessage} />
         ) : (
           <>
             {visibleMessages.length > 0 && (
               <MessagesList
                 messages={visibleMessages}
-                onPromptClick={onPromptClick}
+                onSendMessage={onSendMessage}
                 onFeedback={onFeedback}
                 onRetry={onRetry}
               />
             )}
-            {isLoading && <ThinkingIndicator stageText={thinkingStageText} />}
+            {isLoading && <ThinkingIndicator text={thinkingStageText} />}
           </>
         )}
       </div>
 
-      <ChatInput
-        placeholder={inputPlaceholder}
-        sendLabel={sendLabel}
-        cancelLabel={cancelLabel}
-        isLoading={isLoading}
-        value={pendingInputText}
-        onSend={onSendMessage}
-        onCancel={onCancel}
-      />
+      <ChatInput value={restoredInputText} onSend={onSendMessage} onCancel={onCancel} />
     </div>
   );
 };

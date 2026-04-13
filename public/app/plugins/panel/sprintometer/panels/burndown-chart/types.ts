@@ -1,5 +1,3 @@
-import { TAiData } from '../../types';
-
 export interface MBurndownCustomData {
   currentDate: string;
   days: MDayData[];
@@ -8,7 +6,6 @@ export interface MBurndownCustomData {
     [EValueMode.StoryPoints]: MSummary;
     [EValueMode.IssuesAmount]: MSummary;
   };
-  ai?: TAiData;
   aiForecast?: TAiForecast;
 }
 

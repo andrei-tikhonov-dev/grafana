@@ -1,8 +1,8 @@
 import { ChatMessageResponse, ChatFeedbackResponse } from '@architeq/core-api-client';
 
-import { AiChatClient, SendMessageArgs, SubmitFeedbackArgs } from '../features/ai-chat/api/types';
+import { AiChatClient, SendBoardMessageArgs, SubmitFeedbackArgs } from '../features/ai-chat/api/types';
 
-import { DEFAULT_AUTO_SUMMARY_RESPONSE, DEFAULT_GENERAL_RESPONSES } from './defaultMockResponses';
+import { DEFAULT_PRESET_RESPONSE, DEFAULT_GENERAL_RESPONSES } from './defaultMockResponses';
 import { AiChatMockConfig } from './types';
 
 const MOCK_DELAY_MS = 500;
@@ -14,22 +14,25 @@ function delay(ms: number): Promise<void> {
 export function createMockAiChatClient(config: AiChatMockConfig): AiChatClient {
   let generalMessageIndex = 0;
 
-  const autoSummaryResponse = config.autoSummary ?? DEFAULT_AUTO_SUMMARY_RESPONSE;
+  const presetResponse = config.preset ?? DEFAULT_PRESET_RESPONSE;
   const generalResponses = config.general ?? DEFAULT_GENERAL_RESPONSES;
 
-  const sendMessage = async (args: SendMessageArgs, _init?: RequestInit): Promise<ChatMessageResponse> => {
+  const submitFeedback = async (_args: SubmitFeedbackArgs, _init?: RequestInit): Promise<ChatFeedbackResponse> => {
+    await delay(MOCK_DELAY_MS);
+    return { success: true };
+  };
+
+  const sendBoardMessage = async (args: SendBoardMessageArgs, _init?: RequestInit): Promise<ChatMessageResponse> => {
     await delay(MOCK_DELAY_MS);
 
-    const message = args.chatMessageRequest?.message?.trim().toLowerCase() ?? '';
+    const message = args.boardChatMessageRequest?.message?.trim().toLowerCase() ?? '';
 
-    // Auto-summary mode: empty message or "Analyze status"
     if (!message || message === 'analyze status') {
-      return autoSummaryResponse;
+      return presetResponse;
     }
 
-    // General mode: cycle through responses
     if (generalResponses.length === 0) {
-      return autoSummaryResponse;
+      return presetResponse;
     }
 
     const response = generalResponses[generalMessageIndex % generalResponses.length];
@@ -38,13 +41,8 @@ export function createMockAiChatClient(config: AiChatMockConfig): AiChatClient {
     return response;
   };
 
-  const submitFeedback = async (_args: SubmitFeedbackArgs, _init?: RequestInit): Promise<ChatFeedbackResponse> => {
-    await delay(MOCK_DELAY_MS);
-    return { success: true };
-  };
-
   return {
-    sendMessage,
+    sendBoardMessage,
     submitFeedback,
   };
 }

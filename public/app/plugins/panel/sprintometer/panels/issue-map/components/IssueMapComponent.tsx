@@ -4,7 +4,6 @@ import React, { useMemo, useCallback } from 'react';
 import { ScrollArea, ScrollBar } from '../../../components/shadcn/scroll-area';
 import { UiFiltersContainer, UiVerticalGroup } from '../../../components/ui';
 import { UiPanelContainer } from '../../../components/ui/panel-container/PanelContainer';
-import { usePanelAiChat } from '../../../features/ai-chat';
 import { usePluginState } from '../../../hooks/usePluginState';
 import { useZoom } from '../../../hooks/useZoom';
 import { getGrafanaCustomData } from '../../../utils/grafana';
@@ -87,10 +86,6 @@ const useSankeyDimensions = (
 };
 
 const initialData: MIssueMapCustomData = {
-  ai: {
-    title: '',
-    content: '',
-  },
   valueField: '',
 };
 
@@ -98,7 +93,7 @@ export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsC
   const series = data?.series[0];
   const issueMapOptions = options.sankey || {};
   const { filterFields = [] } = issueMapOptions;
-  const { valueField, ai } = getGrafanaCustomData<MIssueMapCustomData>(data, initialData);
+  const { valueField } = getGrafanaCustomData<MIssueMapCustomData>(data, initialData);
 
   const nodeWidth = DEFAULT_OPTIONS.NODE_WIDTH;
   const nodePadding = DEFAULT_OPTIONS.NODE_PADDING;
@@ -168,19 +163,10 @@ export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsC
 
   const styles = useIssueMapStyles(width, height, sankeyWidth, hasFilters);
 
-  const { toggle, drawer } = usePanelAiChat({
-    panelId: id,
-    aiEnabled: options.aiEnabled,
-    dashboard: options.sankey?.dashboard,
-    metric: options.sankey?.metric,
-    aiData: ai,
-    mockConfig: options.aiChatMock,
-  });
-
   return (
     <UiPanelContainer width={width} height={height} title="Issue map">
       <UiVerticalGroup align="stretch" gap="sm">
-        <UiFiltersContainer suffix={toggle}>
+        <UiFiltersContainer>
           {filtersComponent}
         </UiFiltersContainer>
         <UiFiltersContainer suffix={zoomComponent}>
@@ -202,7 +188,6 @@ export const IssueMapComponent: React.FC<IssueMapProps> = ({ options, onOptionsC
         />
         <ScrollBar orientation="vertical" />
       </ScrollArea>
-      {drawer}
     </UiPanelContainer>
   );
 };

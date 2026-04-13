@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
+import { uid } from '../../../../../utils/uid';
 import TaskItem from '../../../components/task/TaskItem';
 import { Tooltip } from '../../../components/ui';
 import { TaskService, CollisionService } from '../../../services';
@@ -73,7 +74,7 @@ const TaskRow: React.FC<MTaskRowProps> = ({
   const taskElementRef = useRef<HTMLElement | null>(null);
 
   // Instance ID to prevent cross-chart interactions
-  const instanceId = useRef(`task-row-${Math.random().toString(36).substring(2, 11)}`);
+  const instanceId = useRef(uid('task-row'));
 
   // Calculate if we should use smooth dragging - DISABLED for day view
   const shouldUseSmoothDragging = smoothDragging && viewMode !== EViewMode.DAY;

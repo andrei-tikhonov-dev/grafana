@@ -1,6 +1,5 @@
 import {
   MSprintometerStatusData,
-  TAiData,
   TBreadcrumbItem,
   TDate,
   TId,
@@ -87,7 +86,6 @@ export const eventTypePriority: EEventType[] = [EEventType.Important, EEventType
 export interface MHeaderCustomData extends Record<string, any> {
   title: string;
   breadcrumbs?: TBreadcrumbItem[];
-  ai?: TAiData;
   info?: MPanelInfo;
   status?: MSprintometerStatusData;
   update?: MUpdate;

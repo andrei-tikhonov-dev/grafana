@@ -174,8 +174,8 @@ const srOnlyStyles = css`
   border: 0;
 `;
 
-function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
+function Dialog({ modal = false, ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
+  return <DialogPrimitive.Root data-slot="dialog" modal={modal} {...props} />;
 }
 
 function DialogTrigger({ ...props }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
@@ -200,6 +200,9 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  onOpenAutoFocus,
+  onCloseAutoFocus,
+  onFocusOutside,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
@@ -207,7 +210,31 @@ function DialogContent({
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
-      <DialogPrimitive.Content data-slot="dialog-content" className={cx(dialogContentStyles, className)} {...props}>
+      <DialogPrimitive.Content
+        data-slot="dialog-content"
+        className={cx(dialogContentStyles, className)}
+        onOpenAutoFocus={(e) => {
+          // Prevent Radix auto-focus — it fights with Grafana Drawer's
+          // React Aria FocusScope (contain={true}). zone.js replays focus events,
+          // causing an infinite loop between the two focus managers.
+          e.preventDefault();
+          onOpenAutoFocus?.(e);
+        }}
+        onCloseAutoFocus={(e) => {
+          // Prevent Radix from restoring focus on close — let Grafana's
+          // FocusScope handle focus restoration to avoid the same zone.js loop.
+          e.preventDefault();
+          onCloseAutoFocus?.(e);
+        }}
+        onFocusOutside={(e) => {
+          // Prevent focus-based dismiss — zone.js synthetic focus events
+          // cause false FOCUS_OUTSIDE dispatches. Dialog still closes via
+          // overlay click and Escape key.
+          e.preventDefault();
+          onFocusOutside?.(e);
+        }}
+        {...props}
+      >
         {children}
         {showCloseButton && (
           <DialogPrimitive.Close data-slot="dialog-close" className={dialogCloseStyles}>

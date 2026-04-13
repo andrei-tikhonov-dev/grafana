@@ -13,7 +13,6 @@ interface FiltersProps {
   defaultFilterState?: Partial<MFilterState>;
   totalIssues: number;
   filteredIssues: number;
-  aiToggle?: React.ReactNode;
 }
 
 const defaultFilter: MFilterState = {
@@ -30,7 +29,6 @@ export function Filters({
   defaultFilterState,
   totalIssues,
   filteredIssues,
-  aiToggle,
 }: FiltersProps) {
   const [filterState, setFilterState] = React.useState<MFilterState>({
     ...defaultFilter,
@@ -65,7 +63,6 @@ export function Filters({
       suffix={
         <>
           Showing {filteredIssues} of {totalIssues} issues
-          {aiToggle}
         </>
       }
       className={className}

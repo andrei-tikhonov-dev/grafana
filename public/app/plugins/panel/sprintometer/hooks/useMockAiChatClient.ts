@@ -9,7 +9,7 @@ import { safeParseJson } from '../utils/json';
 export function useMockAiChatClient(options: TPanelOptions): AiChatClient | undefined {
   const mockOptions = options.aiChatMock;
   const useMock = mockOptions?.useMock ?? false;
-  const autoSummaryJson = mockOptions?.autoSummary ?? '';
+  const presetJson = mockOptions?.preset ?? '';
   const generalJson = mockOptions?.general ?? '';
 
   return useMemo(() => {
@@ -18,10 +18,10 @@ export function useMockAiChatClient(options: TPanelOptions): AiChatClient | unde
     }
 
     const config: AiChatMockConfig = {
-      autoSummary: safeParseJson<ChatMessageResponse>(autoSummaryJson),
+      preset: safeParseJson<ChatMessageResponse>(presetJson),
       general: safeParseJson<ChatMessageResponse[]>(generalJson),
     };
 
     return createMockAiChatClient(config);
-  }, [useMock, autoSummaryJson, generalJson]);
+  }, [useMock, presetJson, generalJson]);
 }

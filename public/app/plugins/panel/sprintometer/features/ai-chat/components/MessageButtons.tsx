@@ -4,6 +4,7 @@ import React from 'react';
 
 import { UiButton, UiHorizontalGroup } from '../../../components/ui';
 import { theme3 } from '../../../theme';
+import { useAiChatContext } from '../AiChatContext';
 
 interface Props {
   onThumbsUp: () => void;
@@ -25,9 +26,11 @@ const styles = {
 };
 
 export const MessageButtons: React.FC<Props> = ({ onThumbsUp, onThumbsDown, onCopy, isCopied, disabled }) => {
+  const { strings } = useAiChatContext();
+
   return (
     <UiHorizontalGroup gap="xs">
-      <UiButton variant="ghost" size="sm" onClick={onCopy} className={styles.button} title="Copy to clipboard">
+      <UiButton variant="ghost" size="sm" onClick={onCopy} className={styles.button} title={strings.copyToClipboard}>
         {isCopied ? <Check className={styles.icon} /> : <Copy className={styles.icon} />}
       </UiButton>
       <UiButton
@@ -36,7 +39,7 @@ export const MessageButtons: React.FC<Props> = ({ onThumbsUp, onThumbsDown, onCo
         onClick={onThumbsDown}
         disabled={disabled}
         className={styles.button}
-        title="Thumbs down"
+        title={strings.thumbsDown}
       >
         <ThumbsDown className={styles.icon} />
       </UiButton>
@@ -46,7 +49,7 @@ export const MessageButtons: React.FC<Props> = ({ onThumbsUp, onThumbsDown, onCo
         onClick={onThumbsUp}
         disabled={disabled}
         className={styles.button}
-        title="Thumbs up"
+        title={strings.thumbsUp}
       >
         <ThumbsUp className={styles.icon} />
       </UiButton>

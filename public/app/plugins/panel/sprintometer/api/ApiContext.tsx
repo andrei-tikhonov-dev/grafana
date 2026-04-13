@@ -5,15 +5,18 @@ import { DataSourceRef } from '@grafana/data';
 import { getBackendSrv, getDataSourceSrv } from '@grafana/runtime';
 
 import { UiLoadingState } from '../components/ui/loading-state';
+import { AI_API_PREFIX, CORE_API_PREFIX } from './constants';
 
 /**
  * Context type providing API configuration and readiness state.
  */
 interface ApiContextType {
-  /** The API Configuration instance */
+  /** The API Configuration instance (core-api-client, prefixed with /sprintometer) */
   config: Configuration;
-  /** The resolved basePath URL */
+  /** The resolved basePath URL (raw origin) */
   basePath: string | undefined;
+  /** The basePath for AI API requests (origin + /sprintometer-ai) */
+  aiBasePath: string | undefined;
   /** Whether the basePath has been resolved and is ready for use */
   isBasePathReady: boolean;
   /** Error that occurred while resolving basePath, if any */
@@ -98,13 +101,15 @@ export const ApiProvider: React.FC<ApiProviderProps> = ({ dataSourceRef, childre
   }, [dataSourceRef]);
 
   const api = useMemo<ApiContextType>(() => {
-    const config = new Configuration({
-      basePath,
-    });
+    const coreBasePath = basePath ? `${basePath}${CORE_API_PREFIX}` : undefined;
+    const aiBasePath = basePath ? `${basePath}${AI_API_PREFIX}` : undefined;
+
+    const config = new Configuration({ basePath: coreBasePath });
 
     return {
       config,
       basePath,
+      aiBasePath,
       isBasePathReady: !isLoading && !!basePath,
       basePathError: error,
     };

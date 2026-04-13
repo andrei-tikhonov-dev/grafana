@@ -1,11 +1,8 @@
-import { TAiData } from '../../types';
-
 export interface MData {
   periodType: MPeriod;
   currentPeriod: string;
   periods: MPeriodData[];
   issueTypes: MStructuredData[];
-  ai?: TAiData;
 }
 
 export enum EPeriod {

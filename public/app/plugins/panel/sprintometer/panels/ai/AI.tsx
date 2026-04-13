@@ -1,17 +1,20 @@
 import { css, cx } from '@emotion/css';
+import { Sparkles } from 'lucide-react';
 import React from 'react';
 
 import { PanelProps } from '@grafana/data';
 
-import { UiTypography } from '../../components/ui';
+import { UiButton, UiTypography } from '../../components/ui';
 import { usePanelAiChat } from '../../features/ai-chat';
 import { theme3 } from '../../theme';
 import { TPanelOptions } from '../../types';
 import { getGrafanaCustomData } from '../../utils/grafana';
 
-import { AICustomData } from './types';
-
 interface Props extends PanelProps<TPanelOptions> {}
+
+interface AICustomData {
+  title: string;
+}
 
 const styles = {
   wrapper: css`
@@ -26,22 +29,18 @@ const styles = {
 
 const initialData: AICustomData = {
   title: '',
-  ai: {
-    title: '',
-    content: '',
-  },
 };
 
 export const AI: React.FC<Props> = ({ width, height, data, options, id }) => {
-  const { title, ai } = getGrafanaCustomData<AICustomData>(data, initialData);
+  const { title } = getGrafanaCustomData<AICustomData>(data, initialData);
 
-  const { toggle, drawer } = usePanelAiChat({
+  const { openGeneral, drawer } = usePanelAiChat({
     panelId: id,
     aiEnabled: options.aiEnabled,
-    dashboard: options.ai?.dashboard,
-    metric: options.ai?.metric,
-    aiData: ai,
+    dashboard: options.aiDashboard,
+    metric: options.aiMetric,
     mockConfig: options.aiChatMock,
+    panelIds: options.aiPanelIds,
   });
 
   return (
@@ -55,7 +54,12 @@ export const AI: React.FC<Props> = ({ width, height, data, options, id }) => {
       )}
     >
       <UiTypography variant="panelTitle">{title}</UiTypography>
-      {toggle}
+      {options.aiEnabled && (
+        <UiButton onClick={openGeneral} variant="ai">
+          <Sparkles />
+          AI helper
+        </UiButton>
+      )}
       {drawer}
     </div>
   );

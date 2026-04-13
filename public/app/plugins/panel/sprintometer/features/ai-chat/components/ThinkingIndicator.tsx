@@ -3,9 +3,10 @@ import React from 'react';
 
 import { UiTypography, UiVerticalGroup } from '../../../components/ui';
 import { theme3 } from '../../../theme';
+import { AI_CHAT_COLORS } from '../utils/defaults';
 
 interface Props {
-  stageText: string;
+  text: string;
 }
 
 const shimmer = keyframes`
@@ -27,7 +28,7 @@ const styles = {
   `,
   skeleton: css`
     height: 8px;
-    background: linear-gradient(90deg, #fef6f5 25%, #ffb49b 50%, #fef6f5 75%);
+    background: linear-gradient(90deg, ${AI_CHAT_COLORS.skeletonBase} 25%, ${AI_CHAT_COLORS.skeletonHighlight} 50%, ${AI_CHAT_COLORS.skeletonBase} 75%);
     background-size: 200% 100%;
     animation: ${shimmer} 1.5s ease-in-out infinite;
     border-radius: ${theme3.tailwind.radiusXs};
@@ -43,11 +44,11 @@ const styles = {
   `,
 };
 
-export const ThinkingIndicator: React.FC<Props> = ({ stageText }) => {
+export const ThinkingIndicator: React.FC<Props> = ({ text }) => {
   return (
     <div className={styles.container}>
       <UiTypography variant="body" className={styles.stageText}>
-        {stageText}
+        {text}
       </UiTypography>
 
       <UiVerticalGroup gap="xs" align="start">
