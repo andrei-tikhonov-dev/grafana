@@ -35,7 +35,6 @@ export interface TBurndownOptionsNS {
 
 export interface TAiChatOptionsNS {
   aiDashboard?: SendMetricChatMessageBoardTypeEnum;
-  aiMetric?: SendMetricChatMessageMetricNameEnum;
   aiPanelIds?: string[];
 }
 

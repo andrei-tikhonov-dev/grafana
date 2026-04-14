@@ -1,8 +1,4 @@
-import {
-  type DashboardPanelSettings,
-  SendMetricChatMessageBoardTypeEnum,
-  SendMetricChatMessageMetricNameEnum,
-} from '@architeq/core-api-client';
+import { type DashboardPanelSettings, SendMetricChatMessageBoardTypeEnum } from '@architeq/core-api-client';
 import { createContext, useContext } from 'react';
 
 import type { AiServiceClient } from './api/aiServiceClient';
@@ -23,10 +19,9 @@ export interface AiChatContextValue {
   userId: string;
   boardType: string;
   dashboard?: SendMetricChatMessageBoardTypeEnum;
-  metric?: SendMetricChatMessageMetricNameEnum;
   metricContext?: string;
-  from?: string;
-  to?: string;
+  from?: Date;
+  to?: Date;
   panelIds?: string[];
   dashboardPanelSettings?: DashboardPanelSettings;
 }

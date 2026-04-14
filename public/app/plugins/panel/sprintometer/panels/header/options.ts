@@ -1,4 +1,4 @@
-import { SendMetricChatMessageBoardTypeEnum, SendMetricChatMessageMetricNameEnum } from '@architeq/core-api-client';
+import { SendMetricChatMessageBoardTypeEnum } from '@architeq/core-api-client';
 
 import { AI_CATEGORY, DEFAULT_CONFIGURATION_CATEGORY } from '../../constants';
 import { EAiPanelId } from '../../features/ai-chat/api/aiServiceTypes';
@@ -70,16 +70,6 @@ export function registerHeaderOptions(builder: any) {
     category: DEFAULT_CONFIGURATION_CATEGORY,
     settings: {
       options: getSelectOptionsFromEnum(SendMetricChatMessageBoardTypeEnum),
-    },
-    showIf,
-  });
-
-  builder.addSelect({
-    path: 'aiMetric',
-    name: 'Metric',
-    category: DEFAULT_CONFIGURATION_CATEGORY,
-    settings: {
-      options: getSelectOptionsFromEnum(SendMetricChatMessageMetricNameEnum),
     },
     showIf,
   });

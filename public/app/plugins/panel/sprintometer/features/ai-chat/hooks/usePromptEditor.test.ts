@@ -9,7 +9,7 @@ import { usePromptEditor } from './usePromptEditor';
 const mockNotifyError = jest.fn();
 const mockNotifySuccess = jest.fn();
 
-jest.mock('hooks/useNotifications', () => ({
+jest.mock('../../../hooks/useNotifications', () => ({
   useNotifications: () => ({
     notifyError: mockNotifyError,
     notifySuccess: mockNotifySuccess,

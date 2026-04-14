@@ -2,7 +2,6 @@ import {
   type DashboardPanelSettings,
   ChatMessageResponse,
   SendMetricChatMessageBoardTypeEnum,
-  SendMetricChatMessageMetricNameEnum,
 } from '@architeq/core-api-client';
 import React, { useCallback, useMemo } from 'react';
 
@@ -35,6 +34,19 @@ const GRAFANA_VAR_NAMES: string[] = ['team', 'project', 'context'];
 const DEFAULT_BOARD_TYPE = SendMetricChatMessageBoardTypeEnum.Daily;
 
 /**
+ * Converts an ISO date string (e.g. from `getTemplateSrv().replace('${__from:date:iso}')`)
+ * to a Date. Returns undefined if the string is empty, unresolved (e.g. still contains `${...}`),
+ * or doesn't parse to a valid date. Prevents downstream `.toISOString()` calls on non-Date values.
+ */
+function toDateOrUndefined(value: string): Date | undefined {
+  if (!value) {
+    return undefined;
+  }
+  const date = new Date(value);
+  return isNaN(date.getTime()) ? undefined : date;
+}
+
+/**
  * Maps hook's PascalCase panel type keys to the API's camelCase property names.
  */
 function toApiPanelSettings(settings: HookDashboardPanelSettings | undefined): DashboardPanelSettings | undefined {
@@ -53,7 +65,6 @@ export interface UsePanelAiChatConfig {
   panelId: number;
   aiEnabled?: boolean;
   dashboard?: SendMetricChatMessageBoardTypeEnum;
-  metric?: SendMetricChatMessageMetricNameEnum;
   mockConfig?: TAiChatMockOptionsNS['aiChatMock'];
   panelIds?: string[];
 }
@@ -68,7 +79,6 @@ export function usePanelAiChat({
   panelId,
   aiEnabled,
   dashboard,
-  metric,
   mockConfig,
   panelIds,
 }: UsePanelAiChatConfig): UsePanelAiChatResult {
@@ -92,8 +102,8 @@ export function usePanelAiChat({
   // panelInstanceId = unique per panel, prevents multiple drawers from opening
   const panelInstanceId = useMemo(() => `${instanceId}:${panelId}`, [instanceId, panelId]);
 
-  const periodFrom = getTemplateSrv().replace('${__from:date:iso}');
-  const periodTo = getTemplateSrv().replace('${__to:date:iso}');
+  const periodFrom = toDateOrUndefined(getTemplateSrv().replace('${__from:date:iso}'));
+  const periodTo = toDateOrUndefined(getTemplateSrv().replace('${__to:date:iso}'));
 
   const hookPanelSettings = useDashboardPanelSettings();
   const dashboardPanelSettings = useMemo(() => toApiPanelSettings(hookPanelSettings), [hookPanelSettings]);
@@ -163,7 +173,6 @@ export function usePanelAiChat({
       userId,
       boardType,
       dashboard,
-      metric,
       metricContext,
       from: periodFrom,
       to: periodTo,
@@ -181,7 +190,6 @@ export function usePanelAiChat({
       userId,
       boardType,
       dashboard,
-      metric,
       metricContext,
       periodFrom,
       periodTo,

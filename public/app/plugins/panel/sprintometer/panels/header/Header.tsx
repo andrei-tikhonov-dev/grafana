@@ -69,7 +69,6 @@ export const Header: React.FC<Props> = ({ width, height, data, options, id }) =>
     panelId: id,
     aiEnabled: options.aiEnabled,
     dashboard: options.aiDashboard,
-    metric: options.aiMetric,
     mockConfig: options.aiChatMock,
     panelIds: options.aiPanelIds,
   });

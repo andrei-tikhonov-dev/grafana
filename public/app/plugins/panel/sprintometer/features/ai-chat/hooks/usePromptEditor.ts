@@ -1,6 +1,6 @@
-import { useNotifications } from 'hooks/useNotifications';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useNotifications } from '../../../hooks/useNotifications';
 import { useAiChatContext } from '../AiChatContext';
 import type { AiServiceClient } from '../api/aiServiceClient';
 import { type AiServiceRequestContext, type Prompt, PROMPT_TYPE } from '../api/aiServiceTypes';
