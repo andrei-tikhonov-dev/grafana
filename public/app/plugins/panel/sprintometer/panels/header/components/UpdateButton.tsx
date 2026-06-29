@@ -35,7 +35,7 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({ url, buttonText, dat
         throw new Error('Update failed');
       }
 
-      return response.json();
+      return true;
     },
     enabled: false,
     retry: false,

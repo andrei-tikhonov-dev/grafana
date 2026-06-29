@@ -49,6 +49,31 @@ const chevronStyles = css`
   flex-shrink: 0;
 `;
 
+const chevronButtonStyles = css`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: ${theme3.tailwind.radiusSm};
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 150ms ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+`;
+
 const chevronRotatedStyles = css`
   transform: rotate(180deg);
 `;
@@ -94,13 +119,18 @@ export const StatusCard: React.FC<SprintometerStatusCardProps & { onAnalyze?: ()
 
   const handleToggle = () => {
     if (hasDetails) {
-      setIsExpanded(!isExpanded);
+      setIsExpanded((expanded) => !expanded);
     }
   };
 
   const handleAnalyze = (e: React.MouseEvent) => {
     e.stopPropagation();
     onAnalyze?.();
+  };
+
+  const handleChevronToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    handleToggle();
   };
 
   return (
@@ -123,14 +153,28 @@ export const StatusCard: React.FC<SprintometerStatusCardProps & { onAnalyze?: ()
           <UiEllipsis style={{ minWidth: 0, flex: 1 }}>{summary}</UiEllipsis>
         </UiHorizontalGroup>
 
-        <UiHorizontalGroup gap="sm" justify="end" onClick={(e) => e.stopPropagation()}>
+        <UiHorizontalGroup gap="sm" justify="end">
           {onAnalyze && (
             <UiButton variant="ghost" size="sm" onClick={handleAnalyze}>
               <Sparkles size={16} />
               Analyze status
             </UiButton>
           )}
-          {hasDetails && <ChevronDown size={20} className={cx(chevronStyles, isExpanded && chevronRotatedStyles)} />}
+          {hasDetails && (
+            <button
+              type="button"
+              className={chevronButtonStyles}
+              onClick={handleChevronToggle}
+              aria-expanded={isExpanded}
+              aria-label={isExpanded ? 'Collapse status details' : 'Expand status details'}
+            >
+              <ChevronDown
+                size={20}
+                aria-hidden="true"
+                className={cx(chevronStyles, isExpanded && chevronRotatedStyles)}
+              />
+            </button>
+          )}
         </UiHorizontalGroup>
       </UiHorizontalGroup>
 

@@ -1,5 +1,4 @@
-import type { ApiHistoryMessage, AiChatMessageVM } from '../api/types';
-import { EAiChatStatus } from '../api/types';
+import { EAiChatStatus, type ApiHistoryMessage, type AiChatMessageVM } from '../api/types';
 
 /**
  * Build API history from view model messages

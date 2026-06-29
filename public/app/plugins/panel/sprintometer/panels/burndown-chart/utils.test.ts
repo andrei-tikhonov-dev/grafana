@@ -370,6 +370,35 @@ describe('getChartOptions', () => {
     expect(series[2].itemStyle.color).toBe('#EE522E');
   });
 
+  it('should set AI prediction color from config', () => {
+    const option = getChartOptions(baseConfig);
+    const series = option.series as any[];
+
+    const predictionSeries = series[4];
+    const confidenceSpreadSeries = series[6];
+
+    expect(predictionSeries.lineStyle.color).toBe('#EE522E');
+    expect(predictionSeries.itemStyle.color).toBe('#EE522E');
+    expect(confidenceSpreadSeries.areaStyle.color).toBe('#EE522E');
+    expect(confidenceSpreadSeries.areaStyle.opacity).toBe(0.2);
+  });
+
+  it('should use issues amount color for AI prediction when provided', () => {
+    const option = getChartOptions({
+      ...baseConfig,
+      color: '#6634FA',
+    });
+    const series = option.series as any[];
+
+    const predictionSeries = series[4];
+    const confidenceSpreadSeries = series[6];
+
+    expect(predictionSeries.lineStyle.color).toBe('#6634FA');
+    expect(predictionSeries.itemStyle.color).toBe('#6634FA');
+    expect(confidenceSpreadSeries.areaStyle.color).toBe('#6634FA');
+    expect(confidenceSpreadSeries.areaStyle.opacity).toBe(0.2);
+  });
+
   it('should configure non-working days mark areas', () => {
     const option = getChartOptions({
       ...baseConfig,

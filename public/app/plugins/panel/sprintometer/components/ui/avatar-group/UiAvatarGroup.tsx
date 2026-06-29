@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../shadcn/popover';
 import { UiAvatar } from '../avatar/UiAvatar';
 import { UiButton } from '../button/UiButton';
 import { UiHorizontalGroup } from '../group/UiHorizontalGroup';
+import { UiTooltip } from '../tooltip/UiTooltip';
 import { UiVerticalGroup } from '../group/UiVerticalGroup';
 import { UiTypography } from '../typography/UiTypography';
 
@@ -33,6 +34,17 @@ const groupContainerStyles = css`
   }
 `;
 
+const avatarTooltipTriggerStyles = css`
+  display: inline-flex;
+  border-radius: 9999px;
+  outline: none;
+
+  &:focus-visible {
+    outline: 2px solid ${theme3.shadcn.ring};
+    outline-offset: 2px;
+  }
+`;
+
 const popoverContentStyles = css`
   padding: calc(${theme3.tailwind.spacing} * 4);
 `;
@@ -46,7 +58,11 @@ function UiAvatarGroup({ users, maxVisible = 5, className, size = 'md' }: UiAvat
     <UiHorizontalGroup className={className} justify="start" align="center" gap="xs">
       <div className={groupContainerStyles}>
         {visibleUsers.map((user, index) => (
-          <UiAvatar key={index} user={user} size={size} />
+          <UiTooltip key={user.url ?? `${user.name}-${index}`} content={user.name}>
+            <div className={avatarTooltipTriggerStyles} tabIndex={0} aria-label={user.name}>
+              <UiAvatar user={user} size={size} />
+            </div>
+          </UiTooltip>
         ))}
       </div>
       {remainingCount > 0 && (

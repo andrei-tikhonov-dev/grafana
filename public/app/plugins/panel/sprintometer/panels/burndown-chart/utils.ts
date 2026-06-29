@@ -384,12 +384,12 @@ export const getChartOptions = ({
         type: 'line',
         data: predictionData,
         lineStyle: {
-          color: theme.colors.semantic.primary, // Or another distinct color
+          color,
           width: 2,
           type: 'dashed',
         },
         itemStyle: {
-          color: theme.colors.semantic.primary,
+          color,
         },
         showSymbol: false,
       },
@@ -410,7 +410,7 @@ export const getChartOptions = ({
         data: upperBoundDiffData,
         lineStyle: { opacity: 0 },
         areaStyle: {
-          color: theme.colors.semantic.primary,
+          color,
           opacity: 0.2,
         },
         stack: 'confidence-band',

@@ -2,10 +2,9 @@ import { ChatFeedbackRequestValueEnum } from '@architeq/core-api-client';
 import { useMutation } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import type { SubmitFeedbackArgs } from '../api/types';
-import { toFeedbackBoardType } from '../api/types';
-import { useAiChatStore } from '../store/aiChatStore';
 import { useAiChatContext } from '../AiChatContext';
+import { toFeedbackBoardType, type SubmitFeedbackArgs } from '../api/types';
+import { useAiChatStore } from '../store/aiChatStore';
 
 interface UseFeedbackHandlersResult {
   handleFeedback: (localId: string, value: ChatFeedbackRequestValueEnum) => void;
@@ -15,11 +14,7 @@ interface UseFeedbackHandlersResult {
 export function useFeedbackHandlers(): UseFeedbackHandlersResult {
   const { instanceId, client, teamId, project, dashboard } = useAiChatContext();
 
-  const {
-    openFeedbackModal,
-    closeFeedbackModal,
-    applyFeedback,
-  } = useAiChatStore.getState();
+  const { openFeedbackModal, closeFeedbackModal, applyFeedback } = useAiChatStore.getState();
 
   const submitFeedbackMutation = useMutation({
     mutationFn: async (args: SubmitFeedbackArgs) => {

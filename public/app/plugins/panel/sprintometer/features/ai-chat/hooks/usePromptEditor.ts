@@ -42,7 +42,6 @@ export function usePromptEditor(client: AiServiceClient, ctx: AiServiceRequestCo
   const { setPromptConfig, setConfigLoading, closeEditor } = usePromptEditorStore.getState();
 
   // Load config on mount.
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional mount-only fetch: client and ctx are referentially unstable
   useEffect(() => {
     isMountedRef.current = true;
     let cancelled = false;
@@ -77,6 +76,7 @@ export function usePromptEditor(client: AiServiceClient, ctx: AiServiceRequestCo
       cancelled = true;
       isMountedRef.current = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional mount-only fetch: client and ctx are referentially unstable
   }, []);
 
   const sourcePrompt: Prompt | null = promptConfig ? promptConfig.customPrompt ?? promptConfig.defaultPrompt : null;
@@ -116,7 +116,7 @@ export function usePromptEditor(client: AiServiceClient, ctx: AiServiceRequestCo
         setIsSaving(false);
       }
     }
-  }, [client, ctx, name, text, notifySuccess, notifyError, closeEditor, promptConfig, setPromptConfig]);
+  }, [client, ctx, name, text, notifySuccess, notifyError, closeEditor, promptConfig, setPromptConfig, project]);
 
   const improve = useCallback(async () => {
     setIsImproving(true);
